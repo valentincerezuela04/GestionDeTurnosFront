@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, output } from '@angular/core';
 
 @Component({
   selector: 'app-headear',
@@ -7,4 +7,7 @@ import { Component } from '@angular/core';
   templateUrl: './headear.html',
   styleUrl: './headear.css',
 })
-export class Headear {}
+export class Headear {
+  menuToongle = output<void>()
+  onToongle(){this.menuToongle.emit()}
+}
