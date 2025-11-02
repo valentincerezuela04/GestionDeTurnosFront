@@ -1,0 +1,19 @@
+.side{
+  width:260px; min-width:260px; transition:width .18s ease, transform .18s ease;
+  padding:16px; background:linear-gradient(180deg,#0d1219,#0b0f13);
+  border-right:1px solid rgba(255,255,255,.06);
+  position:sticky; top:0; height:100dvh; overflow:auto;
+}
+.side.closed{ width:64px; min-width:64px }
+.side nav{ display:grid; gap:8px }
+.side a{
+  padding:10px 12px; border-radius:12px; color:var(--text);
+  border:1px solid transparent; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.side a.active, .side a:hover{
+  background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.1);
+}
+@media (max-width:900px){
+  .side{ position:fixed; left:0; top:56px; height:calc(100dvh - 56px); transform:translateX(-100%) }
+  .side:not(.closed){ transform:translateX(0) }
+}
