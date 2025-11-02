@@ -1,6 +1,6 @@
-<app-headear></app-headear>
+<app-headear (menuToongle)="toggleSidebar()"></app-headear>
 <div class="layout">
-  <app-aside></app-aside>
+  <app-aside [open]="sideBarOpen()"></app-aside>
   <main class="content">
     <router-outlet></router-outlet>
   </main>

@@ -4,7 +4,7 @@
   border-right:1px solid rgba(255,255,255,.06);
   position:sticky; top:0; height:100dvh; overflow:auto;
 }
-.side.closed{ width:64px; min-width:64px }
+.side.closed{ width:0px; min-width:0px ;padding:0;}
 .side nav{ display:grid; gap:8px }
 .side a{
   padding:10px 12px; border-radius:12px; color:var(--text);

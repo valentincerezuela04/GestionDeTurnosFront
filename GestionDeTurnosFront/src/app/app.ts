@@ -12,4 +12,7 @@ import { Headear } from "./components/headear/headear";
 })
 export class App {
   protected readonly title = signal('GestionDeTurnosFront');
+
+  sideBarOpen = signal(true)
+  toggleSidebar = () => this.sideBarOpen.set(!this.sideBarOpen());
 }
