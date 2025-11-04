@@ -1,6 +1,5 @@
 import { Component, input } from '@angular/core';
-import { SalaDTO } from '../../../models/Sala.model';
-
+import { Sala } from '../../../models/sala';
 @Component({
   selector: 'app-card-hall',
   imports: [],
@@ -8,7 +7,7 @@ import { SalaDTO } from '../../../models/Sala.model';
   styleUrl: './card-hall.css',
 })
 export class CardHall {
-  hall = input.required<SalaDTO>()
+  hall = input.required<Sala>()
 
 
 

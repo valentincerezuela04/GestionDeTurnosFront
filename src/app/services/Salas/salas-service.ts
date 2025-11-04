@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
-import { SalaDTO } from '../../models/sala';
-
+import { Sala } from '../../models/sala';
 @Injectable({
   providedIn: 'root',
 })
@@ -10,20 +9,20 @@ export class SalasService {
   private readonly baseUrl = 'http://localhost:8080/api/salas';
   private readonly http = inject(HttpClient);
 
-  getAll(): Observable<SalaDTO[]> {
-    return this.http.get<SalaDTO[]>(this.baseUrl)
+  getAll(): Observable<Sala[]> {
+    return this.http.get<Sala[]>(this.baseUrl)
   }
 
-  getById(id:number):Observable<SalaDTO>{
-    return this.http.get<SalaDTO>(`${this.baseUrl}/${id}`)
+  getById(id:number):Observable<Sala>{
+    return this.http.get<Sala>(`${this.baseUrl}/${id}`)
   }
 
-  create(sala:Partial<SalaDTO>):Observable<SalaDTO>{
-    return this.http.post<SalaDTO>(this.baseUrl,sala)
+  create(sala:Partial<Sala>):Observable<Sala>{
+    return this.http.post<Sala>(this.baseUrl,sala)
   }
 
-  updateDescription(sala:SalaDTO):Observable<SalaDTO>{
-    return this.http.put<SalaDTO>(`${this.baseUrl}/update`,sala)
+  updateDescription(sala:Sala):Observable<Sala>{
+    return this.http.put<Sala>(`${this.baseUrl}/update`,sala)
   }
 
   delete(id:number){

@@ -1,0 +1,20 @@
+.reservas-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.reserva-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  max-width: 300px;
+}
+
+.reserva-card h3 {
+  margin-top: 0;
+}
+
+.error {
+  color: #b00020;
+}

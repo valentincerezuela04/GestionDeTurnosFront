@@ -1,0 +1,26 @@
+<h2>Clientes</h2>
+
+<div *ngIf="loading">Cargando...</div>
+<div *ngIf="error">{{ error }}</div>
+
+<table *ngIf="!loading && !error">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Apellido</th>
+      <th>DNI</th>
+      <th>Email</th>
+      <th>Teléfono</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let c of clientes">
+      <td>{{ c.nombre }}</td>
+      <td>{{ c.apellido }}</td>
+      <td>{{ c.dni }}</td>
+      <td>{{ c.email }}</td>
+      <td>{{ c.telefono }}</td>
+    </tr>
+  </tbody>
+</table>
+

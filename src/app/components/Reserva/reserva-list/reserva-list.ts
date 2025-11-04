@@ -1,6 +1,6 @@
 // src/app/features/reservas/reservas-list/reservas-list.component.ts
 import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe, NgForOf, NgIf } from '@angular/common';
 import { Reserva } from '../../../models/reservas/reserva';
 import { ReservaService } from '../../../services/Reservas/reservas-service';
 import { RouterLink } from '@angular/router';
@@ -8,6 +8,13 @@ import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-reservas-list',
   templateUrl: 'reserva-list.html',
+  standalone: true,
+  // Opción A: importar puntuales (más moderno)
+  imports: [
+    DatePipe,       // para | date
+    RouterLink,     // para [routerLink]
+    NgIf, NgForOf   // para *ngIf y *ngFor
+  ],
 })
 export class ReservasListComponent implements OnInit {
   reservas: Reserva[] = [];
