@@ -3,6 +3,7 @@
     
     
     <h3 class="card-title" >Sala #{{ hall().numero }}</h3>
+    
   </header>
 
   <div class="card-body">
@@ -14,4 +15,7 @@
       Capacidad: <strong>{{ hall().cantidad_personas }}</strong> personas
     </p>
   </div>
+  <button class="icon-btn edit"[routerLink]="['/hall', hall().id, 'edit']"></button>
+  <button class="icon-btn delete" type="button" (click)="onDeleteClick()"></button>
+
 </article>

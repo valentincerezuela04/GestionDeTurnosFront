@@ -1,0 +1,33 @@
+<form
+  [formGroup]="form"
+  (ngSubmit)="submit()"
+  class="sala-form"
+  novalidate
+>
+  <h2>Editar descripción</h2>
+
+  @let descCtrl = form.get('descripcion');
+
+  <div class="field">
+    <label for="descripcion">Descripción</label>
+    <input
+      id="descripcion"
+      type="text"
+      formControlName="descripcion"
+      [class.invalid]="descCtrl?.touched && descCtrl?.invalid"
+    />
+
+    @if (descCtrl?.touched && descCtrl?.hasError('required')) {
+      <p class="error">La descripción es obligatoria.</p>
+    }
+
+    @if (descCtrl?.touched && descCtrl?.hasError('minlength')) {
+      <p class="error">
+        La descripción debe tener al menos
+        {{ descCtrl?.errors?.['minlength']?.requiredLength }} caracteres.
+      </p>
+    }
+  </div>
+
+  <button type="submit" [disabled]="form.invalid">Guardar</button>
+</form>

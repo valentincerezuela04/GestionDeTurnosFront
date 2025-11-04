@@ -1,11 +1,11 @@
 import { Cliente } from '../usuarios/cliente';
-import { Sala } from '../sala';
+import { SalaDTO } from '../sala';
 import { TipoPago } from './tipo-pago';
 import { Estado } from './estado'; 
 export interface Reserva {
   id: number;              
   cliente: Cliente;       
-  sala: Sala;              
+  sala: SalaDTO;              
   fechaInicio: string;      
   fechaFinal: string;       
   tipoPago: TipoPago;       

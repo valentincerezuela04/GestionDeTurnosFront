@@ -1,0 +1,101 @@
+:root {
+  --card-bg: #0f1220;
+  --card-bd: #20243a;
+  --txt: #e6e8ef;
+  --txt-dim: #b7bdd1;
+  --accent: #7c5cff;
+  --accent-2: #19c3a7;
+}
+
+.sala-form {
+  max-width: 420px;
+  margin: 1.5rem auto;
+  background: radial-gradient(circle at top, rgba(124, 92, 255, 0.08), transparent 55%), var(--card-bg);
+  border: 1px solid rgba(32, 36, 58, 0.9);
+  border-radius: 16px;
+  padding: 1.4rem 1.3rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
+}
+
+.sala-form h2 {
+  margin: 0 0 0.5rem;
+  color: var(--txt);
+  font-size: 1.15rem;
+  font-weight: 650;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.field label {
+  font-size: 0.8rem;
+  color: var(--txt);
+  font-weight: 500;
+}
+
+.sala-form input[type="text"] {
+  background: rgba(15, 18, 32, 0.35);
+  border: 1px solid rgba(183, 189, 209, 0.05);
+  border-radius: 10px;
+  padding: 0.45rem 0.6rem;
+  color: var(--txt);
+  font-size: 0.9rem;
+  transition: border 120ms ease-out, box-shadow 120ms ease-out;
+}
+
+.sala-form input[type="text"]:focus {
+  outline: none;
+  border: 1px solid rgba(124, 92, 255, 0.6);
+  box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.08);
+}
+
+/* cuando está inválido */
+.invalid {
+  border-color: rgba(220, 38, 38, 0.65) !important;
+}
+
+/* mensajes de error */
+.error {
+  font-size: 0.7rem;
+  color: #fda4af;
+  background: rgba(254, 226, 226, 0.02);
+  border-left: 2px solid rgba(248, 113, 113, 0.45);
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+}
+
+/* botón */
+.sala-form button[type="submit"] {
+  margin-top: 0.2rem;
+  background: linear-gradient(135deg, var(--accent) 0%, #5d46d2 100%);
+  border: none;
+  border-radius: 9999px;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.5rem 0.6rem;
+  cursor: pointer;
+  transition: transform 90ms ease-out, box-shadow 90ms ease-out, opacity 90ms ease-out;
+}
+
+.sala-form button[type="submit"]:hover:not([disabled]) {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(124, 92, 255, 0.35);
+}
+
+.sala-form button[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+@media (max-width: 520px) {
+  .sala-form {
+    margin: 1rem;
+  }
+}
