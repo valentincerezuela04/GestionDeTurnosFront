@@ -2,21 +2,26 @@ import { Routes } from '@angular/router';
 import { Hall } from './components/halls/hall/hall';
 import { Login } from './components/login/login';
 import { Client } from './components/client/client';
-
+import { LoadForm } from './components/halls/load-form/load-form';
 export const routes: Routes = [
     { path: '', redirectTo: 'hall', pathMatch: 'full' },
 
   {
     path: 'hall',
-    loadComponent: () =>
-      import('./components/halls/hall/hall').then(m => m.Hall),
-    data: { title: 'Salas' }
-  },
-   {
-    path: 'hall/new',
-    loadComponent: () =>
-      import('./components/halls/load-form/load-form').then(m => m.LoadForm),
-    data: { title: 'Crear sala' }
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./components/halls/hall/hall').then(m => m.Hall),
+        data: { title: 'Salas' }
+      },
+      {
+        path: 'new',
+        loadComponent: () =>
+          import('./components/halls/load-form/load-form').then(m => m.LoadForm),
+        data: { title: 'Crear sala' }
+      }
+    ]
   },
   {
     path: 'employee',

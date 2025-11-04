@@ -21,7 +21,7 @@ export class LoadForm {
     nombre: ['',[Validators.required,Validators.minLength(3)]],
     numero: [0,[Validators.required,Validators.min(1)]],
     descripcion: ['',[Validators.required,Validators.minLength(6)]],
-    cantidad_personas: [0,Validators.required,Validators.min(1)],
+    cantidad_personas: [0,[Validators.required,Validators.min(1)]],
   });
 
   submit() {
