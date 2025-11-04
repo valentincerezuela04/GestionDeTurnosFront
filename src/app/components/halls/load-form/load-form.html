@@ -1,0 +1,81 @@
+<form
+  [formGroup]="form"
+  (ngSubmit)="submit()"
+  class="sala-form"
+  novalidate
+>
+  <h2>Crear sala</h2>
+
+  <!-- Número -->
+  @let numeroCtrl = form.get('numero');
+  <div class="field">
+    <label for="numero">Número</label>
+    <input
+      id="numero"
+      type="number"
+      formControlName="numero"
+      [class.invalid]="numeroCtrl?.touched && numeroCtrl?.invalid"
+    />
+
+    @if (numeroCtrl?.touched && numeroCtrl?.hasError('required')) {
+      <p class="error">El número es obligatorio.</p>
+    }
+
+    @if (numeroCtrl?.touched && numeroCtrl?.hasError('min')) {
+      <p class="error">El número debe ser mayor o igual a 1.</p>
+    }
+
+        @if (numeroOcupado) {
+      <p class="error">Ya existe una sala con ese número.</p>
+    }
+  </div>
+
+  <!-- Descripción -->
+  @let descCtrl = form.get('descripcion');
+  <div class="field">
+    <label for="descripcion">Descripción</label>
+    <input
+      id="descripcion"
+      type="text"
+      formControlName="descripcion"
+      [class.invalid]="descCtrl?.touched && descCtrl?.invalid"
+    />
+
+    @if (descCtrl?.touched && descCtrl?.hasError('required')) {
+      <p class="error">La descripción es obligatoria.</p>
+    }
+
+    @if (descCtrl?.touched && descCtrl?.hasError('minlength')) {
+      <p class="error">
+        La descripción debe tener al menos
+        {{ descCtrl?.errors?.['minlength']?.requiredLength }} caracteres.
+        (actual:
+        {{ descCtrl?.errors?.['minlength']?.actualLength || 0 }})
+      </p>
+    }
+  </div>
+
+  <!-- Cantidad de personas -->
+  @let cantCtrl = form.get('cantidad_personas');
+  <div class="field">
+    <label for="cantidad_personas">Cantidad de personas</label>
+    <input
+      id="cantidad_personas"
+      type="number"
+      formControlName="cantidad_personas"
+      [class.invalid]="cantCtrl?.touched && cantCtrl?.invalid"
+    />
+
+    @if (cantCtrl?.touched && cantCtrl?.hasError('required')) {
+      <p class="error">La cantidad de personas es obligatoria.</p>
+    }
+
+    @if (cantCtrl?.touched && cantCtrl?.hasError('min')) {
+      <p class="error">Debe ser al menos 1.</p>
+    }
+  </div>
+
+  <button type="submit" [disabled]="form.invalid">
+    Guardar
+  </button>
+</form>
