@@ -24,6 +24,10 @@
     @if (numeroCtrl?.touched && numeroCtrl?.hasError('min')) {
       <p class="error">El número debe ser mayor o igual a 1.</p>
     }
+
+        @if (numeroOcupado) {
+      <p class="error">Ya existe una sala con ese número.</p>
+    }
   </div>
 
   <!-- Descripción -->
