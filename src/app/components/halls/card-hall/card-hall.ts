@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { SalaDTO } from '../../../models/sala';
 import { RouterLink } from '@angular/router';
 
@@ -12,6 +12,9 @@ import { RouterLink } from '@angular/router';
 export class CardHall {
   hall = input.required<SalaDTO>()
 
+  delete = output<number>()
 
-
+  onDeleteClick() {
+    this.delete.emit(this.hall().id)
+  }
 }

@@ -9,7 +9,7 @@
     <div class="grid">
         
       @for (hall of hallList(); track hall.id) {
-        <app-card-hall [hall]="hall"></app-card-hall>
+        <app-card-hall [hall]="hall" (delete)="deleteSala($event)"></app-card-hall>
       }
     </div>
   } @else {
