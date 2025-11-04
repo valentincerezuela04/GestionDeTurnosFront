@@ -15,7 +15,7 @@
       Capacidad: <strong>{{ hall().cantidad_personas }}</strong> personas
     </p>
   </div>
-  <button [routerLink]="['/hall', hall().id, 'edit']">Edit description</button>
-  <button type="button" (click)="onDeleteClick()">Delete</button>
+  <button class="icon-btn edit"[routerLink]="['/hall', hall().id, 'edit']"></button>
+  <button class="icon-btn delete" type="button" (click)="onDeleteClick()"></button>
 
 </article>

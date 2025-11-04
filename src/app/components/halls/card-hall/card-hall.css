@@ -7,6 +7,11 @@
   --accent-2: #19c3a7;
 }
 
+.sala-num {
+  color: var(--accent-2);
+}
+
+
 .card {
   display: flex;
   flex-direction: column;
@@ -72,6 +77,54 @@
 
 .capacidad strong {
   color: var(--accent);
+}
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(230, 232, 239, 0.04);
+  border-radius: 9999px;
+  background: rgba(15, 18, 32, 0.35);
+  backdrop-filter: blur(6px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 120ms ease, background 120ms ease, border 120ms ease;
+  color: var(--txt);
+}
+
+.icon-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(124, 92, 255, 0.12);
+  border: 1px solid rgba(124, 92, 255, 0.5);
+}
+
+/* editar */
+.icon-btn.edit::before {
+  content: "✏️";
+  font-size: 1rem;
+}
+
+/* eliminar */
+.icon-btn.delete {
+  background: rgba(220, 38, 38, 0.08);
+  border: 1px solid rgba(248, 113, 113, 0.1);
+}
+
+.icon-btn.delete::before {
+  content: "🗑️";
+  font-size: 1rem;
+}
+
+.icon-btn.delete:hover {
+  background: rgba(220, 38, 38, 0.16);
+  border: 1px solid rgba(248, 113, 113, 0.4);
 }
 
 @media (max-width: 420px) {
