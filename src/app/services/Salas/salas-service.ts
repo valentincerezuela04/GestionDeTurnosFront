@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { SalaDTO } from '../../models/sala';
@@ -22,9 +22,14 @@ export class SalasService {
     return this.http.post<SalaDTO>(this.baseUrl,sala)
   }
 
-  updateDescription(sala:SalaDTO):Observable<SalaDTO>{
-    return this.http.put<SalaDTO>(`${this.baseUrl}/update`,sala)
-  }
+   updateDescription(id: number, descripcion: string): Observable<any> {
+    const params = new HttpParams()
+      .set('id', id.toString())
+      .set('descripcion', descripcion);
+
+    // el backend no usa body, así que mandamos null
+    return this.http.post(`${this.baseUrl}/update`, null, { params ,responseType: 'text' });
+   }
 
   delete(id:number){
     return this.http.delete<void>(`${this.baseUrl}/${id}`)

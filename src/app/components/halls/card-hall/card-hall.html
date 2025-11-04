@@ -15,4 +15,6 @@
       Capacidad: <strong>{{ hall().cantidad_personas }}</strong> personas
     </p>
   </div>
+  <button [routerLink]="['/hall', hall().id, 'edit']">Edit description</button>
+
 </article>

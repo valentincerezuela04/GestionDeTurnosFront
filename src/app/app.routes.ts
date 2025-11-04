@@ -20,7 +20,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./components/halls/load-form/load-form').then(m => m.LoadForm),
         data: { title: 'Crear sala' }
+      },        
+      {path: ':id/edit',
+        loadComponent: () =>
+          import('./components/halls/edit-description/edit-description').then(m => m.EditDescription),
+        data: { title: 'Editar sala' }
       }
+      
     ]
   },
   {
