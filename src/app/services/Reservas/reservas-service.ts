@@ -2,99 +2,59 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Reserva } from '../../models/reservas/reserva';
 import { API_CONFIG } from '../../config/API';
 
-// DTOs para crear/actualizar (coinciden con los del backend)
-export interface CrearReservaClienteDTO {
-  salaId: number;
-  fechaInicio: string;   // ISO: '2025-11-03T18:00'
-  fechaFinal: string;
-  tipoPago: string;      // o tu enum TipoPago
-}
-
-export interface CrearReservaEmpleadoDTO {
-  clienteId: number;
-  salaId: number;
-  fechaInicio: string;
-  fechaFinal: string;
-  tipoPago: string;
-}
-
-export interface ActualizarReservaDTO {
-  reservaId: number;
-  descripcion?: string | null;
-  fechaInicio: string;
-  fechaFinal: string;
-  tipoPago: string;
-}
+import {
+  ReservaRequestByClienteDTO,
+  ReservaRequestByEmpleadoDTO,
+  ReservaUpdateRequestDTO,
+  ReservaResponseDTO
+} from '../../dto/Reserva';
 
 @Injectable({ providedIn: 'root' })
 export class ReservaService {
+  // Ajuste a la ruta real del controller: /api/reserva
   baseUrl = `${API_CONFIG.baseUrl}/reserva`;
 
-  http = inject(HttpClient);
+  private readonly http = inject(HttpClient);
 
-
-  // READ: todas las reservas activas
-  getReservasActivas(): Observable<Reserva[]> {
-    return this.http.get<Reserva[]>(`${this.baseUrl}/all/activas`, {
-      withCredentials: true,
-    });
+  // READ: todas las reservas activas segund el rol del usuario
+  getReservasActivas(): Observable<ReservaResponseDTO[]> {
+    return this.http.get<ReservaResponseDTO[]>(`${this.baseUrl}/all/activas`);
   }
 
   // CREATE: cliente logueado crea su reserva
-  createReservaCliente(dto: CrearReservaClienteDTO): Observable<Reserva> {
-    return this.http.post<Reserva>(`${this.baseUrl}/crear`, dto, {
-      withCredentials: true,
-    });
+  createReservaCliente(dto: ReservaRequestByClienteDTO): Observable<ReservaResponseDTO> {
+    return this.http.post<ReservaResponseDTO>(`${this.baseUrl}/crear`, dto);
   }
 
   // CREATE: empleado crea una reserva para un cliente
-  createReservaEmpleado(dto: CrearReservaEmpleadoDTO): Observable<Reserva> {
-    return this.http.post<Reserva>(`${this.baseUrl}/crear/by-empleado`, dto, {
-      withCredentials: true,
-    });
+  createReservaEmpleado(dto: ReservaRequestByEmpleadoDTO): Observable<ReservaResponseDTO> {
+    return this.http.post<ReservaResponseDTO>(`${this.baseUrl}/crear/by-empleado`, dto);
   }
 
   // UPDATE: cliente actualiza su reserva
-  updateReservaCliente(dto: ActualizarReservaDTO): Observable<Reserva> {
-    return this.http.put<Reserva>(`${this.baseUrl}/update`, dto, {
-      withCredentials: true,
-    });
+  updateReservaCliente(dto: ReservaUpdateRequestDTO): Observable<ReservaResponseDTO> {
+    return this.http.put<ReservaResponseDTO>(`${this.baseUrl}/update`, dto);
   }
 
   // UPDATE: empleado actualiza una reserva
-  updateReservaEmpleado(dto: ActualizarReservaDTO): Observable<Reserva> {
-    return this.http.put<Reserva>(`${this.baseUrl}/update/by-empleado`, dto, {
-      withCredentials: true,
-    });
+  updateReservaEmpleado(dto: ReservaUpdateRequestDTO): Observable<ReservaResponseDTO> {
+    return this.http.put<ReservaResponseDTO>(`${this.baseUrl}/update/by-empleado`, dto);
   }
 
   // CANCELAR: cliente cancela su reserva
   cancelarReservaCliente(id: number): Observable<void> {
-    return this.http.put<void>(`${this.baseUrl}/${id}/cancelar`, null, {
-      withCredentials: true,
-    });
+    return this.http.put<void>(`${this.baseUrl}/${id}/cancelar`, null);
   }
 
   // CANCELAR: empleado cancela una reserva
   cancelarReservaEmpleado(id: number): Observable<void> {
-    return this.http.put<void>(`${this.baseUrl}/${id}/cancelar/by-empleado`, null, {
-      withCredentials: true,
-    });
+    return this.http.put<void>(`${this.baseUrl}/${id}/cancelar/by-empleado`, null);
   }
-
 
   // DELETE: eliminar reserva (ej: admin)
   deleteReserva(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/eliminar/${id}`, {
-      withCredentials: true,
-    });
+    return this.http.delete<void>(`${this.baseUrl}/eliminar/${id}`);
   }
-
-
-  
-
-
 }

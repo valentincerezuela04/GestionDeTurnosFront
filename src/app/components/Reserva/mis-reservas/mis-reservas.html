@@ -1,34 +1,23 @@
-<h2>Mis reservas activas</h2>
+<section class="p-4">
+  <h2>Mis reservas activas</h2>
 
-<div *ngIf="loading">Cargando tus reservas...</div>
-<div *ngIf="error && !loading" class="error">
-  {{ error }}
-</div>
-
-<!-- Si no hay reservas -->
-<div *ngIf="!loading && !error && reservas.length === 0">
-  <p>No tenés reservas activas en este momento.</p>
-</div>
-
-<!-- Lista de reservas -->
-<div *ngIf="!loading && reservas.length > 0" class="reservas-container">
-  <div class="reserva-card" *ngFor="let r of reservas">
-    <h3>Reserva #{{ r.id }}</h3>
-
-    <!-- Ajustá estos campos según tu modelo real -->
-    <p><strong>Sala:</strong>
-      <!-- si tu DTO trae sala como objeto -->
-      {{ r.sala?.descripcion || ('Sala ID ' + r.sala?.id) }}
-    </p>
-
-    <p><strong>Fecha inicio:</strong> {{ r.fechaInicio | date:'short' }}</p>
-    <p><strong>Fecha fin:</strong> {{ r.fechaFinal | date:'short' }}</p>
-
-    <p><strong>Estado:</strong> {{ r.estado }}</p>
-    <p><strong>Tipo de pago:</strong> {{ r.tipoPago }}</p>
-
-    <button (click)="cancelarReserva(r.id)">
-      Cancelar
-    </button>
-  </div>
-</div>
+  @if (error()) {
+    <p>{{ error() }}</p>
+  } @else {
+    @if (reservas().length === 0) {
+      <p>No tenés reservas activas.</p>
+    } @else {
+      <ul class="space-y-2">
+        @for (r of reservas(); track r.id) {
+          <li class="border rounded p-3">
+            <strong>Sala N° {{ r.salaNumero }}</strong>
+            (capacidad: {{ r.salaCapacidad }})<br>
+            {{ r.fechaInicio | date:'short' }} → {{ r.fechaFinal | date:'short' }}<br>
+            <small>Estado: {{ r.estado }}</small><br>
+            <small>Cliente: {{ r.clienteEmail }}</small>
+          </li>
+        }
+      </ul>
+    }
+  }
+</section>

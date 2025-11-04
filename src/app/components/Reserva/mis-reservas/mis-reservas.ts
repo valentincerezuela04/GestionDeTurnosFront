@@ -1,53 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { Reserva } from '../../../models/reservas/reserva';
+// src/app/components/Reserva/mis-reservas/mis-reservas.ts
+import { Component, inject, signal, computed } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { catchError } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+
 import { ReservaService } from '../../../services/Reservas/reservas-service';
-import { DatePipe, CommonModule } from '@angular/common';
+import { Reserva}  from '../../../models/reservas/reserva';
 
 @Component({
   selector: 'app-mis-reservas',
+  standalone: true,
+  imports: [DatePipe],
   templateUrl: './mis-reservas.html',
-  styleUrls: ['./mis-reservas.css'],
-  imports:[
-    CommonModule,
-    DatePipe
-  ]
 })
-export class MisReservas implements OnInit {
+export class MisReservas {
 
-  reservas: Reserva[] = [];
-  loading = false;
-  error = '';
+  //Mostrar las reservas activas del usuario
+  reservaSrv = inject(ReservaService);
+  readonly error = signal<string | null>(null);
 
-  constructor(private reservaService: ReservaService) {}
+  
 
-  ngOnInit(): void {
-    this.cargarReservas();
-  }
-
-  cargarReservas(): void {
-    this.loading = true;
-    this.error = '';
-
-    this.reservaService.getReservasActivas().subscribe({
-      next: (data) => {
-        this.reservas = data;
-        this.loading = false;
-      },
-      error: () => {
-        this.error = 'No se pudieron cargar tus reservas.';
-        this.loading = false;
-      }
-    });
-  }
-
-  cancelarReserva(id: number): void {
-    if (!confirm('¿Seguro que querés cancelar esta reserva?')) {
-      return;
-    }
-
-    this.reservaService.cancelarReservaCliente(id).subscribe({
-      next: () => this.cargarReservas(),
-      error: () => alert('No se pudo cancelar la reserva')
-    });
-  }
 }

@@ -1,11 +1,11 @@
 // src/app/features/reservas/reserva-form/reserva-form.component.ts
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {ReservaService} from '../../../services/Reservas/reservas-service';
 import {
-  ReservaService,
-  CrearReservaClienteDTO,
-  ActualizarReservaDTO
-} from '../../../services/Reservas/reservas-service';
+  ReservaRequestByClienteDTO as CrearReservaClienteDTO,
+  ReservaUpdateRequestDTO 
+} from '../../../dto/Reserva';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -43,7 +43,7 @@ export class ReservaFormComponent implements OnInit {
     if (this.form.invalid) return;
 
     if (this.editMode && this.reservaId) {
-      const dto: ActualizarReservaDTO = {
+      const dto: ReservaFormComponent = {
         reservaId: this.reservaId,
         descripcion: this.form.value.descripcion,
         fechaInicio: this.form.value.fechaInicio,
