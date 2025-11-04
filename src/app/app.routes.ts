@@ -12,6 +12,12 @@ export const routes: Routes = [
       import('./components/halls/hall/hall').then(m => m.Hall),
     data: { title: 'Salas' }
   },
+   {
+    path: 'hall/new',
+    loadComponent: () =>
+      import('./components/halls/load-form/load-form').then(m => m.LoadForm),
+    data: { title: 'Crear sala' }
+  },
   {
     path: 'employee',
     loadComponent: () =>
