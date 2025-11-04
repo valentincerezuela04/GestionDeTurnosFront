@@ -1,23 +1,39 @@
-<section class="p-4">
-  <h2>Mis reservas activas</h2>
+<div class="mis-reservas">
+  <h2>Mis reservas</h2>
 
-  @if (error()) {
-    <p>{{ error() }}</p>
-  } @else {
-    @if (reservas().length === 0) {
-      <p>No tenés reservas activas.</p>
-    } @else {
-      <ul class="space-y-2">
-        @for (r of reservas(); track r.id) {
-          <li class="border rounded p-3">
-            <strong>Sala N° {{ r.salaNumero }}</strong>
-            (capacidad: {{ r.salaCapacidad }})<br>
-            {{ r.fechaInicio | date:'short' }} → {{ r.fechaFinal | date:'short' }}<br>
-            <small>Estado: {{ r.estado }}</small><br>
-            <small>Cliente: {{ r.clienteEmail }}</small>
-          </li>
-        }
-      </ul>
-    }
-  }
-</section>
+  <div *ngIf="reservas.length === 0">
+    <p>No hay reservas activas.</p>
+  </div>
+
+  <table *ngIf="reservas.length > 0" class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Sala (número)</th>
+        <th>Inicio</th>
+        <th>Fin</th>
+        <th>Tipo de pago</th>
+        <th>Estado</th>
+        <th>Cliente (email)</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let reserva of reservas">
+        <td>{{ reserva.id }}</td>
+        <td>{{ reserva.salaNumero }}</td>
+        <td>{{ reserva.fechaInicio }}</td>
+        <td>{{ reserva.fechaFinal }}</td>
+        <td>{{ reserva.tipoPago }}</td>
+        <td>{{ reserva.estado }}</td>
+        <td>{{ reserva.clienteEmail }}</td>
+        <td>
+          <!-- Los botones invocan métodos del componente; no incluyen RouterLink ni navegación -->
+          <button type="button" (click)="editar(reserva.id)">Editar</button>
+          <button type="button" (click)="cancelar(reserva.id)">Cancelar</button>
+          <button type="button" (click)="eliminar(reserva.id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

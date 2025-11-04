@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
   styleUrl: './card-hall.css',
 })
 export class CardHall {
-  hall = input.required<Sala>()
+  hall = input.required<SalaDTO>()
 
   delete = output<number>()
 

@@ -1,8 +1,9 @@
 import { Routes } from '@angular/router';
 import { Hall } from './components/halls/hall/hall';
 import { Login } from './components/login/login';
-import { Client } from './components/client/client';
+import { ClientesListComponent } from './components/Cliente/cliente-list/cliente-list';
 import { LoadForm } from './components/halls/load-form/load-form';
+import { MisReservas } from './components/Reserva/mis-reservas/mis-reservas';
 export const routes: Routes = [
     { path: '', redirectTo: 'hall', pathMatch: 'full' },
 
