@@ -1,4 +1,4 @@
-export interface SalaDTO {
+export interface Sala {
   id: number;
   numero: number;
   descripcion: string;

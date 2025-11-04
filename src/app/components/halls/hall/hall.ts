@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
-import { SalasService } from '../../../services/salas-service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CardHall } from "../card-hall/card-hall";
+import { SalasService } from '../../../services/Salas/salas-service';
+
 
 @Component({
   selector: 'app-hall',
