@@ -1,8 +1,9 @@
 import { Routes } from '@angular/router';
 import { Hall } from './components/halls/hall/hall';
 import { Login } from './components/login/login';
-import { Client } from './components/client/client';
+import { ClientesListComponent } from './components/Cliente/cliente-list/cliente-list';
 import { LoadForm } from './components/halls/load-form/load-form';
+import { MisReservas } from './components/Reserva/mis-reservas/mis-reservas';
 export const routes: Routes = [
     { path: '', redirectTo: 'hall', pathMatch: 'full' },
 
@@ -42,17 +43,23 @@ export const routes: Routes = [
     data: { title: 'Reservas' }
   },
   {
-    path: 'client',
-    loadComponent: () =>
-      import('./components/client/client').then(m => m.Client),
-    data: { title: 'Clientes' }
-  },
+  path: 'clientes',
+  loadComponent: () =>
+    import('./components/Cliente/cliente-list/cliente-list')
+      .then(m => m.ClientesListComponent)
+}
+,
   {
     path: 'calendar',
     loadComponent: () =>
       import('./components/calendar/calendar').then(m => m.Calendar),
     data: { title: 'Calendario' }
   },
+
+
+  { path: 'mis-reservas', component: MisReservas },
+
+
 
   { path: '**', redirectTo: 'hall' },
 ];
