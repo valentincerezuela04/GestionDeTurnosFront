@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { SalaDTO } from '../../../models/Sala.model';
+import { SalaDTO } from '../../../models/sala';
 
 @Component({
   selector: 'app-card-hall',
