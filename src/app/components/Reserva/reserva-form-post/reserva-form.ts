@@ -5,7 +5,7 @@ import { ReservaRequestByClienteDTO, ReservaRequestByEmpleadoDTO } from '../../.
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReservaService } from '../../../services/Reservas/reservas-service';
 import { AuthService } from '../../../services/Auth/auth-service';
-import { UserInfoResponseDTO } from '../../../dto/UserInfoResponseDTO ';
+import { UserInfoResponseDTO } from '../../../dto/user-info-response-dto';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 

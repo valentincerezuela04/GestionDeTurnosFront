@@ -1,0 +1,85 @@
+<section class="empleado-form">
+  <header class="empleado-form__header">
+    <h1>Nuevo empleado</h1>
+    <button type="button" class="empleado-form__cancel" (click)="cancelar()" [disabled]="isSubmitting()">
+      Cancelar
+    </button>
+  </header>
+
+  <form [formGroup]="empleadoForm" (ngSubmit)="submit()" class="empleado-form__form">
+    <div class="empleado-form__field">
+      <label for="nombre">Nombre</label>
+      <input id="nombre" type="text" formControlName="nombre" />
+      @if (controls.nombre.invalid && controls.nombre.touched) {
+        <span class="empleado-form__error">El nombre es obligatorio.</span>
+      }
+    </div>
+
+    <div class="empleado-form__field">
+      <label for="apellido">Apellido</label>
+      <input id="apellido" type="text" formControlName="apellido" />
+      @if (controls.apellido.invalid && controls.apellido.touched) {
+        <span class="empleado-form__error">El apellido es obligatorio.</span>
+      }
+    </div>
+
+    <div class="empleado-form__field">
+      <label for="dni">DNI</label>
+      <input id="dni" type="text" formControlName="dni" />
+      @if (controls.dni.invalid && controls.dni.touched) {
+        <span class="empleado-form__error">El DNI es obligatorio.</span>
+      }
+    </div>
+
+    <div class="empleado-form__field">
+      <label for="telefono">Telefono</label>
+      <input id="telefono" type="text" formControlName="telefono" />
+      @if (controls.telefono.invalid && controls.telefono.touched) {
+        <span class="empleado-form__error">El telefono es obligatorio.</span>
+      }
+    </div>
+
+    <div class="empleado-form__field">
+      <label for="email">Email</label>
+      <input id="email" type="email" formControlName="email" />
+      @if (controls.email.invalid && controls.email.touched) {
+        <span class="empleado-form__error">Ingresa un email valido.</span>
+      }
+    </div>
+
+    <div class="empleado-form__field">
+      <label for="contrasena">Contrasena</label>
+      <input id="contrasena" type="text" formControlName="contrasena" />
+      @if (controls.contrasena.invalid && controls.contrasena.touched) {
+        <span class="empleado-form__error">La contrasena es obligatoria.</span>
+      }
+    </div>
+
+    <div class="empleado-form__field">
+      <label for="legajo">Legajo</label>
+      <input id="legajo" type="text" formControlName="legajo" />
+    </div>
+
+    <div class="empleado-form__field">
+      <label for="rol">Rol</label>
+      <select id="rol" formControlName="rol">
+        @for (rol of roles; track rol) {
+          <option [ngValue]="rol">{{ rol }}</option>
+        }
+      </select>
+      @if (controls.rol.invalid && controls.rol.touched) {
+        <span class="empleado-form__error">Selecciona un rol.</span>
+      }
+    </div>
+
+    @if (errorMessage()) {
+      <p class="empleado-form__alert">{{ errorMessage() }}</p>
+    }
+
+    <footer class="empleado-form__actions">
+      <button type="submit" [disabled]="isSubmitting()" class="empleado-form__submit">
+        {{ isSubmitting() ? 'Guardando...' : 'Guardar empleado' }}
+      </button>
+    </footer>
+  </form>
+</section>
