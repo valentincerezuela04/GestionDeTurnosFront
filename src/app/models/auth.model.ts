@@ -7,7 +7,7 @@ export interface AuthUser {
 
 export interface LoginRequest {
   email: string;
-  contrasena: string;
+  password: string;
 }
 
 export interface RegisterRequest {
