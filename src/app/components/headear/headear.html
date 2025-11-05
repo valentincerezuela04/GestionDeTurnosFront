@@ -6,6 +6,17 @@
   </button>
   <div class="brand">Gestión de Turnos</div>
   <div class="right">
+     @if (auth.user()) {
+    <div class="user-box">
+      <span>{{ auth.user()?.nombre }} ({{ auth.user()?.rol }})</span>
+      <button class="btn" (click)="logout()">Salir</button>
+    </div>
+  } @else {
+    <div class="auth-actions">
+      <button class="btn ghost" (click)="goLogin()">Iniciar sesión</button>
+      <button class="btn" (click)="goRegister()">Registrarse</button>
+    </div>
+  }
     <a class="btn ghost">Mi cuenta</a>
   </div>
 </header>

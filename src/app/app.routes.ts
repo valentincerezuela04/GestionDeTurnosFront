@@ -1,7 +1,15 @@
 import { Routes } from '@angular/router';
-
+import { Hall } from './components/halls/hall/hall';
+import { ClientesListComponent } from './components/Cliente/cliente-list/cliente-list';
+import { LoadForm } from './components/halls/load-form/load-form';
+import { MisReservas } from './components/Reserva/mis-reservas/mis-reservas';
+import { DetailsReserva } from './components/Reserva/details-reserva/details-reserva';
+import { LoginPageComponent } from './components/login/login-page-component/login-page-component';
+import { RegisterPageComponent } from './components/login/register-page-component/register-page-component';
 export const routes: Routes = [
-  { path: '', redirectTo: 'hall', pathMatch: 'full' },
+    {path:'login' ,component: LoginPageComponent} ,
+    {path:'register' ,component: RegisterPageComponent} ,
+    { path: '', redirectTo: 'hall', pathMatch: 'full' },
 
   // Salas
   {
