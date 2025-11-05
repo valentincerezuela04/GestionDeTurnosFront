@@ -90,12 +90,7 @@ export const routes: Routes = [
       },
     ],
   },
-  {
-    path: 'booking',
-    loadComponent: () =>
-      import('./components/booking/booking').then((m) => m.Booking),
-    data: { title: 'Reservas' },
-  },
+  
 
   // Clientes
   {
