@@ -1,39 +1,18 @@
-<div class="mis-reservas">
-  <h2>Mis reservas</h2>
-
-  <div *ngIf="reservas.length === 0">
+@if (reservas && reservas.length > 0) {
+  <div class="mis-reservas">
+    <h2>Mis reservas</h2>
+    <div class="reservas-grid">
+      @for (reserva of reservas; track reserva.id) {
+        <app-card-reserva
+          [reserva]="reserva"
+          (reservaClick)="onReservaClick($event)"
+        ></app-card-reserva>
+      }
+    </div>
+  </div>
+} @else {
+  <div class="mis-reservas">
+    <h2>Mis reservas</h2>
     <p>No hay reservas activas.</p>
   </div>
-
-  <table *ngIf="reservas.length > 0" class="table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Sala (número)</th>
-        <th>Inicio</th>
-        <th>Fin</th>
-        <th>Tipo de pago</th>
-        <th>Estado</th>
-        <th>Cliente (email)</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let reserva of reservas">
-        <td>{{ reserva.id }}</td>
-        <td>{{ reserva.salaNumero }}</td>
-        <td>{{ reserva.fechaInicio }}</td>
-        <td>{{ reserva.fechaFinal }}</td>
-        <td>{{ reserva.tipoPago }}</td>
-        <td>{{ reserva.estado }}</td>
-        <td>{{ reserva.clienteEmail }}</td>
-        <td>
-          <!-- Los botones invocan métodos del componente; no incluyen RouterLink ni navegación -->
-          <button type="button" (click)="editar(reserva.id)">Editar</button>
-          <button type="button" (click)="cancelar(reserva.id)">Cancelar</button>
-          <button type="button" (click)="eliminar(reserva.id)">Eliminar</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+}

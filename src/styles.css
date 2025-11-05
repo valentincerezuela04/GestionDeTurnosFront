@@ -26,3 +26,18 @@ a{ color:inherit; text-decoration:none }
 
 :focus-visible{ outline:2px solid var(--primary); outline-offset:2px }
 @media (prefers-reduced-motion: reduce){ *{ animation:none!important; transition:none!important } }
+
+/* Estilos para las notificaciones */
+.success-snackbar {
+    background-color: #4caf50 !important;
+    color: white !important;
+}
+
+.error-snackbar {
+    background-color: #f44336 !important;
+    color: white !important;
+}
+
+.mat-snack-bar-container {
+    margin: 16px !important;
+}

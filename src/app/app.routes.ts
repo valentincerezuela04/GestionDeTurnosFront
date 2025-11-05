@@ -4,6 +4,7 @@ import { Login } from './components/login/login';
 import { ClientesListComponent } from './components/Cliente/cliente-list/cliente-list';
 import { LoadForm } from './components/halls/load-form/load-form';
 import { MisReservas } from './components/Reserva/mis-reservas/mis-reservas';
+import { DetailsReserva } from './components/Reserva/details-reserva/details-reserva';
 export const routes: Routes = [
     { path: '', redirectTo: 'hall', pathMatch: 'full' },
 
@@ -57,9 +58,19 @@ export const routes: Routes = [
   },
 
 
-  { path: 'mis-reservas', component: MisReservas },
-
-
+  { 
+    path: 'reservas', 
+    children: [
+      {
+        path: '',
+        component: MisReservas
+      },
+      {
+        path: ':id/details',
+        component: DetailsReserva
+      }
+    ]
+  },
 
   { path: '**', redirectTo: 'hall' },
 ];
