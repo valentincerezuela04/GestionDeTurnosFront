@@ -1,0 +1,31 @@
+<section class="mis-empleados">
+  <header class="mis-empleados__header">
+    <h1>Empleados</h1>
+    <div class="mis-empleados__actions">
+      <button type="button" class="mis-empleados__add" (click)="crearEmpleado()">
+        Nuevo empleado
+      </button>
+      <button type="button" class="mis-empleados__refresh" (click)="ObtenerEmpleados()" [disabled]="isLoading()">
+        {{ isLoading() ? 'Cargando...' : 'Actualizar' }}
+      </button>
+    </div>
+  </header>
+
+  @if (errorMessage()) {
+    <p class="mis-empleados__error">{{ errorMessage() }}</p>
+  }
+  @if (!isLoading() && !errorMessage() && empleados().length === 0) {
+    <p class="mis-empleados__empty">
+      No hay empleados registrados.
+    </p>
+  }
+
+  <div class="mis-empleados__grid">
+    @for (empleado of empleados(); track empleado.id) {
+      <app-card-empleados
+        [empleado]="empleado"
+        (viewDetails)="onEmpleadoSelected($event)">
+      </app-card-empleados>
+    }
+  </div>
+</section>

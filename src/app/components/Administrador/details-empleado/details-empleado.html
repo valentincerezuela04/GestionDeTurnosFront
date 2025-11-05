@@ -1,0 +1,136 @@
+<section class="detalle-empleado">
+  <header class="detalle-empleado__header">
+    <h1>Detalle del Empleado</h1>
+    <button type="button" class="detalle-empleado__back" (click)="volverAlListado()">Volver al listado</button>
+  </header>
+
+  @if (isLoading) {
+    <p class="detalle-empleado__status">Cargando empleado...</p>
+  }
+  @if (errorMessage) {
+    <p class="detalle-empleado__status detalle-empleado__status--error">
+      {{ errorMessage }}
+    </p>
+  }
+
+  @if (empleado && !isLoading) {
+    <article class="detalle-empleado__card">
+      <header>
+        <h2>{{ empleado.nombre }} {{ empleado.apellido }}</h2>
+        <span class="detalle-empleado__rol">{{ empleado.rol }}</span>
+      </header>
+
+      <div class="detalle-empleado__meta">
+        <span>ID: {{ empleado.id }}</span>
+      </div>
+
+      @if (!editMode()) {
+        <dl>
+          <div>
+            <dt>Legajo</dt>
+            <dd>{{ empleado.legajo || 'N/A' }}</dd>
+          </div>
+          <div>
+            <dt>DNI</dt>
+            <dd>{{ empleado.dni }}</dd>
+          </div>
+          <div>
+            <dt>Telefono</dt>
+            <dd>{{ empleado.telefono }}</dd>
+          </div>
+          <div>
+            <dt>Email</dt>
+            <dd>{{ empleado.email }}</dd>
+          </div>
+          <div>
+            <dt>Contrasena</dt>
+            <dd>{{ empleado.contrasena }}</dd>
+          </div>
+        </dl>
+      } @else {
+        <form [formGroup]="empleadoForm" class="detalle-empleado__form">
+          <div class="detalle-empleado__field">
+            <label for="nombre">Nombre</label>
+            <input id="nombre" type="text" formControlName="nombre" />
+            @if (controls.nombre.invalid && controls.nombre.touched) {
+              <span class="detalle-empleado__error">El nombre es obligatorio.</span>
+            }
+          </div>
+          <div class="detalle-empleado__field">
+            <label for="apellido">Apellido</label>
+            <input id="apellido" type="text" formControlName="apellido" />
+            @if (controls.apellido.invalid && controls.apellido.touched) {
+              <span class="detalle-empleado__error">El apellido es obligatorio.</span>
+            }
+          </div>
+          <div class="detalle-empleado__field">
+            <label for="dni">DNI</label>
+            <input id="dni" type="text" formControlName="dni" />
+            @if (controls.dni.invalid && controls.dni.touched) {
+              <span class="detalle-empleado__error">El DNI es obligatorio.</span>
+            }
+          </div>
+          <div class="detalle-empleado__field">
+            <label for="telefono">Telefono</label>
+            <input id="telefono" type="text" formControlName="telefono" />
+            @if (controls.telefono.invalid && controls.telefono.touched) {
+              <span class="detalle-empleado__error">El telefono es obligatorio.</span>
+            }
+          </div>
+          <div class="detalle-empleado__field">
+            <label for="email">Email</label>
+            <input id="email" type="email" formControlName="email" />
+            @if (controls.email.invalid && controls.email.touched) {
+              <span class="detalle-empleado__error">Ingresa un email valido.</span>
+            }
+          </div>
+          <div class="detalle-empleado__field">
+            <label for="contrasena">Contrasena</label>
+            <input id="contrasena" type="text" formControlName="contrasena" />
+            @if (controls.contrasena.invalid && controls.contrasena.touched) {
+              <span class="detalle-empleado__error">La contrasena es obligatoria.</span>
+            }
+          </div>
+          <div class="detalle-empleado__field">
+            <label for="legajo">Legajo</label>
+            <input id="legajo" type="text" formControlName="legajo" />
+          </div>
+          <div class="detalle-empleado__field">
+            <label for="rol">Rol</label>
+            <select id="rol" formControlName="rol">
+              @for (rol of roles; track rol) {
+                <option [ngValue]="rol">{{ rol }}</option>
+              }
+            </select>
+            @if (controls.rol.invalid && controls.rol.touched) {
+              <span class="detalle-empleado__error">Selecciona un rol.</span>
+            }
+          </div>
+        </form>
+        @if (saveErrorMessage) {
+          <p class="detalle-empleado__status detalle-empleado__status--error">
+            {{ saveErrorMessage }}
+          </p>
+        }
+      }
+
+      <footer class="detalle-empleado__actions">
+        @if (editMode()) {
+          <button type="button" class="detalle-empleado__cancel" (click)="cancelarEdicion()" [disabled]="saveInProgress()">
+            Cancelar
+          </button>
+          <button type="button" class="detalle-empleado__save" (click)="guardarCambios()" [disabled]="saveInProgress()">
+            {{ saveInProgress() ? 'Guardando...' : 'Guardar cambios' }}
+          </button>
+        } @else {
+          <button type="button" class="detalle-empleado__edit" (click)="habilitarEdicion()">
+            Editar empleado
+          </button>
+        }
+        <button type="button" class="detalle-empleado__delete" (click)="eliminarEmpleado()" [disabled]="deleteInProgress">
+          {{ deleteInProgress ? 'Eliminando...' : 'Eliminar empleado' }}
+        </button>
+      </footer>
+    </article>
+  }
+</section>
