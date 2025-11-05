@@ -1,0 +1,38 @@
+<h2>Iniciar sesión</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form" novalidate>
+  <div class="field">
+    <label for="email">Email</label>
+    <input id="email" type="email" formControlName="email" />
+    @if (hasError('email', 'required')) {
+      <p class="error">El email es obligatorio.</p>
+    }
+    @if (hasError('email', 'email')) {
+      <p class="error">Ingresá un email válido.</p>
+    }
+  </div>
+
+  <div class="field">
+    <label for="contrasena">Contraseña</label>
+    <input id="contrasena" type="password" formControlName="contrasena" />
+    @if (hasError('contrasena', 'required')) {
+      <p class="error">La contraseña es obligatoria.</p>
+    }
+    @if (hasError('contrasena', 'minlength')) {
+      <p class="error">Mínimo 6 caracteres.</p>
+    }
+  </div>
+
+  <button type="submit" [disabled]="loading || form.invalid">
+    {{ loading ? 'Ingresando...' : 'Ingresar' }}
+  </button>
+
+  @if (error) {
+    <p class="error global-error">{{ error }}</p>
+  }
+
+  <p class="hint">
+    ¿No tenés cuenta?
+    <a routerLink="/register">Registrate acá</a>
+  </p>
+</form>
