@@ -37,14 +37,9 @@ export const routes: Routes = [
       import('./components/employee/employee').then(m => m.Employee),
     data: { title: 'Empleados' }
   },
+
   {
-    path: 'booking',
-    loadComponent: () =>
-      import('./components/booking/booking').then(m => m.Booking),
-    data: { title: 'Reservas' }
-  },
-  {
-  path: 'clientes',
+  path: 'clients',
   loadComponent: () =>
     import('./components/Cliente/cliente-list/cliente-list')
       .then(m => m.ClientesListComponent)
@@ -59,7 +54,7 @@ export const routes: Routes = [
 
 
   { 
-    path: 'reservas', 
+    path: 'booking', 
     children: [
       {
         path: '',
