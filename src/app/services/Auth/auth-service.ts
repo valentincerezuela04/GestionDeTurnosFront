@@ -30,7 +30,9 @@ export class AuthService {
 );}  
 
 register(data:RegisterRequest){
-  return this.http.post(`${this.baseUrl}/register`, data)
+  return this.http.post<string>(`${this.baseUrl}/register`, data,{
+    responseType: 'text' as 'json'
+  })
 }
 
 logout(){
