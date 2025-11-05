@@ -7,10 +7,11 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class CalendarService {
-  baseUrl: string = 'http://localhost:3000/api/calendar';
+  baseUrl: string = 'http://localhost:8080/api/calendario';
   http = inject(HttpClient);
 
   getEvents():Observable<CalendarDto[]> {
-    return this.http.get<CalendarDto[]>(`${this.baseUrl}/events`);
+    
+    return this.http.get<CalendarDto[]>(`${this.baseUrl}/eventos`);
   }
 }
