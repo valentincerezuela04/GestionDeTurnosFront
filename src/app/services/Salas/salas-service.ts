@@ -2,11 +2,12 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { SalaDTO as Sala } from '../../models/sala';
+import { API_CONFIG } from '../../config/API';
 @Injectable({
   providedIn: 'root',
 })
 export class SalasService {
-  private readonly baseUrl = 'http://localhost:8080/api/salas';
+  private readonly baseUrl = `${API_CONFIG.baseUrl}/salas`;
   private readonly http = inject(HttpClient);
 
   getAll(): Observable<Sala[]> {

@@ -9,7 +9,7 @@ import { ReservaService } from '../../../services/Reservas/reservas-service';
 import { Reserva}  from '../../../models/reservas/reserva';
 import { ReservaResponseDTO, ReservaUpdateRequestDTO } from '../../../dto/Reserva';
 import { AuthService } from '../../../services/Auth/auth-service';
-import { UserInfoResponseDTO } from '../../../dto/UserInfoResponseDTO ';
+import { UserInfoResponseDTO } from '../../../dto/user-info-response-dto';
 import { CardReserva } from '../card-reserva/card-reserva';
 
 @Component({
