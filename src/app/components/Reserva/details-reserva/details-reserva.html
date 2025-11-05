@@ -1,0 +1,109 @@
+@if (reserva(); as reservaData) {
+  <div class="details-container">
+    <div class="details-header">
+      <h2>Detalles de la Reserva #{{reservaData.id}}</h2>
+      <button class="btn btn-secondary" (click)="volver()">Volver</button>
+    </div>
+
+    <div class="details-content">
+      <div class="info-section">
+        <h3>Información de la Sala</h3>
+        @if (!isEditing()) {
+          <div>
+            <p><strong>Número de Sala:</strong> {{reservaData.salaNumero}}</p>
+            <p><strong>Capacidad:</strong> {{reservaData.salaCapacidad}} personas</p>
+          </div>
+        } @else {
+          <div class="edit-form">
+            <div class="form-group">
+              <label for="salaNumero">Número de Sala:</label>
+              <input 
+                type="number" 
+                id="salaNumero" 
+                [ngModel]="editForm().salaNumero" 
+                (ngModelChange)="updateSalaNumero($event)"
+                class="form-control">
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="info-section">
+        <h3>Información de la Reserva</h3>
+        @if (!isEditing()) {
+          <div>
+            <p><strong>Fecha de Inicio:</strong> {{reservaData.fechaInicio | date:'dd/MM/yyyy HH:mm'}}</p>
+            <p><strong>Fecha de Fin:</strong> {{reservaData.fechaFinal | date:'dd/MM/yyyy HH:mm'}}</p>
+            <p><strong>Tipo de Pago:</strong> {{reservaData.tipoPago}}</p>
+            <p><strong>Estado:</strong> {{reservaData.estado}}</p>
+            <p><strong>Cliente:</strong> {{reservaData.clienteEmail}}</p>
+          </div>
+        } @else {
+          <div class="edit-form">
+            <div class="form-group">
+              <label for="fechaInicio">Fecha de Inicio:</label>
+              <input 
+                type="datetime-local" 
+                id="fechaInicio" 
+                [ngModel]="editForm().fechaInicio" 
+                (ngModelChange)="updateFechaInicio($event)"
+                class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="fechaFinal">Fecha de Fin:</label>
+              <input 
+                type="datetime-local" 
+                id="fechaFinal" 
+                [ngModel]="editForm().fechaFinal" 
+                (ngModelChange)="updateFechaFinal($event)"
+                class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="tipoPago">Tipo de Pago:</label>
+              <select 
+                id="tipoPago" 
+                [ngModel]="editForm().tipoPago" 
+                (ngModelChange)="updateTipoPago($event)"
+                class="form-control">
+                @for (tipo of tipoPagoOptions(); track tipo) {
+                  <option [value]="tipo">{{tipo}}</option>
+                }
+              </select>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="actions-section">
+        @if (!isEditing()) {
+          <div>
+            @if (puedeEditar()) {
+              <button class="btn btn-primary" (click)="startEditing()">
+                Editar
+              </button>
+            }
+            <button class="btn btn-warning" (click)="cancelarReserva()">
+              Cancelar Reserva
+            </button>
+            <button class="btn btn-danger" (click)="eliminarReserva()">
+              Eliminar
+            </button>
+          </div>
+        } @else {
+          <div>
+            <button class="btn btn-success" (click)="guardarCambios()">
+              Guardar
+            </button>
+            <button class="btn btn-secondary" (click)="cancelEditing()">
+              Cancelar Edición
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+} @else {
+  <div class="loading">
+    <p>Cargando detalles de la reserva...</p>
+  </div>
+}

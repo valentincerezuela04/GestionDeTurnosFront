@@ -14,7 +14,7 @@ export class AuthService {
   http = inject(HttpClient);
 
 
-  ObtenerUsuarioActual() {
+  getUserInfo() {
     return this.http.get(`${this.baseUrl}/me`);
   }
 
