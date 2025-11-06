@@ -1,85 +1,158 @@
-<section class="empleado-form">
+<form
+  [formGroup]="empleadoForm"
+  (ngSubmit)="submit()"
+  class="empleado-form"
+  novalidate
+>
   <header class="empleado-form__header">
-    <h1>Nuevo empleado</h1>
-    <button type="button" class="empleado-form__cancel" (click)="cancelar()" [disabled]="isSubmitting()">
+    <div class="empleado-form__heading">
+      <p class="empleado-form__eyebrow">Gestion de equipo</p>
+      <h2>Nuevo empleado</h2>
+      <p class="empleado-form__lead">
+        Completa los datos para sumar un nuevo integrante a tu equipo.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="empleado-form__cancel"
+      (click)="cancelar()"
+      [disabled]="isSubmitting()"
+    >
       Cancelar
     </button>
   </header>
 
-  <form [formGroup]="empleadoForm" (ngSubmit)="submit()" class="empleado-form__form">
-    <div class="empleado-form__field">
+  <div class="empleado-form__body">
+    @let nombreCtrl = empleadoForm.get('nombre');
+    <div class="field">
       <label for="nombre">Nombre</label>
-      <input id="nombre" type="text" formControlName="nombre" />
-      @if (controls.nombre.invalid && controls.nombre.touched) {
-        <span class="empleado-form__error">El nombre es obligatorio.</span>
+      <input
+        id="nombre"
+        type="text"
+        formControlName="nombre"
+        placeholder="Ej: Sofia"
+        [class.invalid]="nombreCtrl?.touched && nombreCtrl?.invalid"
+      />
+      @if (nombreCtrl?.touched && nombreCtrl?.hasError('required')) {
+        <p class="error">El nombre es obligatorio.</p>
       }
     </div>
 
-    <div class="empleado-form__field">
+    @let apellidoCtrl = empleadoForm.get('apellido');
+    <div class="field">
       <label for="apellido">Apellido</label>
-      <input id="apellido" type="text" formControlName="apellido" />
-      @if (controls.apellido.invalid && controls.apellido.touched) {
-        <span class="empleado-form__error">El apellido es obligatorio.</span>
+      <input
+        id="apellido"
+        type="text"
+        formControlName="apellido"
+        placeholder="Ej: Torres"
+        [class.invalid]="apellidoCtrl?.touched && apellidoCtrl?.invalid"
+      />
+      @if (apellidoCtrl?.touched && apellidoCtrl?.hasError('required')) {
+        <p class="error">El apellido es obligatorio.</p>
       }
     </div>
 
-    <div class="empleado-form__field">
+    @let dniCtrl = empleadoForm.get('dni');
+    <div class="field">
       <label for="dni">DNI</label>
-      <input id="dni" type="text" formControlName="dni" />
-      @if (controls.dni.invalid && controls.dni.touched) {
-        <span class="empleado-form__error">El DNI es obligatorio.</span>
+      <input
+        id="dni"
+        type="text"
+        formControlName="dni"
+        placeholder="Ej: 40.123.456"
+        [class.invalid]="dniCtrl?.touched && dniCtrl?.invalid"
+      />
+      @if (dniCtrl?.touched && dniCtrl?.hasError('required')) {
+        <p class="error">El DNI es obligatorio.</p>
       }
     </div>
 
-    <div class="empleado-form__field">
+    @let telefonoCtrl = empleadoForm.get('telefono');
+    <div class="field">
       <label for="telefono">Telefono</label>
-      <input id="telefono" type="text" formControlName="telefono" />
-      @if (controls.telefono.invalid && controls.telefono.touched) {
-        <span class="empleado-form__error">El telefono es obligatorio.</span>
+      <input
+        id="telefono"
+        type="tel"
+        formControlName="telefono"
+        placeholder="Ej: +54 9 11 2233 4455"
+        [class.invalid]="telefonoCtrl?.touched && telefonoCtrl?.invalid"
+      />
+      @if (telefonoCtrl?.touched && telefonoCtrl?.hasError('required')) {
+        <p class="error">El telefono es obligatorio.</p>
       }
     </div>
 
-    <div class="empleado-form__field">
+    @let emailCtrl = empleadoForm.get('email');
+    <div class="field">
       <label for="email">Email</label>
-      <input id="email" type="email" formControlName="email" />
-      @if (controls.email.invalid && controls.email.touched) {
-        <span class="empleado-form__error">Ingresa un email valido.</span>
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        placeholder="Ej: sofia@empresa.com"
+        [class.invalid]="emailCtrl?.touched && emailCtrl?.invalid"
+      />
+      @if (emailCtrl?.touched && emailCtrl?.invalid) {
+        <p class="error">Ingresa un email valido.</p>
       }
     </div>
 
-    <div class="empleado-form__field">
+    @let contrasenaCtrl = empleadoForm.get('contrasena');
+    <div class="field">
       <label for="contrasena">Contrasena</label>
-      <input id="contrasena" type="text" formControlName="contrasena" />
-      @if (controls.contrasena.invalid && controls.contrasena.touched) {
-        <span class="empleado-form__error">La contrasena es obligatoria.</span>
+      <input
+        id="contrasena"
+        type="password"
+        formControlName="contrasena"
+        placeholder="Minimo 8 caracteres"
+        [class.invalid]="contrasenaCtrl?.touched && contrasenaCtrl?.invalid"
+      />
+      @if (contrasenaCtrl?.touched && contrasenaCtrl?.hasError('required')) {
+        <p class="error">La contrasena es obligatoria.</p>
       }
     </div>
 
-    <div class="empleado-form__field">
+    <div class="field">
       <label for="legajo">Legajo</label>
-      <input id="legajo" type="text" formControlName="legajo" />
+      <input
+        id="legajo"
+        type="text"
+        formControlName="legajo"
+        placeholder="Opcional"
+      />
     </div>
 
-    <div class="empleado-form__field">
+    @let rolCtrl = empleadoForm.get('rol');
+    <div class="field">
       <label for="rol">Rol</label>
-      <select id="rol" formControlName="rol">
+      <select
+        id="rol"
+        formControlName="rol"
+        [class.invalid]="rolCtrl?.touched && rolCtrl?.invalid"
+      >
         @for (rol of roles; track rol) {
           <option [ngValue]="rol">{{ rol }}</option>
         }
       </select>
-      @if (controls.rol.invalid && controls.rol.touched) {
-        <span class="empleado-form__error">Selecciona un rol.</span>
+      @if (rolCtrl?.touched && rolCtrl?.hasError('required')) {
+        <p class="error">Selecciona un rol.</p>
       }
     </div>
+  </div>
 
-    @if (errorMessage()) {
-      <p class="empleado-form__alert">{{ errorMessage() }}</p>
-    }
+  @if (errorMessage()) {
+    <p class="empleado-form__alert">{{ errorMessage() }}</p>
+  }
 
-    <footer class="empleado-form__actions">
-      <button type="submit" [disabled]="isSubmitting()" class="empleado-form__submit">
-        {{ isSubmitting() ? 'Guardando...' : 'Guardar empleado' }}
-      </button>
-    </footer>
-  </form>
-</section>
+  <footer class="empleado-form__actions">
+    <button
+      type="submit"
+      class="empleado-form__submit"
+      [disabled]="isSubmitting() || empleadoForm.invalid"
+    >
+      {{ isSubmitting() ? 'Guardando...' : 'Guardar empleado' }}
+    </button>
+  </footer>
+</form>

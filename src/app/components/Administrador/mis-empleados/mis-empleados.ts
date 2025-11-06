@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { EmpledosService } from '../../../services/Empleados/empledos-service';
@@ -17,6 +17,7 @@ import { CardEmpleados } from '../card-empleados/card-empleados';
 export class MisEmpleados implements OnInit {
   private empService = inject(EmpledosService);
   private router = inject(Router);
+  private destroyRef = inject(DestroyRef);
 
   readonly empleados = signal<EmpleadoResponseDTO[]>([]);
   readonly isLoading = signal(false);
@@ -32,7 +33,7 @@ export class MisEmpleados implements OnInit {
 
     this.empService
       .getAll()
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (empleados) => {
           this.empleados.set(empleados);

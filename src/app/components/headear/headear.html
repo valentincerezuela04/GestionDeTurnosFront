@@ -1,22 +1,22 @@
 <header class="topbar">
-  <button class="icon" (click)="onToongle()" aria-label="Abrir menú">
+  <button class="icon" (click)="onToongle()" aria-label="Abrir menu">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
     </svg>
   </button>
-  <div class="brand">Gestión de Turnos</div>
+  <div class="brand">Gestion de Turnos</div>
   <div class="right">
-     @if (auth.user()) {
-    <div class="user-box">
-      <span>{{ auth.user()?.nombre }} ({{ auth.user()?.rol }})</span>
-      <button class="btn" (click)="logout()">Salir</button>
-    </div>
-  } @else {
-    <div class="auth-actions">
-      <button class="btn ghost" (click)="goLogin()">Iniciar sesión</button>
-      <button class="btn" (click)="goRegister()">Registrarse</button>
-    </div>
-  }
-    <a class="btn ghost">Mi cuenta</a>
+    @if (auth.user()) {
+      <div class="user-box">
+        <span>{{ auth.user()?.nombre }} ({{ auth.user()?.rol }})</span>
+        <button class="btn" (click)="logout()">Salir</button>
+      </div>
+    } @else {
+      <div class="auth-actions">
+        <button class="btn ghost" (click)="goLogin()">Iniciar sesion</button>
+        <button class="btn" (click)="goRegister()">Registrarse</button>
+      </div>
+    }
+    <a class="btn ghost" (click)="goProfile()">Mi cuenta</a>
   </div>
 </header>

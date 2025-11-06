@@ -2,3 +2,60 @@
     display: grid;
     grid-template-columns: auto 1fr;
 }
+
+.content {
+    padding: 1.5rem;
+}
+
+.auth-layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: radial-gradient(circle at top, rgba(124, 92, 255, 0.08), transparent 55%), #0f1220;
+    color: #e6e8ef;
+}
+
+.auth-layout__top {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1.5rem 2rem 0;
+}
+
+.auth-link {
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #7c5cff 0%, #5d46d2 100%);
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: transform 120ms ease-out, box-shadow 120ms ease-out;
+}
+
+.auth-link:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 24px rgba(124, 92, 255, 0.35);
+}
+
+.auth-link.ghost {
+    background: rgba(15, 18, 32, 0.35);
+    border: 1px solid rgba(183, 189, 209, 0.2);
+    color: #e6e8ef;
+}
+
+.auth-layout__main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+@media (max-width: 768px) {
+    .auth-layout__top {
+        padding: 1rem 1.2rem 0;
+    }
+
+    .auth-layout__main {
+        padding: 1.5rem;
+    }
+}

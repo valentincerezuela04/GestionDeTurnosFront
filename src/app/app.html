@@ -1,7 +1,18 @@
-<app-headear (menuToongle)="toggleSidebar()"></app-headear>
-<div class="layout">
-  <app-aside [open]="sideBarOpen()"></app-aside>
-  <main class="content">
-    <router-outlet></router-outlet>
-  </main>
-</div>
+@if (showShell()) {
+  <app-headear (menuToongle)="toggleSidebar()"></app-headear>
+  <div class="layout">
+    <app-aside [open]="sideBarOpen()"></app-aside>
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+} @else {
+  <div class="auth-layout">
+    <header class="auth-layout__top">
+      <a routerLink="/register" class="auth-link">Registrarse</a>
+    </header>
+    <main class="auth-layout__main">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+}

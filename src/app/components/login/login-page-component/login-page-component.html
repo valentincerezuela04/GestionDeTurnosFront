@@ -33,6 +33,7 @@
 
   <p class="hint">
     ¿No tenés cuenta?
-    <a routerLink="/register">Registrate acá</a>
+    <a routerLink="/register" [queryParams]="returnUrl ? { returnUrl: returnUrl } : null">Registrate acá</a>
   </p>
 </form>
+

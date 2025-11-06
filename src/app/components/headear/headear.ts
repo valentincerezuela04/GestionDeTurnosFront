@@ -28,4 +28,13 @@ export class Headear {
   goRegister(){
     this.router.navigate(['/register']);
   }
+
+  goProfile(){
+    if(!this.auth.isLoggedIn()){
+      this.router.navigate(['/login']);
+      return;
+    }
+    this.router.navigate(['/perfil']);
+  }
 }
+
