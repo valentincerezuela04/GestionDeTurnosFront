@@ -1,26 +1,19 @@
 import { Routes } from '@angular/router';
-
-import { authCanMatch } from './guards/auth.guard';
-
+import { Hall } from './components/halls/hall/hall';
+import { ClientesListComponent } from './components/Cliente/cliente-list/cliente-list';
+import { LoadForm } from './components/halls/load-form/load-form';
+import { MisReservas } from './components/Reserva/mis-reservas/mis-reservas';
+import { DetailsReserva } from './components/Reserva/details-reserva/details-reserva';
+import { LoginPageComponent } from './components/login/login-page-component/login-page-component';
+import { RegisterPageComponent } from './components/login/register-page-component/register-page-component';
+import { roleGuard } from './guards/role-guard';
+import { authGuard } from './guards/auth-guard';
 export const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
 
-  {
-    path: 'login',
-    loadComponent: () =>
-      import('./components/login/login-page-component/login-page-component').then(
-        (m) => m.LoginPageComponent
-      ),
-    data: { title: 'Iniciar sesion' },
-  },
-  {
-    path: 'register',
-    loadComponent: () =>
-      import('./components/login/register-page-component/register-page-component').then(
-        (m) => m.RegisterPageComponent
-      ),
-    data: { title: 'Registrarse' },
-  },
+  //publico>>>>>>>
+    {path:'login' ,component: LoginPageComponent} ,
+    {path:'register' ,component: RegisterPageComponent} ,
+    { path: '', redirectTo: 'hall', pathMatch: 'full' },
 
   // Salas
   {
@@ -39,6 +32,7 @@ export const routes: Routes = [
             (m) => m.LoadForm
           ),
         data: { title: 'Crear sala' },
+        canActivate: [roleGuard('ADMIN')],
       },
       {
         path: ':id/edit',
@@ -47,6 +41,7 @@ export const routes: Routes = [
             (m) => m.EditDescription
           ),
         data: { title: 'Editar sala' },
+        canActivate: [roleGuard('ADMIN')],
       },
     ],
   },
@@ -62,6 +57,7 @@ export const routes: Routes = [
             (m) => m.MisEmpleados
           ),
         data: { title: 'Empleados' },
+        canActivate: [roleGuard('ADMIN')],
       },
       {
         path: 'new',
@@ -70,6 +66,7 @@ export const routes: Routes = [
             (m) => m.EmpleadoFormPost
           ),
         data: { title: 'Nuevo empleado' },
+        canActivate: [roleGuard('ADMIN')],
       },
       {
         path: ':id/details',
@@ -78,6 +75,7 @@ export const routes: Routes = [
             (m) => m.DetailsEmpleado
           ),
         data: { title: 'Detalle empleado' },
+        canActivate: [roleGuard('ADMIN')],
       },
     ],
   },
@@ -98,6 +96,7 @@ export const routes: Routes = [
             (m) => m.MisReservas
           ),
         data: { title: 'Mis reservas' },
+        canActivate: [roleGuard('CLIENTE', 'EMPLEADO')],
       },
       {
         path: ':id/details',
@@ -106,6 +105,7 @@ export const routes: Routes = [
             (m) => m.DetailsReserva
           ),
         data: { title: 'Detalle reserva' },
+        canActivate: [roleGuard('CLIENTE', 'EMPLEADO')]
       },
     ],
   },
@@ -119,6 +119,7 @@ export const routes: Routes = [
         (m) => m.ClientesListComponent
       ),
     data: { title: 'Clientes' },
+    canActivate: [roleGuard('CLIENTE', 'EMPLEADO')]
   },
 
   // Calendario
@@ -127,6 +128,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./components/calendar/calendar').then((m) => m.Calendar),
     data: { title: 'Calendario' },
+    canActivate: [roleGuard('CLIENTE', 'EMPLEADO')]
   },
 
   // Perfil del usuario
@@ -137,6 +139,7 @@ export const routes: Routes = [
         (m) => m.PerfilUsuario
       ),
     data: { title: 'Perfil' },
+    canActivate:[authGuard]
   },
 
   // Fallback

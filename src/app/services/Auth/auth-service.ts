@@ -1,8 +1,11 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { API_CONFIG } from '../../config/API';
-import { AuthUser, LoginRequest, RegisterRequest } from '../../models/auth.model';
+import { AppRole, AuthUser, LoginRequest, RegisterRequest } from '../../models/auth.model';
 import { tap } from 'rxjs';
+import { Rol } from '../../models/usuarios/rol';
+
+
 
 @Injectable({
   providedIn: 'root',
@@ -50,6 +53,15 @@ export class AuthService {
   isLoggedIn(): boolean {
     return this.user() !== null;
   }
+
+  hasRole(...roles: AppRole[]): boolean {
+    const user = this.user();
+    if(!user) {
+      return false;
+    }
+    return roles.includes(user.rol as AppRole);
+  }
+
 
   private getUserFromStorage(): AuthUser | null {
     const raw = localStorage.getItem('user');
