@@ -1,6 +1,6 @@
 <div class="header-hall">
   <h2>Salas</h2>
-  <button routerLink="/hall/new">Crear sala</button>
+  <button *ngIf="canCreate()" routerLink="/hall/new">Crear sala</button>
 </div>
 
 
@@ -9,7 +9,12 @@
     <div class="grid">
         
       @for (hall of hallList(); track hall.id) {
-        <app-card-hall [hall]="hall" (delete)="deleteSala($event)"></app-card-hall>
+        <app-card-hall
+          [hall]="hall"
+          [canEdit]="canEdit()"
+          [canDelete]="canDelete()"
+          (delete)="deleteSala($event)"
+        ></app-card-hall>
       }
     </div>
   } @else {

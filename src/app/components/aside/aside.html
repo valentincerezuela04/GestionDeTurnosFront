@@ -1,10 +1,10 @@
 <aside class="side" [class.closed]="!open()" aria-label="Navegación">
   <nav>
     <a routerLink="/hall" routerLinkActive="active">Salas</a>
-    <a routerLink="/empleados" routerLinkActive="active">Empleados</a>
-  <a routerLink="/reservas" routerLinkActive="active">Reservas</a>
-    <a routerLink="/clientes" routerLinkActive="active">Clientes</a>
+    <a *ngIf="showFullMenu()" routerLink="/empleados" routerLinkActive="active">Empleados</a>
+    <a routerLink="/reservas" routerLinkActive="active">Reservas</a>
+    <a *ngIf="showFullMenu()" routerLink="/clientes" routerLinkActive="active">Clientes</a>
     <a routerLink="/calendar" routerLinkActive="active">Calendario</a>
-    <a routerLink="/perfil" routerLinkActive="active">Perfil</a>
+    <a *ngIf="showFullMenu()" routerLink="/perfil" routerLinkActive="active">Perfil</a>
   </nav>
 </aside>

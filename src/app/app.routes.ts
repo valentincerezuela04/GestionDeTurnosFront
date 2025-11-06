@@ -1,11 +1,7 @@
 import { Routes } from '@angular/router';
-import { Hall } from './components/halls/hall/hall';
-import { ClientesListComponent } from './components/Cliente/cliente-list/cliente-list';
-import { LoadForm } from './components/halls/load-form/load-form';
-import { MisReservas } from './components/Reserva/mis-reservas/mis-reservas';
-import { DetailsReserva } from './components/Reserva/details-reserva/details-reserva';
 import { LoginPageComponent } from './components/login/login-page-component/login-page-component';
 import { RegisterPageComponent } from './components/login/register-page-component/register-page-component';
+import { authCanMatch } from './guards/auth.guard';
 import { roleGuard } from './guards/role-guard';
 import { authGuard } from './guards/auth-guard';
 export const routes: Routes = [
@@ -99,6 +95,15 @@ export const routes: Routes = [
         canActivate: [roleGuard('CLIENTE', 'EMPLEADO')],
       },
       {
+        path: 'new',
+        loadComponent: () =>
+          import('./components/Reserva/reserva-form-post/reserva-form').then(
+            (m) => m.ReservaFormComponent
+          ),
+        data: { title: 'Nueva reserva' },
+        canActivate: [roleGuard('CLIENTE', 'EMPLEADO')],
+      },
+      {
         path: ':id/details',
         loadComponent: () =>
           import('./components/Reserva/details-reserva/details-reserva').then(
@@ -126,7 +131,7 @@ export const routes: Routes = [
   {
     path: 'calendar', canMatch: [authCanMatch],
     loadComponent: () =>
-      import('./components/calendar/calendar').then((m) => m.Calendar),
+      import('./components/Calendario/calendar-view/calendar-view').then((m) => m.CalendarViewComponent),
     data: { title: 'Calendario' },
     canActivate: [roleGuard('CLIENTE', 'EMPLEADO')]
   },

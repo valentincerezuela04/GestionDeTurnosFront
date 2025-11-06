@@ -1,6 +1,11 @@
-@if (reservas && reservas.length > 0) {
-  <div class="mis-reservas">
+<div class="mis-reservas">
+  <div class="mis-reservas-header">
     <h2>Mis reservas</h2>
+    <button type="button" class="nueva-reserva-btn" (click)="onNuevaReserva()">
+      Nueva reserva
+    </button>
+  </div>
+  @if (reservas && reservas.length > 0) {
     <div class="reservas-grid">
       @for (reserva of reservas; track reserva.id) {
         <app-card-reserva
@@ -9,10 +14,7 @@
         ></app-card-reserva>
       }
     </div>
-  </div>
-} @else {
-  <div class="mis-reservas">
-    <h2>Mis reservas</h2>
-    <p>No hay reservas activas.</p>
-  </div>
-}
+  } @else {
+    <p class="no-reservas">No hay reservas activas.</p>
+  }
+</div>

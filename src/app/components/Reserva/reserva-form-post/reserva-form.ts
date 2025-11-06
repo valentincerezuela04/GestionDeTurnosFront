@@ -1,125 +1,163 @@
 // src/app/features/reservas/reserva-form/reserva-form.component.ts
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ReservaRequestByClienteDTO, ReservaRequestByEmpleadoDTO } from '../../../dto/Reserva';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ReservaService } from '../../../services/Reservas/reservas-service';
-import { AuthService } from '../../../services/Auth/auth-service';
-import { UserInfoResponseDTO } from '../../../dto/user-info-response-dto';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+
+import { ReservaService } from '../../../services/Reservas/reservas-service';
+import { AuthService } from '../../../services/Auth/auth-service';
+import { SalasService } from '../../../services/Salas/salas-service';
+
+import { ReservaRequestByClienteDTO, ReservaRequestByEmpleadoDTO } from '../../../dto/Reserva';
+import { UserInfoResponseDTO } from '../../../dto/user-info-response-dto';
+import { SalaDTO as Sala } from '../../../models/sala';
 
 @Component({
-	selector: 'app-reserva-form',
-	templateUrl: 'reserva-form.html',
-    imports: [
-        ReactiveFormsModule,
-        CommonModule,
-        MatSnackBarModule
-    ],
-    standalone: true,
+  selector: 'app-reserva-form',
+  templateUrl: 'reserva-form.html',
+  styleUrls: ['reserva-form.css'],
+  standalone: true,
+  imports: [ReactiveFormsModule, CommonModule, MatSnackBarModule],
 })
 export class ReservaFormComponent implements OnInit {
-	form!: FormGroup;
-	editMode = false;
-	reservaId?: number;
-    usuario: UserInfoResponseDTO | null = null;
+  form!: FormGroup;
+  editMode = false;
+  reservaId?: number;
 
-	fb = inject(FormBuilder);
-	reservaService = inject(ReservaService);
-    authService = inject(AuthService);
-	route = inject(ActivatedRoute);
-	router = inject(Router);
-	snackBar = inject(MatSnackBar);	ngOnInit(): void {
-        this.obtenerUsuarioActual();
-		
-		this.form = this.fb.group({
-			salaId: [null, Validators.required],
-			clienteId: [null], // solo si la crea un empleado
-			fechaInicio: [null, Validators.required],
-			fechaFinal: [null, Validators.required],
-			tipoPago: ['EFECTIVO', Validators.required],
-		});
+  usuario: UserInfoResponseDTO | null = null;
+  salas: Sala[] = [];
+  tipoPagos: Array<'EFECTIVO' | 'TARJETA'> = ['EFECTIVO', 'TARJETA'];
 
-	}
+  // DI
+  private fb = inject(FormBuilder);
+  private reservaService = inject(ReservaService);
+  authService = inject(AuthService);
+  salasService = inject(SalasService);
+  router = inject(Router);
+  private snackBar = inject(MatSnackBar);
 
+  ngOnInit(): void {
+    this.obtenerUsuarioActual();
 
-	onSubmit(): void {
-        if (this.form.invalid) {
-			console.error('Formulario inválido');
-			return;
-		}
-        const formValue = this.form.value;
+    // Form + validador de rango (fin > inicio)
+    this.form = this.fb.group(
+      {
+        salaId: [null, Validators.required],
+        clienteId: [null], // requerido si EMPLEADO
+        fechaInicio: [null, Validators.required],
+        fechaFinal: [null, Validators.required],
+        tipoPago: ['EFECTIVO', Validators.required],
+        descripcion: [''], // opcional (UI only, no se envía si tu back no lo soporta)
+      },
+      { validators: [this.dateRangeValidator] }
+    );
 
-        if (this.usuario?.role === 'CLIENTE') {
-            const reservaDTO: ReservaRequestByClienteDTO = {
-                salaId: formValue.salaId,
-                fechaInicio: formValue.fechaInicio,
-                fechaFinal: formValue.fechaFinal,
-                tipoPago: formValue.tipoPago,
-            };
-            this.reservaService.createReservaCliente(reservaDTO).subscribe({
-                next: () => {
-                    this.snackBar.open('Reserva creada correctamente', 'Cerrar', {
-                        duration: 3000,
-                        panelClass: ['success-snackbar']
-                    });
-                    setTimeout(() => {
-                        this.router.navigate(['/mis-reservas']);
-                    }, 1000);
-                },
-                error: (err) => {
-                    console.error('Error creando reserva:', err);
-                    this.snackBar.open('No se pudo crear la reserva', 'Cerrar', {
-                        duration: 3000,
-                        panelClass: ['error-snackbar']
-                    });
-                }
-            });
-        } else if (this.usuario?.role === 'EMPLEADO') {
-            const reservaDTO: ReservaRequestByEmpleadoDTO = {
-                salaId: formValue.salaId,
-                clienteId: formValue.clienteId,
-                fechaInicio: formValue.fechaInicio,
-                fechaFinal: formValue.fechaFinal,
-                tipoPago: formValue.tipoPago,
-            };
-            this.reservaService.createReservaEmpleado(reservaDTO).subscribe({
-                next: () => {
-                    this.snackBar.open('Reserva creada correctamente', 'Cerrar', {
-                        duration: 3000,
-                        panelClass: ['success-snackbar']
-                    });
-                    setTimeout(() => {
-                        this.router.navigate(['/mis-reservas']);
-                    }, 1000);
-                },
-                error: (err) => {
-                    console.error('Error creando reserva:', err);
-                    this.snackBar.open('No se pudo crear la reserva', 'Cerrar', {
-                        duration: 3000,
-                        panelClass: ['error-snackbar']
-                    });
-                }
-            });
-        }
-	}
+    // Cargar salas para el <select>
+    this.salasService.getAll().subscribe({
+      next: (salas) => (this.salas = salas ?? []),
+      error: () => this.snackBar.open('No se pudieron cargar las salas', 'Cerrar', { duration: 2500 }),
+    });
+  }
 
-
-	obtenerUsuarioActual(): void {
-		this.authService.getUserInfo().subscribe({
-			next: (data) => {
-				this.usuario = data as UserInfoResponseDTO;
-			},
-            error: (err) => {
-                console.error('Error al obtener el usuario actual:', err);
-            }
-		});
-	}
-
-    // Método para verificar si el usuario es empleado
-    isEmpleado(): boolean {
-        return this.usuario?.role === 'EMPLEADO';
+  onSubmit(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
     }
 
+    const v = this.form.value;
+
+    // Asegurar numéricos (el select/inputs devuelven string)
+    const salaId = Number(v.salaId);
+    if (Number.isNaN(salaId)) {
+      this.snackBar.open('Seleccioná una sala válida', 'Cerrar', { duration: 2500 });
+      return;
+    }
+
+    const clienteId = v.clienteId != null ? Number(v.clienteId) : null;
+    if (this.isEmpleado() && (clienteId == null || Number.isNaN(clienteId))) {
+      this.snackBar.open('Ingresá un cliente válido', 'Cerrar', { duration: 2500 });
+      return;
+    }
+
+    // Formatear fechas para el backend (yyyy-MM-dd'T'HH:mm)
+    const payloadBase = {
+      salaId,
+      fechaInicio: this.formatDateForApi(v.fechaInicio),
+      fechaFinal: this.formatDateForApi(v.fechaFinal),
+      tipoPago: v.tipoPago,
+    };
+
+    const onOk = () => {
+      this.snackBar.open('Reserva creada correctamente', 'Cerrar', {
+        duration: 3000,
+        panelClass: ['success-snackbar'],
+      });
+      setTimeout(() => this.router.navigate(['/mis-reservas']), 800);
+    };
+
+    const onError = (err: any) => {
+      // Mirá la consola/Network para ver el cuerpo crudo del 400
+      console.error('API error body =>', err?.error);
+
+      const raw = (err?.error?.message || err?.error || '').toString();
+      const isSolape = err?.status === 409 || /solap|ocupad/i.test(raw);
+      this.snackBar.open(
+        isSolape ? 'La sala no está disponible en ese horario.' : (raw || 'No se pudo crear la reserva'),
+        'Cerrar',
+        { duration: 3500, panelClass: [isSolape ? 'warn-snackbar' : 'error-snackbar'] }
+      );
+    };
+
+    if (this.usuario?.role === 'CLIENTE') {
+      const dto: ReservaRequestByClienteDTO = payloadBase as ReservaRequestByClienteDTO;
+      this.reservaService.createReservaCliente(dto).subscribe({ next: onOk, error: onError });
+    } else if (this.usuario?.role === 'EMPLEADO') {
+      const dto: ReservaRequestByEmpleadoDTO = { ...payloadBase, clienteId: clienteId! };
+      this.reservaService.createReservaEmpleado(dto).subscribe({ next: onOk, error: onError });
+    } else {
+      this.snackBar.open('No se pudo determinar el rol del usuario', 'Cerrar', { duration: 2500 });
+    }
+  }
+
+  obtenerUsuarioActual(): void {
+    this.authService.getUserInfo().subscribe({
+      next: (data) => {
+        this.usuario = data as UserInfoResponseDTO;
+
+        // Si es EMPLEADO, clienteId es requerido
+        if (this.isEmpleado()) {
+          this.form?.get('clienteId')?.addValidators([Validators.required]);
+          this.form?.get('clienteId')?.updateValueAndValidity();
+        }
+      },
+      error: (err) => console.error('Error al obtener el usuario actual:', err),
+    });
+  }
+
+  isEmpleado(): boolean {
+    return this.usuario?.role === 'EMPLEADO';
+  }
+
+  // ===== Helpers =====
+
+  private dateRangeValidator = (group: FormGroup) => {
+    const i = group.get('fechaInicio')?.value;
+    const f = group.get('fechaFinal')?.value;
+    if (!i || !f) return null;
+    return new Date(f) > new Date(i) ? null : { dateRange: true };
+  };
+
+  // Devuelve "YYYY-MM-DDTHH:mm" (sin segundos), que suele ser lo que esperan controladores con LocalDateTime
+  private formatDateForApi(value: any): string {
+    if (!value) return value;
+    if (typeof value === 'string') {
+      // "2025-11-06T18:30" o "2025-11-06T18:30:00"
+      return value.length >= 16 ? value.slice(0, 16) : value;
+    }
+    const d = new Date(value);
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
 }

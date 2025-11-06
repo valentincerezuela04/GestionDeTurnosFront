@@ -11,6 +11,8 @@ import { RouterLink } from '@angular/router';
 })
 export class CardHall {
   hall = input.required<SalaDTO>()
+  canEdit = input<boolean>(false);
+  canDelete = input<boolean>(false);
 
   delete = output<number>()
 

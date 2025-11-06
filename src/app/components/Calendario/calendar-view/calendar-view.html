@@ -1,0 +1,12 @@
+<section class="cal-toolbar">
+  <label>
+    <input type="checkbox" (change)="setOnlyMine($event.target.checked)" />
+    Solo mis reservas
+  </label>
+
+  <button type="button" (click)="refetch()">Refrescar</button>
+
+  <span *ngIf="loading()">Cargando eventos…</span>
+</section>
+
+<full-calendar #fc [options]="calendarOptions"></full-calendar>

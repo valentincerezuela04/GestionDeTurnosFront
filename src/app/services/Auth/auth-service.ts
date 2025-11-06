@@ -56,10 +56,17 @@ export class AuthService {
 
   hasRole(...roles: AppRole[]): boolean {
     const user = this.user();
-    if(!user) {
+    if (!user) {
       return false;
     }
-    return roles.includes(user.rol as AppRole);
+    const userRole = user.rol as AppRole;
+    if (userRole === 'ADMIN') {
+      return true;
+    }
+    if (roles.length === 0) {
+      return true;
+    }
+    return roles.includes(userRole);
   }
 
 
