@@ -43,7 +43,7 @@ export class RegisterPageComponent {
           alert('Te has registrado correctamente. Por favor, inicia sesión.');
           this.router.navigate(['/login']);
         },
-        error: (err) => {
+        error: (err:any) => {
           this.loading = false;
           this.error = err?.error ?? 'No se pudo registrar';
           console.error('Registration failed', err);

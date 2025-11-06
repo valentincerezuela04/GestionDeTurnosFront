@@ -18,3 +18,6 @@ export interface RegisterRequest {
   email: string;
   contrasena: string;
 }
+
+
+export type AppRole = 'ADMIN' | 'EMPLEADO' | 'CLIENTE';
