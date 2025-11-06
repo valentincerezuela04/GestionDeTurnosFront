@@ -1,0 +1,111 @@
+<section class="perfil-usuario">
+  <header class="perfil-usuario__header">
+    <h1>Mi perfil</h1>
+    @if (userInfo()) {
+      <span class="perfil-usuario__badge">
+        {{ rolActualTexto() }}
+      </span>
+    }
+  </header>
+
+  @if (isLoading()) {
+    <p class="perfil-usuario__status">Cargando informacion del perfil...</p>
+  } @else {
+    @if (errorMessage()) {
+      <p class="perfil-usuario__status perfil-usuario__status--error">
+        {{ errorMessage() }}
+      </p>
+    }
+
+    @let cliente = clienteDetalle();
+    @let empleado = empleadoDetalle();
+    @let info = userInfo();
+
+    @if (esCliente() && cliente) {
+      @if (!editMode()) {
+        <app-card-usuario
+          [usuario]="cliente"
+          [rol]="rolActual()"
+          titulo="Datos personales"
+          [mostrarEditar]="true"
+          (editar)="habilitarEdicion()"
+        ></app-card-usuario>
+      } @else {
+        <form [formGroup]="clienteForm" class="perfil-usuario__form">
+          <div class="perfil-usuario__field">
+            <label for="nombre">Nombre</label>
+            <input id="nombre" type="text" formControlName="nombre" />
+            @if (controls.nombre.invalid && controls.nombre.touched) {
+              <span class="perfil-usuario__error">El nombre es obligatorio.</span>
+            }
+          </div>
+          <div class="perfil-usuario__field">
+            <label for="apellido">Apellido</label>
+            <input id="apellido" type="text" formControlName="apellido" />
+            @if (controls.apellido.invalid && controls.apellido.touched) {
+              <span class="perfil-usuario__error">El apellido es obligatorio.</span>
+            }
+          </div>
+          <div class="perfil-usuario__field">
+            <label for="dni">DNI</label>
+            <input id="dni" type="text" formControlName="dni" />
+            @if (controls.dni.invalid && controls.dni.touched) {
+              <span class="perfil-usuario__error">El DNI es obligatorio.</span>
+            }
+          </div>
+          <div class="perfil-usuario__field">
+            <label for="telefono">Telefono</label>
+            <input id="telefono" type="text" formControlName="telefono" />
+            @if (controls.telefono.invalid && controls.telefono.touched) {
+              <span class="perfil-usuario__error">El telefono es obligatorio.</span>
+            }
+          </div>
+          <div class="perfil-usuario__field">
+            <label for="email">Email</label>
+            <input id="email" type="email" formControlName="email" />
+            @if (controls.email.invalid && controls.email.touched) {
+              <span class="perfil-usuario__error">Ingresa un email valido.</span>
+            }
+          </div>
+          <div class="perfil-usuario__field">
+            <label for="contrasena">Contrasena</label>
+            <input id="contrasena" type="text" formControlName="contrasena" />
+            @if (controls.contrasena.invalid && controls.contrasena.touched) {
+              <span class="perfil-usuario__error">La contrasena es obligatoria.</span>
+            }
+          </div>
+        </form>
+
+        @if (formError()) {
+          <p class="perfil-usuario__status perfil-usuario__status--error">
+            {{ formError() }}
+          </p>
+        }
+
+        <footer class="perfil-usuario__actions">
+          <button type="button" class="perfil-usuario__cancel" (click)="cancelarEdicion()" [disabled]="isSaving()">
+            Cancelar
+          </button>
+          <button type="button" class="perfil-usuario__save" (click)="guardarCambios()" [disabled]="isSaving()">
+            {{ isSaving() ? 'Guardando...' : 'Guardar cambios' }}
+          </button>
+        </footer>
+      }
+    } @else if (empleado) {
+      <app-card-usuario
+        [usuario]="empleado"
+        [rol]="rolActual()"
+        titulo="Datos del empleado"
+      ></app-card-usuario>
+    } @else if (info) {
+      <app-card-usuario
+        [usuario]="info"
+        [rol]="rolActual()"
+        titulo="Informacion del usuario"
+      ></app-card-usuario>
+    } @else {
+      <p class="perfil-usuario__status">No se encontro informacion del usuario.</p>
+    }
+  }
+</section>
+

@@ -1,77 +1,75 @@
-
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="reserva-form">
   <h2>{{ editMode ? "Editar" : "Nueva" }} Reserva</h2>
 
-  <!-- ID de Sala -->
+  <!-- Sala (select) -->
   <div class="form-group">
-    <label for="salaId">Número de Sala *</label>
-    <input 
-      type="number" 
+    <label for="salaId">Sala *</label>
+    <select
       id="salaId"
       formControlName="salaId"
       class="form-control"
       [class.is-invalid]="form.get('salaId')?.invalid && form.get('salaId')?.touched">
+      <option value="" disabled selected>Seleccioná una sala</option>
+      <option *ngFor="let s of salas" [value]="s.id">
+        Sala {{ s.numero }} - {{ s.descripcion }} ({{ s.cantidad_personas }} pax)
+      </option>
+    </select>
     @if (form.get('salaId')?.invalid && form.get('salaId')?.touched) {
-      <div class="invalid-feedback">
-        El número de sala es requerido
-      </div>
+      <div class="invalid-feedback">La sala es requerida</div>
     }
   </div>
 
   <!-- Fecha y Hora de Inicio -->
   <div class="form-group">
     <label for="fechaInicio">Fecha y Hora de Inicio *</label>
-    <input 
-      type="datetime-local" 
+    <input
+      type="datetime-local"
       id="fechaInicio"
       formControlName="fechaInicio"
       class="form-control"
-      [class.is-invalid]="form.get('fechaInicio')?.invalid && form.get('fechaInicio')?.touched">
+      [class.is-invalid]="form.get('fechaInicio')?.invalid && form.get('fechaInicio')?.touched" />
     @if (form.get('fechaInicio')?.invalid && form.get('fechaInicio')?.touched) {
-      <div class="invalid-feedback">
-        La fecha y hora de inicio son requeridas
-      </div>
+      <div class="invalid-feedback">La fecha y hora de inicio son requeridas</div>
     }
   </div>
 
   <!-- Fecha y Hora de Fin -->
   <div class="form-group">
     <label for="fechaFinal">Fecha y Hora de Fin *</label>
-    <input 
-      type="datetime-local" 
+    <input
+      type="datetime-local"
       id="fechaFinal"
       formControlName="fechaFinal"
       class="form-control"
-      [class.is-invalid]="form.get('fechaFinal')?.invalid && form.get('fechaFinal')?.touched">
+      [class.is-invalid]="(form.get('fechaFinal')?.invalid && form.get('fechaFinal')?.touched) || form.hasError('dateRange')" />
     @if (form.get('fechaFinal')?.invalid && form.get('fechaFinal')?.touched) {
-      <div class="invalid-feedback">
-        La fecha y hora de fin son requeridas
-      </div>
+      <div class="invalid-feedback">La fecha y hora de fin son requeridas</div>
+    }
+    @if (form.hasError('dateRange') && (form.get('fechaFinal')?.touched || form.get('fechaInicio')?.touched)) {
+      <div class="invalid-feedback">La fecha final debe ser posterior a la inicial</div>
     }
   </div>
 
   <!-- Tipo de Pago -->
   <div class="form-group">
     <label for="tipoPago">Tipo de Pago *</label>
-    <select 
+    <select
       id="tipoPago"
       formControlName="tipoPago"
       class="form-control"
       [class.is-invalid]="form.get('tipoPago')?.invalid && form.get('tipoPago')?.touched">
-      <option value="EFECTIVO">Efectivo</option>
-      <option value="TARJETA">Tarjeta</option>
+      <option value="" disabled>Seleccioná un método</option>
+      <option *ngFor="let p of tipoPagos" [value]="p">{{ p }}</option>
     </select>
     @if (form.get('tipoPago')?.invalid && form.get('tipoPago')?.touched) {
-      <div class="invalid-feedback">
-        El tipo de pago es requerido
-      </div>
+      <div class="invalid-feedback">El tipo de pago es requerido</div>
     }
   </div>
 
-  <!-- Descripción (opcional) -->
+  <!-- Descripción (opcional, solo UI) -->
   <div class="form-group">
     <label for="descripcion">Descripción (opcional)</label>
-    <textarea 
+    <textarea
       id="descripcion"
       formControlName="descripcion"
       class="form-control"
@@ -79,90 +77,27 @@
       placeholder="Agrega notas o detalles adicionales"></textarea>
   </div>
 
-  <!-- Campo clienteId (solo visible para empleados) -->
+  <!-- clienteId (solo visible para empleados) -->
   @if (isEmpleado()) {
     <div class="form-group">
-      <label for="clienteId">ID del Cliente</label>
-      <input 
-        type="number" 
+      <label for="clienteId">ID del Cliente *</label>
+      <input
+        type="number"
         id="clienteId"
         formControlName="clienteId"
-        class="form-control">
+        class="form-control"
+        [class.is-invalid]="form.get('clienteId')?.invalid && form.get('clienteId')?.touched" />
+      @if (form.get('clienteId')?.invalid && form.get('clienteId')?.touched) {
+        <div class="invalid-feedback">El cliente es requerido</div>
+      }
     </div>
   }
 
-  <!-- Botones de acción -->
+  <!-- Acciones -->
   <div class="form-actions">
-    <button 
-      type="submit" 
-      class="btn btn-primary"
-      [disabled]="form.invalid">
+    <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
       {{ editMode ? "Actualizar" : "Crear" }} Reserva
     </button>
-    <button 
-      type="button" 
-      class="btn btn-secondary"
-      (click)="router.navigate(['/reservas'])">
-      Cancelar
-    </button>
+    <button type="button" class="btn btn-secondary" (click)="router.navigate(['/reservas'])">Cancelar</button>
   </div>
 </form>
-
-<!-- Estilos básicos -->
-<style>
-.reserva-form {
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 1rem;
-}
-
-.form-group {
-  margin-bottom: 1rem;
-}
-
-.form-control {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ced4da;
-  border-radius: 0.25rem;
-}
-
-.form-control.is-invalid {
-  border-color: #dc3545;
-}
-
-.invalid-feedback {
-  color: #dc3545;
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
-}
-
-.form-actions {
-  display: flex;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-.btn {
-  padding: 0.5rem 1rem;
-  border-radius: 0.25rem;
-  cursor: pointer;
-}
-
-.btn-primary {
-  background: #0d6efd;
-  color: white;
-  border: none;
-}
-
-.btn-primary:disabled {
-  background: #6c757d;
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  background: #6c757d;
-  color: white;
-  border: none;
-}
-</style>

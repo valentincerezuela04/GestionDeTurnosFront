@@ -1,8 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CardHall } from "../card-hall/card-hall";
 import { SalasService } from '../../../services/Salas/salas-service';
 import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../services/Auth/auth-service';
+import { AppRole } from '../../../models/auth.model';
 
 
 @Component({
@@ -14,9 +16,16 @@ import { Router, RouterLink } from '@angular/router';
 export class Hall {
   serv = inject(SalasService)
   router = inject(Router)
-
+  private auth = inject(AuthService);
 
   hallList = toSignal(this.serv.getAll(),{initialValue: []})
+  private readonly role = computed(() => this.auth.user()?.rol as AppRole | null);
+  readonly canCreate = computed(() => this.role() === 'ADMIN');
+  readonly canEdit = computed(() => {
+    const current = this.role();
+    return current === 'ADMIN' || current === 'EMPLEADO';
+  });
+  readonly canDelete = computed(() => this.role() === 'ADMIN');
 
 
   deleteSala(id:number){

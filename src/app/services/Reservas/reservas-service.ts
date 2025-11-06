@@ -13,12 +13,14 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class ReservaService {
-  // Ajuste a la ruta real del controller: /api/reserva
-  baseUrl = `${API_CONFIG.baseUrl}/reserva`;
+  // Mantengo el mismo nombre y compatibilidad con V1.
+  // Lo dejo público como en V1, pero readonly para evitar sobrescrituras accidentales.
+  readonly baseUrl = `${API_CONFIG.baseUrl}/reserva`;
 
+  // Inyección igual que en V1 (compatibilidad)
   private readonly http = inject(HttpClient);
 
-  // READ: todas las reservas activas segund el rol del usuario
+  // READ: todas las reservas activas según el rol del usuario
   getReservasActivas(): Observable<ReservaResponseDTO[]> {
     return this.http.get<ReservaResponseDTO[]>(`${this.baseUrl}/all/activas`);
   }

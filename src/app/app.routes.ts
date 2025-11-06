@@ -1,11 +1,7 @@
 import { Routes } from '@angular/router';
-import { Hall } from './components/halls/hall/hall';
-import { ClientesListComponent } from './components/Cliente/cliente-list/cliente-list';
-import { LoadForm } from './components/halls/load-form/load-form';
-import { MisReservas } from './components/Reserva/mis-reservas/mis-reservas';
-import { DetailsReserva } from './components/Reserva/details-reserva/details-reserva';
 import { LoginPageComponent } from './components/login/login-page-component/login-page-component';
 import { RegisterPageComponent } from './components/login/register-page-component/register-page-component';
+import { authCanMatch } from './guards/auth.guard';
 import { roleGuard } from './guards/role-guard';
 import { authGuard } from './guards/auth-guard';
 export const routes: Routes = [
@@ -17,7 +13,7 @@ export const routes: Routes = [
 
   // Salas
   {
-    path: 'hall',
+    path: 'hall', canMatch: [authCanMatch],
     children: [
       {
         path: '',
@@ -48,7 +44,7 @@ export const routes: Routes = [
 
   // Empleados
   {
-    path: 'empleados',
+    path: 'empleados', canMatch: [authCanMatch],
     children: [
       {
         path: '',
@@ -87,7 +83,7 @@ export const routes: Routes = [
 
   // Reservas
   {
-    path: 'reservas',
+    path: 'reservas', canMatch: [authCanMatch],
     children: [
       {
         path: '',
@@ -96,6 +92,15 @@ export const routes: Routes = [
             (m) => m.MisReservas
           ),
         data: { title: 'Mis reservas' },
+        canActivate: [roleGuard('CLIENTE', 'EMPLEADO')],
+      },
+      {
+        path: 'new',
+        loadComponent: () =>
+          import('./components/Reserva/reserva-form-post/reserva-form').then(
+            (m) => m.ReservaFormComponent
+          ),
+        data: { title: 'Nueva reserva' },
         canActivate: [roleGuard('CLIENTE', 'EMPLEADO')],
       },
       {
@@ -113,7 +118,7 @@ export const routes: Routes = [
 
   // Clientes
   {
-    path: 'clientes',
+    path: 'clientes', canMatch: [authCanMatch],
     loadComponent: () =>
       import('./components/Cliente/cliente-list/cliente-list').then(
         (m) => m.ClientesListComponent
@@ -124,18 +129,18 @@ export const routes: Routes = [
 
   // Calendario
   {
-    path: 'calendar',
+    path: 'calendar', canMatch: [authCanMatch],
     loadComponent: () =>
-      import('./components/calendar/calendar').then((m) => m.Calendar),
+      import('./components/Calendario/calendar-view/calendar-view').then((m) => m.CalendarViewComponent),
     data: { title: 'Calendario' },
     canActivate: [roleGuard('CLIENTE', 'EMPLEADO')]
   },
 
   // Perfil del usuario
   {
-    path: 'perfil',
+    path: 'perfil', canMatch: [authCanMatch],
     loadComponent: () =>
-      import('./components/perfil-usuario/perfil-usuario').then(
+      import('./components/Usuario/perfil-usuario/perfil-usuario').then(
         (m) => m.PerfilUsuario
       ),
     data: { title: 'Perfil' },
@@ -145,3 +150,6 @@ export const routes: Routes = [
   // Fallback
   { path: '**', redirectTo: 'hall' },
 ];
+
+
+

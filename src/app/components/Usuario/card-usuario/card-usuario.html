@@ -1,0 +1,127 @@
+﻿<section class="card-usuario">
+  <header class="card-usuario__header">
+    <h3>{{ titulo() }}</h3>
+    @if (mostrarEditar()) {
+      <button type="button" class="card-usuario__edit" (click)="onEditar()">
+        Editar perfil
+      </button>
+    }
+  </header>
+
+  @let info = data();
+  @let rolActual = rolNormalizado();
+
+  @if (!info) {
+    <p class="card-usuario__empty">No hay informacion disponible para mostrar.</p>
+  } @else {
+    @switch (rolActual) {
+      @case ('CLIENTE') {
+        <dl class="card-usuario__info">
+          @if (info.nombre) {
+            <div>
+              <dt>Nombre</dt>
+              <dd>{{ info.nombre }}</dd>
+            </div>
+          }
+          @if (info.apellido) {
+            <div>
+              <dt>Apellido</dt>
+              <dd>{{ info.apellido }}</dd>
+            </div>
+          }
+          @if (info.dni !== undefined && info.dni !== null) {
+            <div>
+              <dt>DNI</dt>
+              <dd>{{ info.dni }}</dd>
+            </div>
+          }
+          @if (info.telefono !== undefined && info.telefono !== null) {
+            <div>
+              <dt>Telefono</dt>
+              <dd>{{ info.telefono }}</dd>
+            </div>
+          }
+          @if (info.email) {
+            <div>
+              <dt>Email</dt>
+              <dd>{{ info.email }}</dd>
+            </div>
+          }
+        </dl>
+      }
+      @case ('EMPLEADO') {
+        <dl class="card-usuario__info">
+          @if (info.nombre) {
+            <div>
+              <dt>Nombre</dt>
+              <dd>{{ info.nombre }}</dd>
+            </div>
+          }
+          @if (info.apellido) {
+            <div>
+              <dt>Apellido</dt>
+              <dd>{{ info.apellido }}</dd>
+            </div>
+          }
+          @if (info.dni) {
+            <div>
+              <dt>DNI</dt>
+              <dd>{{ info.dni }}</dd>
+            </div>
+          }
+          @if (info.telefono) {
+            <div>
+              <dt>Telefono</dt>
+              <dd>{{ info.telefono }}</dd>
+            </div>
+          }
+          @if (info.email) {
+            <div>
+              <dt>Email</dt>
+              <dd>{{ info.email }}</dd>
+            </div>
+          }
+          @if (info.legajo) {
+            <div>
+              <dt>Legajo</dt>
+              <dd>{{ info.legajo }}</dd>
+            </div>
+          }
+          <div>
+            <dt>Rol</dt>
+            <dd>{{ rolDescripcion() }}</dd>
+          </div>
+        </dl>
+      }
+      @case ('ADMIN') {
+        <dl class="card-usuario__info">
+          @if (info.email) {
+            <div>
+              <dt>Email</dt>
+              <dd>{{ info.email }}</dd>
+            </div>
+          }
+          <div>
+            <dt>Rol</dt>
+            <dd>{{ rolDescripcion() }}</dd>
+          </div>
+        </dl>
+        <!-- TODO: Mostrar datos especificos del administrador cuando el backend los provea -->
+      }
+      @default {
+        <dl class="card-usuario__info">
+          @if (info.email) {
+            <div>
+              <dt>Email</dt>
+              <dd>{{ info.email }}</dd>
+            </div>
+          }
+          <div>
+            <dt>Rol</dt>
+            <dd>{{ rolDescripcion() }}</dd>
+          </div>
+        </dl>
+      }
+    }
+  }
+</section>

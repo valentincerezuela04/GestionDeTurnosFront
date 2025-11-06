@@ -1,19 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AuthService } from '../../services/Auth/auth-service';
-import { EmpledosService } from '../../services/Empleados/empledos-service';
-import { ClientesService } from '../../services/Clientes/cliente-service';
-import { UserInfoResponseDTO } from '../../dto/user-info-response-dto';
-import { EmpleadoResponseDTO } from '../../dto/Empleado/empleado-response-dto';
-import { Cliente } from '../../models/usuarios/cliente';
-import { Rol } from '../../models/usuarios/rol';
+import { AuthService } from '../../../services/Auth/auth-service';
+import { EmpledosService } from '../../../services/Empleados/empledos-service';
+import { ClientesService } from '../../../services/Clientes/cliente-service';
+import { UserInfoResponseDTO } from '../../../dto/user-info-response-dto';
+import { AuthUser } from '../../../models/auth.model';
+import { CardUsuario } from '../card-usuario/card-usuario';
+import { EmpleadoResponseDTO } from '../../../dto/Empleado/empleado-response-dto';
+import { Cliente } from '../../../models/usuarios/cliente';
+import { Rol } from '../../../models/usuarios/rol';
 
 @Component({
   selector: 'app-perfil-usuario',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, CardUsuario],
   templateUrl: './perfil-usuario.html',
   styleUrl: './perfil-usuario.css',
 })
@@ -23,6 +25,7 @@ export class PerfilUsuario implements OnInit {
   private empleadosService = inject(EmpledosService);
   private clientesService = inject(ClientesService);
   private fb = inject(FormBuilder);
+  private destroyRef = inject(DestroyRef);
 
   readonly isLoading = signal(true);
   readonly errorMessage = signal<string | null>(null);
@@ -56,11 +59,18 @@ export class PerfilUsuario implements OnInit {
   }
 
   private cargarPerfil(): void {
-    this.isLoading.set(true);
     this.errorMessage.set(null);
+    const cached = this.authService.user() as AuthUser | null;
+    if (cached) {
+      const info: UserInfoResponseDTO = { id: cached.id, nombre: cached.nombre, email: '', role: cached.rol };
+      this.userInfo.set(info);
+      this.cargarDetalle(info);
+      return;
+    }
+    this.isLoading.set(true);
     this.authService
       .getUserInfo()
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (user) => {
           const info = user as UserInfoResponseDTO;
@@ -81,6 +91,7 @@ export class PerfilUsuario implements OnInit {
     const id = user.id;
 
     if (!role || !id) {
+      this.isLoading.set(false);
       return;
     }
 
@@ -90,7 +101,7 @@ export class PerfilUsuario implements OnInit {
     if (role === Rol.CLIENTE) {
       this.clientesService
         .getById(id)
-        .pipe(takeUntilDestroyed())
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: (cliente) => {
             this.clienteDetalle.set(cliente);
@@ -106,7 +117,7 @@ export class PerfilUsuario implements OnInit {
     } else {
       this.empleadosService
         .getById(id)
-        .pipe(takeUntilDestroyed())
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: (empleado) => {
             this.empleadoDetalle.set(empleado);
@@ -191,7 +202,7 @@ export class PerfilUsuario implements OnInit {
 
     this.clientesService
       .update(payload)
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (clienteActualizado) => {
           this.clienteDetalle.set(clienteActualizado);
@@ -219,3 +230,7 @@ export class PerfilUsuario implements OnInit {
     return role;
   }
 }
+
+
+
+

@@ -34,6 +34,10 @@ export class MisReservas {
     // Navegar al componente de detalles con el ID de la reserva
     this.router.navigate(['/reservas', reserva.id, 'details']);
   }
+
+  onNuevaReserva(): void {
+    this.router.navigate(['/reservas', 'new']);
+  }
   
 
   obtenerReservas(): void {

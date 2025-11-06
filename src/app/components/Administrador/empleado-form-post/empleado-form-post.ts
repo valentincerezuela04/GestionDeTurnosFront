@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -18,6 +18,7 @@ export class EmpleadoFormPost {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private empleadoService = inject(EmpledosService);
+  private destroyRef = inject(DestroyRef);
 
   readonly roles = Object.values(Rol);
   readonly isSubmitting = signal(false);
@@ -34,8 +35,6 @@ export class EmpleadoFormPost {
     rol: [Rol.EMPLEADO as Rol, Validators.required],
   });
 
-  readonly controls = this.empleadoForm.controls;
-
   submit(): void {
     if (this.empleadoForm.invalid) {
       this.empleadoForm.markAllAsTouched();
@@ -49,7 +48,7 @@ export class EmpleadoFormPost {
 
     this.empleadoService
       .createEmpleado(payload)
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           alert('Empleado creado correctamente.');
