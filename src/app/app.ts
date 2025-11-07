@@ -23,6 +23,7 @@ export class App {
   readonly currentUrl = signal<string>(this.normalizeUrl(this.router.url));
 
   readonly showShell = computed(() => !this.authRoutes.includes(this.currentUrl()));
+  readonly isRegisterRoute = computed(() => this.currentUrl() === '/register');
   toggleSidebar = () => this.sideBarOpen.set(!this.sideBarOpen());
 
   constructor() {

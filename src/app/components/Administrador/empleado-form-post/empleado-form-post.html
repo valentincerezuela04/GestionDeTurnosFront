@@ -106,11 +106,14 @@
         id="contrasena"
         type="password"
         formControlName="contrasena"
-        placeholder="Minimo 8 caracteres"
+        placeholder="Minimo 4 caracteres"
         [class.invalid]="contrasenaCtrl?.touched && contrasenaCtrl?.invalid"
       />
       @if (contrasenaCtrl?.touched && contrasenaCtrl?.hasError('required')) {
         <p class="error">La contrasena es obligatoria.</p>
+      }
+      @if (contrasenaCtrl?.touched && contrasenaCtrl?.hasError('minlength')) {
+        <p class="error">Debe tener al menos 4 caracteres.</p>
       }
     </div>
 

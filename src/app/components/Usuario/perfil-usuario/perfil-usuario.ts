@@ -42,7 +42,7 @@ export class PerfilUsuario implements OnInit {
     dni: ['', Validators.required],
     telefono: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
-    contrasena: ['', Validators.required],
+    contrasena: ['', [Validators.required, Validators.minLength(4)]],
   });
 
   readonly controls = this.clienteForm.controls;

@@ -1,0 +1,50 @@
+<section class="details-cliente">
+  <header class="details-cliente__header">
+    <div>
+      <p class="details-cliente__eyebrow">Detalle de cliente</p>
+      <h1 *ngIf="cliente(); else sinCliente">
+        {{ cliente()?.nombre || 'Sin nombre' }} {{ cliente()?.apellido || '' }}
+      </h1>
+      <ng-template #sinCliente>
+        <h1>Cliente no disponible</h1>
+      </ng-template>
+      <p class="details-cliente__lead" *ngIf="cliente()">
+        ID {{ cliente()?.id }} · DNI {{ cliente()?.dni || 'No informado' }}
+      </p>
+    </div>
+    <button type="button" class="details-cliente__back" (click)="onVolver()">
+      Volver
+    </button>
+  </header>
+
+  <ng-container *ngIf="cliente(); else emptyState">
+    <dl class="details-cliente__grid">
+      <div>
+        <dt>Nombre</dt>
+        <dd>{{ cliente()?.nombre || '—' }}</dd>
+      </div>
+      <div>
+        <dt>Apellido</dt>
+        <dd>{{ cliente()?.apellido || '—' }}</dd>
+      </div>
+      <div>
+        <dt>DNI</dt>
+        <dd>{{ cliente()?.dni || '—' }}</dd>
+      </div>
+      <div>
+        <dt>Teléfono</dt>
+        <dd>{{ cliente()?.telefono || '—' }}</dd>
+      </div>
+      <div>
+        <dt>Email</dt>
+        <dd>{{ cliente()?.email || '—' }}</dd>
+      </div>
+    </dl>
+  </ng-container>
+
+  <ng-template #emptyState>
+    <p class="details-cliente__empty">
+      Selecciona un cliente desde el listado para ver su información completa.
+    </p>
+  </ng-template>
+</section>

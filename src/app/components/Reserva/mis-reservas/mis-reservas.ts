@@ -3,11 +3,10 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { combineLatest, map, of } from 'rxjs';
 
 import { ReservaService } from '../../../services/Reservas/reservas-service';
-import { Reserva}  from '../../../models/reservas/reserva';
-import { ReservaResponseDTO, ReservaUpdateRequestDTO } from '../../../dto/Reserva';
+import { ReservaResponseDTO } from '../../../dto/Reserva';
 import { AuthService } from '../../../services/Auth/auth-service';
 import { UserInfoResponseDTO } from '../../../dto/user-info-response-dto';
 import { CardReserva } from '../card-reserva/card-reserva';
@@ -20,56 +19,85 @@ import { CardReserva } from '../card-reserva/card-reserva';
 })
 export class MisReservas {
   private router = inject(Router);
-  reservaSrv = inject(ReservaService);
-  authService = inject(AuthService);
+  private reservaSrv = inject(ReservaService);
+  private authService = inject(AuthService);
+
   reservas: ReservaResponseDTO[] = [];
   usuario: UserInfoResponseDTO | null = null;
+  loading = true;
+  mensajeClienteSinReservas = '';
 
   ngOnInit(): void {
-    this.obtenerReservas();
-    this.UsuarioActual();
+    this.cargarDatos();
   }
 
   onReservaClick(reserva: ReservaResponseDTO): void {
-    // Navegar al componente de detalles con el ID de la reserva
     this.router.navigate(['/reservas', reserva.id, 'details']);
   }
 
   onNuevaReserva(): void {
     this.router.navigate(['/reservas', 'new']);
   }
-  
 
-  obtenerReservas(): void {
-    this.reservaSrv.getReservasActivas().pipe(
-      catchError((error) => {
-        console.error('Error al obtener las reservas:', error);
-        return of([]); // Retorna un array vacío en caso de error
-      })
-    ).subscribe((data: ReservaResponseDTO[]) => {
-      this.reservas = data;
-    });
-    
+  mostrarBotonNuevaReserva(): boolean {
+    return !this.esAdmin();
   }
 
+  private cargarDatos(): void {
+    combineLatest<[ReservaResponseDTO[], UserInfoResponseDTO | null]>([
+      this.reservaSrv.getReservasActivas().pipe(
+        catchError((error) => {
+          console.error('Error al obtener las reservas:', error);
+          return of([] as ReservaResponseDTO[]);
+        })
+      ),
+      this.authService.getUserInfo().pipe(
+        map((user) => (user as UserInfoResponseDTO | null)),
+        catchError((error) => {
+          console.error('Error al obtener la informacion del usuario:', error);
+          return of(null as UserInfoResponseDTO | null);
+        })
+      ),
+    ]).subscribe(([reservas, usuario]) => {
+      this.usuario = usuario;
+      this.reservas = this.filtrarSegunUsuario(reservas, usuario);
+      this.mensajeClienteSinReservas =
+        this.esCliente() && this.reservas.length === 0
+          ? 'Todavía no tienes reservas registradas.'
+          : '';
+      this.loading = false;
+    });
+  }
 
-  // Las funciones de eliminar, cancelar y editar se han movido al componente details-reserva
-
-  
-
-
-  UsuarioActual(): void {
-    this.authService.getUserInfo().pipe(
-      catchError((error) => {
-        console.error('Error al obtener la información del usuario:', error);
-        return of(null as UserInfoResponseDTO | null); // Retorna null en caso de error
-      })
-    ).subscribe({
-      next: (data) => {
-        this.usuario = data as UserInfoResponseDTO | null;
+  private filtrarSegunUsuario(
+    reservas: ReservaResponseDTO[],
+    usuario: UserInfoResponseDTO | null
+  ): ReservaResponseDTO[] {
+    if (this.esCliente(usuario)) {
+      const email = usuario?.email?.toLowerCase();
+      if (!email) {
+        return [];
       }
-    });
+      return reservas.filter(
+        (reserva) => (reserva.clienteEmail ?? '').toLowerCase() === email
+      );
+    }
+    return reservas;
   }
 
+  private esCliente(usuario: UserInfoResponseDTO | null = this.usuario): boolean {
+    return this.normalizarRol(usuario?.role) === 'CLIENTE';
+  }
 
+  private esAdmin(): boolean {
+    const rol = this.authService.user()?.rol ?? this.usuario?.role;
+    return this.normalizarRol(rol) === 'ADMIN';
+  }
+
+  private normalizarRol(rol: string | null | undefined): string | null {
+    if (!rol) {
+      return null;
+    }
+    return rol.toString().toUpperCase().replace(/^ROLE_/, '');
+  }
 }

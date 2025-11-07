@@ -1,9 +1,13 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { API_CONFIG } from '../../config/API';
-import { AppRole, AuthUser, LoginRequest, RegisterRequest } from '../../models/auth.model';
-import { tap } from 'rxjs';
-import { Rol } from '../../models/usuarios/rol';
+import {
+  AppRole,
+  AuthUser,
+  LoginRequest,
+  RegisterRequest,
+} from '../../models/auth.model';
+import { take, tap } from 'rxjs';
 
 
 
@@ -17,7 +21,12 @@ export class AuthService {
   user = signal<AuthUser | null>(this.getUserFromStorage());
 
   getUserInfo() {
-    return this.http.get(`${this.baseUrl}/me`, { withCredentials: true });
+    return this.http.get(`${this.baseUrl}/me`, { withCredentials: true }).pipe(
+      tap((res) => {
+        const updated = this.mapToAuthUser(res, this.user());
+        this.persistUser(updated);
+      })
+    );
   }
 
   login(data: LoginRequest) {
@@ -25,10 +34,9 @@ export class AuthService {
       .post<any>(`${this.baseUrl}/login`, data, { withCredentials: true })
       .pipe(
         tap((res) => {
-          const stored = this.getUserFromStorage() || ({} as any);
-          const merged = { id: (res as any)?.id ?? (stored as any)?.id, rol: (res as any)?.rol ?? (stored as any)?.rol ?? 'USUARIO', nombre: (res as any)?.nombre ?? (stored as any)?.nombre } as AuthUser;
-          localStorage.setItem('user', JSON.stringify(merged));
-          this.user.set(merged);
+          const merged = this.mapToAuthUser(res, this.user());
+          this.persistUser(merged);
+          this.hydrateUserFromProfile();
         })
       );
   }
@@ -59,7 +67,12 @@ export class AuthService {
     if (!user) {
       return false;
     }
-    const userRole = user.rol as AppRole;
+    const userRole =
+      this.normalizeRole((user as any)?.rol) ??
+      this.normalizeRole((user as any)?.role);
+    if (!userRole) {
+      return false;
+    }
     if (userRole === 'ADMIN') {
       return true;
     }
@@ -72,7 +85,49 @@ export class AuthService {
 
   private getUserFromStorage(): AuthUser | null {
     const raw = localStorage.getItem('user');
-    return raw ? JSON.parse(raw) : null;
+    if (!raw) {
+      return null;
+    }
+    try {
+      const parsed = JSON.parse(raw);
+      return this.mapToAuthUser(parsed);
+    } catch {
+      return null;
+    }
+  }
+
+  private hydrateUserFromProfile(): void {
+    this.getUserInfo().pipe(take(1)).subscribe({ error: () => {} });
+  }
+
+  private persistUser(user: AuthUser): void {
+    localStorage.setItem('user', JSON.stringify(user));
+    this.user.set(user);
+  }
+
+  private mapToAuthUser(source: any, fallback?: AuthUser | null): AuthUser {
+    const fallbackRole = fallback
+      ? this.normalizeRole((fallback as any)?.rol ?? (fallback as any)?.role)
+      : null;
+    const normalizedRole =
+      this.normalizeRole(source?.rol ?? source?.role) ?? fallbackRole ?? 'CLIENTE';
+
+    return {
+      id: source?.id ?? fallback?.id ?? 0,
+      nombre: source?.nombre ?? fallback?.nombre ?? '',
+      rol: normalizedRole,
+      token: source?.token ?? fallback?.token ?? '',
+    };
+  }
+
+  private normalizeRole(value: unknown): AppRole | null {
+    if (typeof value !== 'string') {
+      return null;
+    }
+    const cleaned = value.trim().toUpperCase().replace(/^ROLE_/, '');
+    if (cleaned === 'ADMIN' || cleaned === 'EMPLEADO' || cleaned === 'CLIENTE') {
+      return cleaned as AppRole;
+    }
+    return null;
   }
 }
-

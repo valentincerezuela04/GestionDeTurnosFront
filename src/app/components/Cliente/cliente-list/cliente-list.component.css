@@ -1,0 +1,149 @@
+.clientes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+}
+
+.clientes-list__header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.clientes-list__eyebrow {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #64748b;
+}
+
+.clientes-list__lead {
+  margin: 4px 0 0;
+  color: #475569;
+  max-width: 560px;
+}
+
+.clientes-list__refresh {
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid #0f172a;
+  background: #0f172a;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.clientes-list__refresh:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.clientes-list__status {
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.clientes-list__status--error {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.clientes-list__cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cliente-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cliente-card__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+
+.cliente-card__eyebrow {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #6366f1;
+  font-weight: 600;
+}
+
+.cliente-card__dni {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.cliente-card__data {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.cliente-card__data div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.cliente-card__data dt {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  margin: 0;
+}
+
+.cliente-card__data dd {
+  margin: 0;
+  font-size: 1rem;
+  color: #0f172a;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.cliente-card {
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cliente-card:focus-within,
+.cliente-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 35px rgba(15, 23, 42, 0.12);
+}
+
+@media (max-width: 640px) {
+  .clientes-list {
+    padding: 16px;
+  }
+
+  .cliente-card {
+    padding: 16px;
+  }
+}

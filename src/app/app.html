@@ -9,7 +9,9 @@
 } @else {
   <div class="auth-layout">
     <header class="auth-layout__top">
-      <a routerLink="/register" class="auth-link">Registrarse</a>
+      @if (!isRegisterRoute()) {
+        <a routerLink="/register" class="auth-link">Registrarse</a>
+      }
     </header>
     <main class="auth-layout__main">
       <router-outlet></router-outlet>

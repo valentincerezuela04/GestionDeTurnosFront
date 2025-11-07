@@ -1,6 +1,8 @@
 <div class="header-hall">
   <h2>Salas</h2>
-  <button *ngIf="canCreate()" routerLink="/hall/new">Crear sala</button>
+  @if (canCreate()) {
+    <button routerLink="/hall/new">Crear sala</button>
+  }
 </div>
 
 

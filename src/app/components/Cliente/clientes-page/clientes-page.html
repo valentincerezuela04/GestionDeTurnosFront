@@ -1,0 +1,14 @@
+<section class="clientes-page">
+  <ng-container *ngIf="!clienteSeleccionado(); else detalle">
+    <app-clientes-list
+      (seleccionarCliente)="onSeleccion($event)"
+    ></app-clientes-list>
+  </ng-container>
+
+  <ng-template #detalle>
+    <app-details-cliente
+      [cliente]="clienteSeleccionado()"
+      (volver)="volverAlListado()"
+    ></app-details-cliente>
+  </ng-template>
+</section>

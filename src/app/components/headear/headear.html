@@ -14,7 +14,9 @@
     } @else {
       <div class="auth-actions">
         <button class="btn ghost" (click)="goLogin()">Iniciar sesion</button>
-        <button class="btn" (click)="goRegister()">Registrarse</button>
+        @if (!isRegisterRoute()) {
+          <button class="btn" (click)="goRegister()">Registrarse</button>
+        }
       </div>
     }
     <a class="btn ghost" (click)="goProfile()">Mi cuenta</a>

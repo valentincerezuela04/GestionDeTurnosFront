@@ -70,8 +70,11 @@
           <div class="perfil-usuario__field">
             <label for="contrasena">Contrasena</label>
             <input id="contrasena" type="text" formControlName="contrasena" />
-            @if (controls.contrasena.invalid && controls.contrasena.touched) {
+            @if (controls.contrasena.touched && controls.contrasena.hasError('required')) {
               <span class="perfil-usuario__error">La contrasena es obligatoria.</span>
+            }
+            @if (controls.contrasena.touched && controls.contrasena.hasError('minlength')) {
+              <span class="perfil-usuario__error">Debe tener al menos 4 caracteres.</span>
             }
           </div>
         </form>
