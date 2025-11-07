@@ -16,7 +16,7 @@ import { SalaDTO as Sala } from '../../../models/sala';
 @Component({
   selector: 'app-reserva-form',
   templateUrl: 'reserva-form.html',
-  styleUrls: ['reserva-form.css'],
+  styleUrls: ['./reserva-form.css'],
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, MatSnackBarModule],
 })

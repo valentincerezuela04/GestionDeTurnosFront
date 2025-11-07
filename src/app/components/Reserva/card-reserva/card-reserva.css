@@ -1,30 +1,59 @@
+/* ===== CARD RESERVA (lista) ===== */
 .card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    margin: 10px;
-    padding: 15px;
-    cursor: pointer;
-    transition: box-shadow 0.3s ease;
+  background:
+    radial-gradient(circle at 0 0, rgba(93,70,210,.15), rgba(12,14,20,1) 58%);
+  border: 1px solid rgba(255,255,255,.025);
+  border-radius: 16px;
+  padding: .85rem .9rem .75rem;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  box-shadow:
+    0 16px 30px rgba(0,0,0,.25),
+    0 2px 6px rgba(93,70,210,.10);
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+  color: #e7faff;
 }
 
 .card:hover {
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.card-header {
-    margin-bottom: 15px;
+  transform: translateY(-2px);
+  border-color: rgba(93,70,210,.45);
+  box-shadow:
+    0 20px 40px rgba(93,70,210,.25),
+    0 3px 10px rgba(0,0,0,.25);
 }
 
 .card-header h3 {
-    margin: 0;
-    color: #333;
+  margin: 0;
+  font-size: .95rem;
+  font-weight: 600;
+  text-shadow: 0 0 6px rgba(93,70,210,.35);
 }
 
 .card-body p {
-    margin: 8px 0;
-    color: #666;
+  margin: 0;
+  font-size: .78rem;
+  line-height: 1.25;
+  color: rgba(231,250,255,.95);
+}
+
+.card-body p + p {
+  margin-top: .25rem;
 }
 
 .card-body strong {
-    color: #333;
+  color: rgba(231,250,255,.6);
+  font-weight: 600;
+}
+
+/* por si el mail o estado es largo */
+.card-body p:last-child {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* opcional: estado con color */
+.card-body p:nth-child(4) strong {
+  color: #b1a7ec;
 }

@@ -1,65 +1,137 @@
-.mis-empleados {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+:root{
+  --page-bg: radial-gradient(circle at top, rgba(93,70,210,.12), rgba(5,8,13,1) 42%);
+  --surface: rgba(9, 11, 16, 0.65);
+  --surface-solid: #0f141c;
+  --stroke: rgba(255,255,255,0.04);
+  --muted: #8a94a7;
+  --text: #e7faff;
+  --accent: #5d46d2;     /* mismo color que el título */
+  --accent-soft: rgba(93,70,210,.15);
+  --success: #10b981;
 }
 
-.mis-empleados__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+/* contenedor general */
+.mis-empleados{
+  display:flex;
+  flex-direction:column;
+  gap:1.25rem;
+  background: transparent;
 }
 
-.mis-empleados__actions {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+/* header de la sección */
+.mis-empleados__header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  background: linear-gradient(120deg, rgba(93,70,210,.12), rgba(15,20,28,0));
+  border: 1px solid rgba(93,70,210,.04);
+  border-radius:16px;
+  padding: .75rem 1rem .9rem;
+  backdrop-filter: blur(6px);
 }
 
-.mis-empleados__add {
-  padding: 0.35rem 0.8rem;
-  border-radius: 6px;
-  border: none;
-  background-color: #10b981;
-  color: #fff;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+.mis-empleados__header h1{
+  margin:0;
+  font-size:1.4rem;
+  font-weight:700;
+  color:var(--text);
+  text-shadow:
+    0 0 6px rgba(93,70,210,.25),
+    0 0 16px rgba(93,70,210,.15);
 }
 
-.mis-empleados__add:hover {
-  background-color: #059669;
+.mis-empleados__actions{
+  display:flex;
+  align-items:center;
+  gap:.65rem;
 }
 
-.mis-empleados__refresh {
-  padding: 0.35rem 0.75rem;
-  border-radius: 6px;
-  border: none;
-  background-color: #2563eb;
-  color: #fff;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+/* botones con la misma onda que la topbar */
+.mis-empleados__add,
+.mis-empleados__refresh{
+  display:inline-flex;
+  align-items:center;
+  gap:.4rem;
+  padding:.45rem .8rem;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.04);
+  background: rgba(255,255,255,.015);
+  color:var(--text);
+  font-weight:600;
+  cursor:pointer;
+  transition: background .16s ease, border-color .16s ease, transform .08s ease;
+  line-height:1;
+  font-size:.83rem;
 }
 
-.mis-empleados__refresh:disabled {
-  background-color: #94a3b8;
-  cursor: not-allowed;
+/* botón principal “nuevo empleado” en violeta */
+.mis-empleados__add{
+  background: linear-gradient(180deg, rgba(93,70,210,.5), rgba(93,70,210,.25));
+  border:1px solid rgba(93,70,210,.6);
+  box-shadow: 0 4px 18px rgba(93,70,210,.15);
+}
+.mis-empleados__add:hover{
+  background: linear-gradient(180deg, rgba(93,70,210,.7), rgba(93,70,210,.35));
+  transform: translateY(-1px);
+}
+.mis-empleados__add:active{ transform: translateY(0); }
+
+/* botón secundario “actualizar” */
+.mis-empleados__refresh{
+  background: rgba(255,255,255,.02);
+  border:1px solid rgba(255,255,255,.04);
+  color:var(--muted);
+}
+.mis-empleados__refresh:hover:not(:disabled){
+  background: rgba(255,255,255,.04);
+  color:var(--text);
+  transform: translateY(-1px);
+}
+.mis-empleados__refresh:disabled{
+  opacity:.4;
+  cursor:not-allowed;
 }
 
-.mis-empleados__refresh:not(:disabled):hover {
-  background-color: #1d4ed8;
+/* mensajes de error / vacío en dark */
+.mis-empleados__error{
+  color:#f87171;
+  background: rgba(248,113,113,.08);
+  border: 1px solid rgba(248,113,113,.15);
+  padding:.5rem .75rem;
+  border-radius:12px;
+  font-size:.8rem;
+}
+.mis-empleados__empty{
+  color:var(--muted);
+  font-size:.85rem;
+  padding:.25rem .25rem 0;
 }
 
-.mis-empleados__error {
-  color: #dc2626;
-}
-
-.mis-empleados__empty {
-  color: #4b5563;
-}
-
-.mis-empleados__grid {
-  display: grid;
-  gap: 1rem;
+/* grid de tarjetas */
+.mis-empleados__grid{
+  display:grid;
+  gap:1rem;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+/* si las cards de empleado vienen de otro componente,
+   al menos les damos un fondo coherente por si no lo tienen */
+.mis-empleados__grid app-card-empleados{
+  background: radial-gradient(circle at 5% 0%, rgba(93,70,210,.12), rgba(9,11,16,1));
+  border: 1px solid rgba(255,255,255,.015);
+  border-radius: 16px;
+  box-shadow: 0 10px 35px rgba(0,0,0,.18);
+}
+
+/* responsive */
+@media (max-width: 640px){
+  .mis-empleados__header{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+  .mis-empleados__actions{
+    width:100%;
+    justify-content:flex-start;
+  }
 }
