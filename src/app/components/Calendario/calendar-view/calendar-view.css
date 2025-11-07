@@ -1,17 +1,64 @@
-.cal-toolbar {
+/* barra superior del calendario */
+.cal-toolbar{
   display: flex;
-  gap: 12px;
   align-items: center;
-  margin: 12px 0 16px;
+  gap: .75rem;
+  margin-bottom: .8rem;
+  padding: .45rem .8rem;
+  background: linear-gradient(120deg, rgba(93,70,210,.14), rgba(7,9,14,0));
+  border: 1px solid rgba(93,70,210,.05);
+  border-radius: 14px;
+  backdrop-filter: blur(6px);
+  color: #e7faff;
+  flex-wrap: wrap;
 }
 
-button {
-  padding: 6px 10px;
-  border-radius: 8px;
-  border: 1px solid #444;
-  background: transparent;
+/* checkbox + label */
+.cal-toolbar label{
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font-size: .78rem;
+  cursor: pointer;
+  color: rgba(231,250,255,.85);
+}
+
+.cal-toolbar input[type="checkbox"]{
+  width: 16px;
+  height: 16px;
+  accent-color: #5d46d2; /* navegadores modernos */
   cursor: pointer;
 }
-button:hover {
-  background-color: #f0f0f0;
+
+/* botón refrescar */
+.cal-toolbar button{
+  border: 1px solid rgba(93,70,210,.55);
+  background: linear-gradient(180deg, rgba(93,70,210,.55), rgba(93,70,210,.25));
+  color: #fff;
+  border-radius: 999px;
+  padding: .35rem .85rem;
+  font-weight: 600;
+  font-size: .74rem;
+  cursor: pointer;
+  transition: background .14s ease, transform .08s ease, box-shadow .14s ease;
+  box-shadow: 0 4px 16px rgba(93,70,210,.18);
+}
+.cal-toolbar button:hover{
+  background: linear-gradient(180deg, rgba(93,70,210,.7), rgba(93,70,210,.35));
+  transform: translateY(-1px);
+  box-shadow: 0 5px 20px rgba(93,70,210,.23);
+}
+
+/* estado cargando */
+.cal-toolbar span{
+  font-size: .7rem;
+  color: #8f97aa;
+}
+
+/* responsive */
+@media (max-width: 620px){
+  .cal-toolbar{
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
