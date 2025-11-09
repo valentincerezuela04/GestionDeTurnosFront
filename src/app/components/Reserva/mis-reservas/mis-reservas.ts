@@ -16,6 +16,7 @@ import { CardReserva } from '../card-reserva/card-reserva';
   standalone: true,
   imports: [CommonModule, CardReserva],
   templateUrl: './mis-reservas.html',
+  styleUrls: ['./mis-reservas.css'],
 })
 export class MisReservas {
   private router = inject(Router);

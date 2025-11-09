@@ -18,7 +18,7 @@ import { Cliente } from '../../../models/usuarios/cliente';
 @Component({
   selector: 'app-reserva-form',
   templateUrl: 'reserva-form.html',
-  styleUrls: ['reserva-form.css'],
+  styleUrls: ['./reserva-form.css'],
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, MatSnackBarModule],
 })

@@ -1,156 +1,191 @@
+/* ===== DETALLES RESERVA ===== */
 .details-container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background: radial-gradient(circle at 0 0, rgba(93,70,210,.12), rgba(6,7,11,1));
+  border: 1px solid rgba(255,255,255,.02);
+  border-radius: 18px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 20px 45px rgba(0,0,0,.25);
+  color: #e7faff;
 }
 
 .details-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .details-header h2 {
-    margin: 0;
+  margin: 0;
+  font-size: 1.05rem;
+  text-shadow: 0 0 6px rgba(93,70,210,.35);
 }
 
+/* reutilizamos tus botones */
+.btn {
+  border-radius: 999px;
+  border: 1px solid transparent;
+  padding: .45rem 1rem;
+  font-weight: 600;
+  font-size: .75rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .14s ease, transform .08s ease, box-shadow .14s ease;
+}
+
+/* secundarios / volver */
+.btn.btn-secondary {
+  background: rgba(231,250,255,.02);
+  border: 1px solid rgba(231,250,255,.05);
+  color: #e7faff;
+}
+.btn.btn-secondary:hover {
+  background: rgba(231,250,255,.06);
+  transform: translateY(-1px);
+}
+
+/* primarios / editar, guardar */
+.btn.btn-primary,
+.btn.btn-success {
+  background: linear-gradient(135deg, #5d46d2 0%, #8f7aff 60%);
+  border: 1px solid rgba(255,255,255,.02);
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(93,70,210,.3);
+}
+.btn.btn-primary:hover,
+.btn.btn-success:hover {
+  background: linear-gradient(135deg, #5AE2FF 0%, #B7FF00 95%);
+  box-shadow:
+    0 0 14px rgba(90,226,255,.45),
+    0 0 32px rgba(183,255,0,.25);
+  transform: translateY(-1px);
+}
+
+/* warning / cancelar reserva */
+.btn.btn-warning {
+  background: rgba(250,204,21,.12);
+  border: 1px solid rgba(250,204,21,.35);
+  color: #fef9c3;
+}
+.btn.btn-warning:hover {
+  background: rgba(250,204,21,.2);
+  transform: translateY(-1px);
+}
+
+/* danger / eliminar */
+.btn.btn-danger {
+  background: rgba(244,63,94,.12);
+  border: 1px solid rgba(244,63,94,.35);
+  color: #fee2e2;
+}
+.btn.btn-danger:hover {
+  background: rgba(244,63,94,.2);
+  transform: translateY(-1px);
+}
+
+/* contenido */
 .details-content {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
 }
 
+/* cada bloque */
 .info-section {
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-radius: 6px;
+  background: rgba(7,8,13,.45);
+  border: 1px solid rgba(255,255,255,.015);
+  border-radius: 14px;
+  padding: .65rem .75rem .7rem;
+  display: flex;
+  flex-direction: column;
+  gap: .45rem;
 }
-
 .info-section h3 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    color: #333;
+  margin: 0;
+  font-size: .9rem;
+  color: #e7faff;
 }
 
 .info-section p {
-    margin: 10px 0;
-    color: #666;
+  margin: 0;
+  font-size: .75rem;
+  line-height: 1.35;
+  color: rgba(231,250,255,.9);
 }
-
 .info-section strong {
-    color: #333;
+  color: rgba(231,250,255,.55);
 }
 
-.actions-section {
-    display: flex;
-    gap: 10px;
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-radius: 6px;
-}
-
-.btn {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s;
-}
-
-.btn:hover {
-    transform: translateY(-1px);
-}
-
-.btn-primary {
-    background-color: #007bff;
-    color: white;
-}
-
-.btn-warning {
-    background-color: #ffc107;
-    color: #000;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    color: white;
-}
-
-.btn-secondary {
-    background-color: #6c757d;
-    color: white;
-}
-
-.btn-success {
-    background-color: #28a745;
-    color: white;
-}
-
-.loading {
-    text-align: center;
-    padding: 40px;
-    color: #666;
-}
-
-/* Estilos para el formulario de edición */
+/* form de edición dentro de los bloques */
 .edit-form {
-    padding: 15px;
-    background-color: #fff;
-    border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
 }
-
 .form-group {
-    margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
 }
-
 .form-group label {
-    display: block;
-    margin-bottom: 5px;
-    color: #333;
-    font-weight: 500;
+  font-size: .65rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: rgba(231,250,255,.7);
 }
-
 .form-control {
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-    transition: border-color 0.2s;
+  background: rgba(7,10,14,.45);
+  border: 1px solid rgba(231,250,255,.03);
+  border-radius: 10px;
+  padding: .4rem .55rem;
+  color: #e7faff;
+  font-size: .78rem;
+  outline: none;
+  transition: border .12s ease, box-shadow .12s ease;
 }
-
 .form-control:focus {
-    border-color: #007bff;
-    outline: none;
+  border: 1px solid rgba(93,70,210,.85);
+  box-shadow: 0 0 0 3px rgba(93,70,210,.15);
 }
 
-select.form-control {
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-    background-size: 16px;
-    padding-right: 32px;
+/* acciones abajo */
+.actions-section {
+  background: rgba(7,8,13,.45);
+  border: 1px solid rgba(255,255,255,.015);
+  border-radius: 14px;
+  padding: .65rem .75rem .7rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.actions-section > div {
+  display: flex;
+  gap: .4rem;
+  flex-wrap: wrap;
 }
 
-/* Responsividad */
-@media (max-width: 600px) {
-    .details-container {
-        margin: 10px;
-        padding: 15px;
-    }
+/* loading */
+.loading {
+  background: rgba(7,8,13,.25);
+  border: 1px solid rgba(255,255,255,.01);
+  border-radius: 12px;
+  padding: .6rem .75rem;
+  color: #8f97aa;
+}
 
-    .actions-section {
-        flex-direction: column;
-    }
-
-    .btn {
-        width: 100%;
-        margin-bottom: 8px;
-    }
+/* responsive */
+@media (max-width: 880px) {
+  .details-content {
+    grid-template-columns: 1fr;
+  }
+  .details-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .actions-section {
+    justify-content: flex-start;
+  }
 }
