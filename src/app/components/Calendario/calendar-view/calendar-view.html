@@ -8,7 +8,9 @@
     Refrescar
   </button>
 
-  <span *ngIf="loading()" class="loading-pill">Cargando eventos…</span>
+  @if (loading()) {
+    <span class="loading-pill">Cargando eventos…</span>
+  }
 </section>
 
 <div class="calendar-panel">
