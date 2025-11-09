@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClientesService } from '../../../services/Clientes/cliente-service';
 import { Cliente } from '../../../models/usuarios/cliente';
@@ -7,14 +7,16 @@ import { Cliente } from '../../../models/usuarios/cliente';
   selector: 'app-clientes-list',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: '\cliente-list.html',
-  styleUrls: ['\cliente-list.css']
+  templateUrl: './cliente-list.component.html',
+  styleUrls: ['./cliente-list.component.css']
 })
 export class ClientesListComponent implements OnInit {
 
   clientes: Cliente[] = [];
   loading = false;
   error: string | null = null;
+
+  readonly seleccionarCliente = output<Cliente>();
 
   clientesService = inject(ClientesService);
 
@@ -37,5 +39,9 @@ export class ClientesListComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  seleccionar(cliente: Cliente): void {
+    this.seleccionarCliente.emit(cliente);
   }
 }

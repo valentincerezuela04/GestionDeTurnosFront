@@ -25,7 +25,7 @@ export class RegisterPageComponent {
     email: ['', [Validators.required, Validators.email]],
     contrasena: [
       '',
-      [Validators.required, Validators.minLength(6), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/)],
+      [Validators.required, Validators.minLength(4), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/)],
     ],
   });
 

@@ -1,6 +1,8 @@
 <div class="header-hall">
   <h2>Salas</h2>
-  <button routerLink="/hall/new">Crear sala</button>
+  @if (canCreate()) {
+    <button routerLink="/hall/new">Crear sala</button>
+  }
 </div>
 
 
@@ -12,6 +14,8 @@
       @for (hall of hallList(); track hall.id) {
         <app-card-hall
           [hall]="hall"
+          [canEdit]="canEdit()"
+          [canRemove]="canDelete()"
           (delete)="deleteSala($event)"
         ></app-card-hall>
       }

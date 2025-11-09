@@ -1,0 +1,12 @@
+<section class="clientes-page">
+  @if (!clienteSeleccionado()) {
+    <app-clientes-list
+      (seleccionarCliente)="onSeleccion($event)"
+    ></app-clientes-list>
+  } @else {
+    <app-details-cliente
+      [cliente]="clienteSeleccionado()"
+      (volver)="volverAlListado()"
+    ></app-details-cliente>
+  }
+</section>

@@ -38,7 +38,7 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
     dni: ['', [Validators.required]],
     telefono: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
-    contrasena: ['', [Validators.required]],
+    contrasena: ['', [Validators.required, Validators.minLength(4)]],
     legajo: [''],
     rol: [Rol.EMPLEADO as Rol, [Validators.required]],
   });

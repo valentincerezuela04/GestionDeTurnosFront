@@ -1,0 +1,66 @@
+<section class="clientes-list">
+  <header class="clientes-list__header">
+    <div>
+      <p class="clientes-list__eyebrow">Gestión de clientes</p>
+      <h1>Clientes</h1>
+      <p class="clientes-list__lead">
+        Consulta los datos básicos de cada cliente registrado en la plataforma.
+      </p>
+    </div>
+    <button
+      type="button"
+      class="clientes-list__refresh"
+      (click)="cargarClientes()"
+      [disabled]="loading"
+    >
+      {{ loading ? 'Actualizando...' : 'Actualizar' }}
+    </button>
+  </header>
+
+  @if (loading) {
+    <div class="clientes-list__status">Cargando clientes...</div>
+  }
+  @if (error) {
+    <div class="clientes-list__status clientes-list__status--error">
+      {{ error }}
+    </div>
+  }
+  @if (!loading && !error && clientes.length === 0) {
+    <div class="clientes-list__status">
+      No hay clientes registrados.
+    </div>
+  }
+
+  @if (!loading && !error && clientes.length > 0) {
+    <div class="clientes-list__cards">
+      @for (c of clientes; track c.id) {
+        <article
+          class="cliente-card"
+          role="button"
+          tabindex="0"
+          (click)="seleccionar(c)"
+          (keyup.enter)="seleccionar(c)"
+        >
+          <header class="cliente-card__header">
+            <div>
+              <p class="cliente-card__eyebrow">Cliente #{{ c.id }}</p>
+              <h2>{{ c.nombre }} {{ c.apellido }}</h2>
+            </div>
+            <span class="cliente-card__dni">DNI {{ c.dni || 'N/A' }}</span>
+          </header>
+          <dl class="cliente-card__data">
+            <div>
+              <dt>Email</dt>
+              <dd>{{ c.email || 'Sin email' }}</dd>
+            </div>
+            <div>
+              <dt>Teléfono</dt>
+              <dd>{{ c.telefono || 'Sin teléfono' }}</dd>
+            </div>
+          </dl>
+        </article>
+      }
+    </div>
+  }
+
+</section>

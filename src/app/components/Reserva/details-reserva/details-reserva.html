@@ -16,13 +16,21 @@
         } @else {
           <div class="edit-form">
             <div class="form-group">
-              <label for="salaNumero">Número de Sala:</label>
-              <input 
-                type="number" 
-                id="salaNumero" 
-                [ngModel]="editForm().salaNumero" 
-                (ngModelChange)="updateSalaNumero($event)"
+              <label for="salaId">Sala:</label>
+              <select
+                id="salaId"
+                [ngModel]="editForm().salaId"
+                (ngModelChange)="updateSalaId($event)"
                 class="form-control">
+                <option [ngValue]="null" disabled>
+                  Seleccioná una sala
+                </option>
+                @for (sala of salas(); track sala.id) {
+                  <option [value]="sala.id">
+                    Sala {{sala.numero}} - Capacidad {{sala.cantidad_personas}}
+                  </option>
+                }
+              </select>
             </div>
           </div>
         }

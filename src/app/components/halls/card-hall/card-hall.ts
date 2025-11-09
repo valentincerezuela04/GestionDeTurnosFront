@@ -10,10 +10,12 @@ import { RouterLink } from '@angular/router';
   styleUrl: './card-hall.css',
 })
 export class CardHall {
-  hall = input.required<SalaDTO>()
-  delete = output<number>()
+  hall = input.required<SalaDTO>();
+  canEdit = input(false);
+  canRemove = input(false);
+  delete = output<number>();
 
-  onDeleteClick() {
-    this.delete.emit(this.hall().id)
+  onDeleteClick(): void {
+    this.delete.emit(this.hall().id);
   }
 }

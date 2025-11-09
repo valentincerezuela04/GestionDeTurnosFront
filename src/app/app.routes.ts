@@ -9,7 +9,7 @@ export const routes: Routes = [
   //publico>>>>>>>
     {path:'login' ,component: LoginPageComponent} ,
     {path:'register' ,component: RegisterPageComponent} ,
-    { path: '', redirectTo: 'hall', pathMatch: 'full' },
+    { path: '', redirectTo: 'login', pathMatch: 'full' },
 
   // Salas
   {
@@ -120,8 +120,8 @@ export const routes: Routes = [
   {
     path: 'clientes', canMatch: [authCanMatch],
     loadComponent: () =>
-      import('./components/Cliente/cliente-list/cliente-list').then(
-        (m) => m.ClientesListComponent
+      import('./components/Cliente/clientes-page/clientes-page').then(
+        (m) => m.ClientesPageComponent
       ),
     data: { title: 'Clientes' },
     canActivate: [roleGuard('CLIENTE', 'EMPLEADO')]
@@ -148,7 +148,7 @@ export const routes: Routes = [
   },
 
   // Fallback
-  { path: '**', redirectTo: 'hall' },
+  { path: '**', redirectTo: 'login' },
 ];
 
 

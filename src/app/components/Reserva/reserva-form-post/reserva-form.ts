@@ -8,10 +8,12 @@ import { Router } from '@angular/router';
 import { ReservaService } from '../../../services/Reservas/reservas-service';
 import { AuthService } from '../../../services/Auth/auth-service';
 import { SalasService } from '../../../services/Salas/salas-service';
+import { ClientesService } from '../../../services/Clientes/cliente-service';
 
 import { ReservaRequestByClienteDTO, ReservaRequestByEmpleadoDTO } from '../../../dto/Reserva';
 import { UserInfoResponseDTO } from '../../../dto/user-info-response-dto';
 import { SalaDTO as Sala } from '../../../models/sala';
+import { Cliente } from '../../../models/usuarios/cliente';
 
 @Component({
   selector: 'app-reserva-form',
@@ -27,6 +29,7 @@ export class ReservaFormComponent implements OnInit {
 
   usuario: UserInfoResponseDTO | null = null;
   salas: Sala[] = [];
+  clientes: Cliente[] = [];
   tipoPagos: Array<'EFECTIVO' | 'TARJETA'> = ['EFECTIVO', 'TARJETA'];
 
   // DI
@@ -34,6 +37,7 @@ export class ReservaFormComponent implements OnInit {
   private reservaService = inject(ReservaService);
   authService = inject(AuthService);
   salasService = inject(SalasService);
+  clientesService = inject(ClientesService);
   router = inject(Router);
   private snackBar = inject(MatSnackBar);
 
@@ -94,7 +98,7 @@ export class ReservaFormComponent implements OnInit {
         duration: 3000,
         panelClass: ['success-snackbar'],
       });
-      setTimeout(() => this.router.navigate(['/mis-reservas']), 800);
+      setTimeout(() => this.router.navigate(['/reservas']), 800);
     };
 
     const onError = (err: any) => {
@@ -130,6 +134,7 @@ export class ReservaFormComponent implements OnInit {
         if (this.isEmpleado()) {
           this.form?.get('clienteId')?.addValidators([Validators.required]);
           this.form?.get('clienteId')?.updateValueAndValidity();
+          this.cargarClientes();
         }
       },
       error: (err) => console.error('Error al obtener el usuario actual:', err),
@@ -159,5 +164,12 @@ export class ReservaFormComponent implements OnInit {
     const d = new Date(value);
     const pad = (n: number) => String(n).padStart(2, '0');
     return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  private cargarClientes(): void {
+    this.clientesService.getAll().subscribe({
+      next: (clientes) => (this.clientes = clientes ?? []),
+      error: () => this.snackBar.open('No se pudieron cargar los clientes', 'Cerrar', { duration: 2500 })
+    });
   }
 }

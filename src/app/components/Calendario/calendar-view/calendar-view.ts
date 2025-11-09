@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild, inject, signal } from '@angular/core';
+import { Component, ViewChild, signal, inject } from '@angular/core';
 import { CalendarService } from '../../../services/Calendar/calendar-service';
 import { CalendarDto } from '../../../models/calendarModel';
-
 import { FullCalendarComponent, FullCalendarModule } from '@fullcalendar/angular';
 import { CalendarOptions, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -19,14 +18,16 @@ import { Router } from '@angular/router';
   styleUrls: ['./calendar-view.css'], // <- ojo acá
 })
 export class CalendarViewComponent {
-  router = inject(Router)
   @ViewChild('fc') calendar?: FullCalendarComponent;
 
   loading = signal(true);
   onlyMine = signal(false);
+
+  private router = inject(Router);
+
   calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin], // <- clave
-    initialView: 'dayGridWeek',
+    initialView: 'dayGridMonth',
     locale: 'es',
     locales: [esLocale],
     firstDay: 1,
@@ -68,11 +69,10 @@ export class CalendarViewComponent {
       return { html: `<div>${hora}<br>${styled}</div>` };
     },
     eventClick: (info) => {
-      const id = info.event.id
-      const desc = (info.event.extendedProps as any)?.description;
-       this.router.navigate(['/reservas', id, 'details']);
-  
-       
+      const id = info.event.id;
+      if (id) {
+        this.router.navigate(['/reservas', id, 'details']);
+      }
     }
   };
 

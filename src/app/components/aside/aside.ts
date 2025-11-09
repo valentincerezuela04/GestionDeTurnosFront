@@ -1,12 +1,11 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { NgIf } from '@angular/common';
 import { AuthService } from '../../services/Auth/auth-service';
 import { AppRole } from '../../models/auth.model';
 
 @Component({
   selector: 'app-aside',
-  imports: [RouterLink, NgIf],
+  imports: [RouterLink],
   templateUrl: './aside.html',
   styleUrl: './aside.css',
 })
@@ -19,4 +18,5 @@ export class Aside {
     const current = this.role();
     return current === 'ADMIN' || current === 'EMPLEADO';
   });
+  readonly isAdmin = computed(() => this.role() === 'ADMIN');
 }

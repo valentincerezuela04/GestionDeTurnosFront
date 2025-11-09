@@ -29,6 +29,10 @@ export class Headear {
     this.router.navigate(['/register']);
   }
 
+  isRegisterRoute(): boolean {
+    return this.router.url.startsWith('/register');
+  }
+
   goProfile(){
     if(!this.auth.isLoggedIn()){
       this.router.navigate(['/login']);

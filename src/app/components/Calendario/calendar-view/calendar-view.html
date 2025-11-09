@@ -1,12 +1,18 @@
 <section class="cal-toolbar">
-  <label>
+  <label class="cal-filter">
     <input type="checkbox" (change)="setOnlyMine($event.target.checked)" />
     Solo mis reservas
   </label>
 
-  <button type="button" (click)="refetch()">Refrescar</button>
+  <button type="button" (click)="refetch()" class="refresh-btn">
+    Refrescar
+  </button>
 
-  <span *ngIf="loading()">Cargando eventos…</span>
+  @if (loading()) {
+    <span class="loading-pill">Cargando eventos…</span>
+  }
 </section>
 
-<full-calendar #fc [options]="calendarOptions"></full-calendar>
+<div class="calendar-panel">
+  <full-calendar #fc [options]="calendarOptions"></full-calendar>
+</div>

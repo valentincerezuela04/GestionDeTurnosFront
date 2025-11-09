@@ -1,64 +1,106 @@
 /* barra superior del calendario */
 .cal-toolbar{
   display: flex;
-  align-items: center;
-  gap: .75rem;
-  margin-bottom: .8rem;
-  padding: .45rem .8rem;
-  background: linear-gradient(120deg, rgba(93,70,210,.14), rgba(7,9,14,0));
-  border: 1px solid rgba(93,70,210,.05);
-  border-radius: 14px;
-  backdrop-filter: blur(6px);
-  color: #e7faff;
   flex-wrap: wrap;
-}
-
-/* checkbox + label */
-.cal-toolbar label{
-  display: inline-flex;
+  gap: 1rem;
   align-items: center;
-  gap: .35rem;
-  font-size: .78rem;
-  cursor: pointer;
-  color: rgba(231,250,255,.85);
+  justify-content: space-between;
+  background: #f4f6fb;
+  border-radius: 14px;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid #e2e6f0;
 }
 
-.cal-toolbar input[type="checkbox"]{
-  width: 16px;
-  height: 16px;
-  accent-color: #5d46d2; /* navegadores modernos */
-  cursor: pointer;
-}
-
-/* botón refrescar */
-.cal-toolbar button{
-  border: 1px solid rgba(93,70,210,.55);
-  background: linear-gradient(180deg, rgba(93,70,210,.55), rgba(93,70,210,.25));
-  color: #fff;
-  border-radius: 999px;
-  padding: .35rem .85rem;
+.cal-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
   font-weight: 600;
-  font-size: .74rem;
+  color: #334155;
+}
+
+.cal-filter input {
+  accent-color: #2563eb;
+  width: 18px;
+  height: 18px;
+}
+
+.refresh-btn {
+  padding: 0.55rem 1.2rem;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(120deg, #2563eb, #3b82f6);
   cursor: pointer;
-  transition: background .14s ease, transform .08s ease, box-shadow .14s ease;
-  box-shadow: 0 4px 16px rgba(93,70,210,.18);
+  box-shadow: 0 10px 20px rgba(59, 130, 246, 0.25);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
-.cal-toolbar button:hover{
-  background: linear-gradient(180deg, rgba(93,70,210,.7), rgba(93,70,210,.35));
+
+.refresh-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 5px 20px rgba(93,70,210,.23);
+  box-shadow: 0 15px 30px rgba(59, 130, 246, 0.3);
 }
 
-/* estado cargando */
-.cal-toolbar span{
-  font-size: .7rem;
-  color: #8f97aa;
+.loading-pill {
+  background: #fff;
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.9rem;
+  color: #475569;
+  border: 1px solid #e2e8f0;
 }
 
-/* responsive */
-@media (max-width: 620px){
-  .cal-toolbar{
-    flex-direction: column;
-    align-items: flex-start;
-  }
+.calendar-panel {
+  margin-top: 1.5rem;
+  border: 1px solid #e2e6f0;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+:host ::ng-deep .fc {
+  background: #fff;
+  border-radius: 18px;
+}
+
+:host ::ng-deep .fc .fc-toolbar.fc-header-toolbar {
+  padding: 1rem;
+  margin-bottom: 0;
+  background: #f9fafb;
+  border-bottom: 1px solid #e2e6f0;
+}
+
+:host ::ng-deep .fc .fc-button-primary {
+  background: #2563eb;
+  border: none;
+  border-radius: 8px;
+  padding: 0.4rem 0.8rem;
+  box-shadow: none;
+}
+
+:host ::ng-deep .fc .fc-button-primary:not(:disabled):hover {
+  background: #1d4ed8;
+}
+
+:host ::ng-deep .fc .fc-daygrid-day,
+:host ::ng-deep .fc .fc-timegrid-slot {
+  background: #fbfcff;
+}
+
+:host ::ng-deep .fc .fc-daygrid-day-number {
+  color: #475569;
+  font-weight: 600;
+}
+
+:host ::ng-deep .fc .fc-event {
+  border: none;
+  border-radius: 10px;
+  padding: 0.35rem;
+  background: linear-gradient(120deg, #ff6b6b, #f06595);
+  box-shadow: 0 10px 20px rgba(240, 101, 149, 0.25);
+  color: #fff;
+}
+
+:host ::ng-deep .fc .fc-daygrid-day.fc-day-today {
+  background: #e0edff;
 }

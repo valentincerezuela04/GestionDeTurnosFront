@@ -1,0 +1,49 @@
+<section class="details-cliente">
+  <header class="details-cliente__header">
+    <div>
+      <p class="details-cliente__eyebrow">Detalle de cliente</p>
+      @if (cliente(); as data) {
+        <h1>
+          {{ data?.nombre || 'Sin nombre' }} {{ data?.apellido || '' }}
+        </h1>
+        <p class="details-cliente__lead">
+          ID {{ data?.id }} – DNI {{ data?.dni || 'No informado' }}
+        </p>
+      } @else {
+        <h1>Cliente no disponible</h1>
+      }
+    </div>
+    <button type="button" class="details-cliente__back" (click)="onVolver()">
+      Volver
+    </button>
+  </header>
+
+  @if (cliente(); as data) {
+    <dl class="details-cliente__grid">
+      <div>
+        <dt>Nombre</dt>
+        <dd>{{ data?.nombre || '—' }}</dd>
+      </div>
+      <div>
+        <dt>Apellido</dt>
+        <dd>{{ data?.apellido || '—' }}</dd>
+      </div>
+      <div>
+        <dt>DNI</dt>
+        <dd>{{ data?.dni || '—' }}</dd>
+      </div>
+      <div>
+        <dt>Teléfono</dt>
+        <dd>{{ data?.telefono || '—' }}</dd>
+      </div>
+      <div>
+        <dt>Email</dt>
+        <dd>{{ data?.email || '—' }}</dd>
+      </div>
+    </dl>
+  } @else {
+    <p class="details-cliente__empty">
+      Selecciona un cliente desde el listado para ver su información completa.
+    </p>
+  }
+</section>
