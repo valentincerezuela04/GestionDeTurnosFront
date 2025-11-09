@@ -7,6 +7,8 @@ import { AuthService } from '../../../services/Auth/auth-service';
 import { ReservaResponseDTO, ReservaUpdateRequestDTO } from '../../../dto/Reserva';
 import { UserInfoResponseDTO } from '../../../dto/user-info-response-dto';
 import { TipoPago } from '../../../models/reservas/tipo-pago';
+import { SalasService } from '../../../services/Salas/salas-service';
+import { SalaDTO as Sala } from '../../../models/sala';
 
 @Component({
   selector: 'app-details-reserva',
@@ -20,21 +22,23 @@ export class DetailsReserva {
   private router = inject(Router);
   private reservaSrv = inject(ReservaService);
   private authService = inject(AuthService);
+  private salasService = inject(SalasService);
 
   // Signals para el estado
   readonly reserva = signal<ReservaResponseDTO | null>(null);
   readonly usuario = signal<UserInfoResponseDTO | null>(null);
   readonly isEditing = signal<boolean>(false);
   readonly tipoPagoOptions = signal<TipoPago[]>([TipoPago.EFECTIVO, TipoPago.TARJETA]);
+  readonly salas = signal<Sala[]>([]);
 
-  // Signal para el formulario de edición
+  // Estado del formulario de edición
   readonly editForm = signal<{
-    salaNumero: number;
+    salaId: number | null;
     fechaInicio: string;
     fechaFinal: string;
     tipoPago: TipoPago;
   }>({
-    salaNumero: 0,
+    salaId: null,
     fechaInicio: '',
     fechaFinal: '',
     tipoPago: TipoPago.EFECTIVO
@@ -53,6 +57,7 @@ export class DetailsReserva {
       this.cargarReserva(Number(id));
     }
     this.cargarUsuario();
+    this.cargarSalas();
   }
 
   cargarReserva(id: number): void {
@@ -67,11 +72,22 @@ export class DetailsReserva {
 
       // Inicializar formulario de edición
       this.editForm.set({
-        salaNumero: reservaEncontrada.salaNumero,
+        salaId: this.getSalaIdFromNumero(reservaEncontrada.salaNumero),
         fechaInicio: reservaEncontrada.fechaInicio,
         fechaFinal: reservaEncontrada.fechaFinal,
         tipoPago: reservaEncontrada.tipoPago as TipoPago
       });
+      this.syncSalaSeleccion();
+    });
+  }
+
+  private cargarSalas(): void {
+    this.salasService.getAll().subscribe({
+      next: (salas) => {
+        this.salas.set(salas ?? []);
+        this.syncSalaSeleccion();
+      },
+      error: (err) => console.error('Error al cargar las salas:', err)
     });
   }
 
@@ -95,7 +111,7 @@ export class DetailsReserva {
     const currentReserva = this.reserva();
     if (currentReserva) {
       this.editForm.set({
-        salaNumero: currentReserva.salaNumero,
+        salaId: this.getSalaIdFromNumero(currentReserva.salaNumero),
         fechaInicio: currentReserva.fechaInicio,
         fechaFinal: currentReserva.fechaFinal,
         tipoPago: currentReserva.tipoPago as TipoPago
@@ -108,9 +124,15 @@ export class DetailsReserva {
     if (!currentReserva) return;
 
     const formValues = this.editForm();
+
+    if (!formValues.salaId) {
+      alert('Selecciona una sala válida');
+      return;
+    }
+
     const dto = new ReservaUpdateRequestDTO(
       currentReserva.id,
-      formValues.salaNumero,
+      formValues.salaId,
       formValues.fechaInicio,
       formValues.fechaFinal,
       formValues.tipoPago
@@ -171,8 +193,10 @@ export class DetailsReserva {
   }
 
   // Métodos de actualización del formulario
-  updateSalaNumero(value: number): void {
-    this.editForm.update(form => ({...form, salaNumero: value}));
+  updateSalaId(value: number | string): void {
+    const parsed = typeof value === 'string' ? Number(value) : value;
+    if (Number.isNaN(parsed)) return;
+    this.editForm.update(form => ({...form, salaId: parsed}));
   }
 
   updateFechaInicio(value: string): void {
@@ -189,6 +213,20 @@ export class DetailsReserva {
 
   volver(): void {
     this.router.navigate(['/reservas']);
+  }
+
+  private getSalaIdFromNumero(numero: number): number | null {
+    const sala = this.salas().find(s => s.numero === numero);
+    return sala ? sala.id : null;
+  }
+
+  private syncSalaSeleccion(): void {
+    const currentReserva = this.reserva();
+    if (!currentReserva) return;
+    const salaId = this.getSalaIdFromNumero(currentReserva.salaNumero);
+    if (salaId != null && this.editForm().salaId !== salaId) {
+      this.editForm.update(form => ({...form, salaId}));
+    }
   }
   
   // Modelo temporal para la edición

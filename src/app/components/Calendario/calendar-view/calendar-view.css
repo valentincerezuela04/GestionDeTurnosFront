@@ -1,17 +1,105 @@
 .cal-toolbar {
   display: flex;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 1rem;
   align-items: center;
-  margin: 12px 0 16px;
+  justify-content: space-between;
+  background: #f4f6fb;
+  border-radius: 14px;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid #e2e6f0;
 }
 
-button {
-  padding: 6px 10px;
-  border-radius: 8px;
-  border: 1px solid #444;
-  background: transparent;
-  cursor: pointer;
+.cal-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 600;
+  color: #334155;
 }
-button:hover {
-  background-color: #f0f0f0;
+
+.cal-filter input {
+  accent-color: #2563eb;
+  width: 18px;
+  height: 18px;
+}
+
+.refresh-btn {
+  padding: 0.55rem 1.2rem;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(120deg, #2563eb, #3b82f6);
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(59, 130, 246, 0.25);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.refresh-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 15px 30px rgba(59, 130, 246, 0.3);
+}
+
+.loading-pill {
+  background: #fff;
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.9rem;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.calendar-panel {
+  margin-top: 1.5rem;
+  border: 1px solid #e2e6f0;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+:host ::ng-deep .fc {
+  background: #fff;
+  border-radius: 18px;
+}
+
+:host ::ng-deep .fc .fc-toolbar.fc-header-toolbar {
+  padding: 1rem;
+  margin-bottom: 0;
+  background: #f9fafb;
+  border-bottom: 1px solid #e2e6f0;
+}
+
+:host ::ng-deep .fc .fc-button-primary {
+  background: #2563eb;
+  border: none;
+  border-radius: 8px;
+  padding: 0.4rem 0.8rem;
+  box-shadow: none;
+}
+
+:host ::ng-deep .fc .fc-button-primary:not(:disabled):hover {
+  background: #1d4ed8;
+}
+
+:host ::ng-deep .fc .fc-daygrid-day,
+:host ::ng-deep .fc .fc-timegrid-slot {
+  background: #fbfcff;
+}
+
+:host ::ng-deep .fc .fc-daygrid-day-number {
+  color: #475569;
+  font-weight: 600;
+}
+
+:host ::ng-deep .fc .fc-event {
+  border: none;
+  border-radius: 10px;
+  padding: 0.35rem;
+  background: linear-gradient(120deg, #ff6b6b, #f06595);
+  box-shadow: 0 10px 20px rgba(240, 101, 149, 0.25);
+  color: #fff;
+}
+
+:host ::ng-deep .fc .fc-daygrid-day.fc-day-today {
+  background: #e0edff;
 }

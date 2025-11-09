@@ -57,6 +57,8 @@ export class ReservaService {
 
   // DELETE: eliminar reserva (ej: admin)
   deleteReserva(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/eliminar/${id}`);
+    return this.http.delete<void>(`${this.baseUrl}/eliminar/${id}`, {
+      responseType: 'text' as 'json'
+    });
   }
 }

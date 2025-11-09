@@ -80,13 +80,18 @@
   <!-- clienteId (solo visible para empleados) -->
   @if (isEmpleado()) {
     <div class="form-group">
-      <label for="clienteId">ID del Cliente *</label>
-      <input
-        type="number"
+      <label for="clienteId">Cliente *</label>
+      <select
         id="clienteId"
         formControlName="clienteId"
         class="form-control"
-        [class.is-invalid]="form.get('clienteId')?.invalid && form.get('clienteId')?.touched" />
+        [class.is-invalid]="form.get('clienteId')?.invalid && form.get('clienteId')?.touched">
+        <option [ngValue]="null" disabled>Seleccioná un cliente</option>
+        <option *ngFor="let c of clientes" [value]="c.id">
+          #{{ c.id }} - {{ c.email }}
+        </option>
+      </select>
+      <small class="text-muted">Mostrando ID y correo registrado del cliente.</small>
       @if (form.get('clienteId')?.invalid && form.get('clienteId')?.touched) {
         <div class="invalid-feedback">El cliente es requerido</div>
       }

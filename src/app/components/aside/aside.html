@@ -1,7 +1,7 @@
 <aside class="side" [class.closed]="!open()" aria-label="Navegación">
   <nav>
     <a routerLink="/hall" routerLinkActive="active">Salas</a>
-    <a *ngIf="showFullMenu()" routerLink="/empleados" routerLinkActive="active">Empleados</a>
+    <a *ngIf="isAdmin()" routerLink="/empleados" routerLinkActive="active">Empleados</a>
     <a routerLink="/reservas" routerLinkActive="active">Reservas</a>
     <a *ngIf="showFullMenu()" routerLink="/clientes" routerLinkActive="active">Clientes</a>
     <a routerLink="/calendar" routerLinkActive="active">Calendario</a>

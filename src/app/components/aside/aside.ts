@@ -19,4 +19,5 @@ export class Aside {
     const current = this.role();
     return current === 'ADMIN' || current === 'EMPLEADO';
   });
+  readonly isAdmin = computed(() => this.role() === 'ADMIN');
 }

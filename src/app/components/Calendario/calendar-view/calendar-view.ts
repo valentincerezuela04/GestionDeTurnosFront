@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild, signal } from '@angular/core';
+import { Component, ViewChild, signal, inject } from '@angular/core';
 import { CalendarService } from '../../../services/Calendar/calendar-service';
 import { CalendarDto } from '../../../models/calendarModel';
-
 import { FullCalendarComponent, FullCalendarModule } from '@fullcalendar/angular';
 import { CalendarOptions, EventInput } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import esLocale from '@fullcalendar/core/locales/es';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-calendar-view',
@@ -23,9 +23,11 @@ export class CalendarViewComponent {
   loading = signal(true);
   onlyMine = signal(false);
 
+  private router = inject(Router);
+
   calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin], // <- clave
-    initialView: 'dayGridWeek',
+    initialView: 'dayGridMonth',
     locale: 'es',
     locales: [esLocale],
     firstDay: 1,
@@ -67,8 +69,10 @@ export class CalendarViewComponent {
       return { html: `<div>${hora}<br>${styled}</div>` };
     },
     eventClick: (info) => {
-      const desc = (info.event.extendedProps as any)?.description;
-      if (desc) alert(desc);
+      const id = info.event.id;
+      if (id) {
+        this.router.navigate(['/reservas', id, 'details']);
+      }
     }
   };
 
