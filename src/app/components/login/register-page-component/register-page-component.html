@@ -3,7 +3,7 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="register-form" novalidate>
   <div class="field">
     <label for="nombre">Nombre</label>
-    <input id="nombre" formControlName="nombre" />
+    <input id="nombre" formControlName="nombre" type="text" />
     @if (hasError('nombre', 'required')) {
       <p class="error">El nombre es obligatorio.</p>
     }
@@ -14,7 +14,7 @@
 
   <div class="field">
     <label for="apellido">Apellido</label>
-    <input id="apellido" formControlName="apellido" />
+    <input id="apellido" formControlName="apellido" type="text"/>
     @if (hasError('apellido', 'required')) {
       <p class="error">El apellido es obligatorio.</p>
     }
@@ -25,7 +25,7 @@
 
   <div class="field">
     <label for="dni">DNI</label>
-    <input id="dni" formControlName="dni" />
+    <input id="dni" formControlName="dni" type="text"/>
     @if (hasError('dni', 'required')) {
       <p class="error">El DNI es obligatorio.</p>
     }
@@ -36,7 +36,7 @@
 
   <div class="field">
     <label for="telefono">Teléfono</label>
-    <input id="telefono" formControlName="telefono" />
+    <input id="telefono" formControlName="telefono" type="text"/>
     @if (hasError('telefono', 'required')) {
       <p class="error">El teléfono es obligatorio.</p>
     }
