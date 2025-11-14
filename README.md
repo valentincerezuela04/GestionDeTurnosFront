@@ -1,59 +1,170 @@
-# GestionDeTurnosFront
+# 🗓️ Sistema de Gestión de Turnos — Trabajo Práctico Final (Programación IV – UTN)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.4.
+Este repositorio contiene el **Trabajo Práctico Final de Programación IV (2025)**, desarrollado en coordinación con **Metodología de Sistemas II**, siguiendo la consigna oficial de la materia.  
+El proyecto está desarrollado **íntegramente en Angular 20**, cumpliendo con todos los requisitos obligatorios establecidos para la aprobación.  
+Además, se proyecta su futura ampliación para la **Tesis Final de la carrera**.
 
-## Development server
+---
 
-To start a local development server, run:
+## 📌 Objetivo del Proyecto
 
-```bash
-ng serve
-```
+Desarrollar una aplicación web funcional para la **gestión integral de turnos**, permitiendo a los usuarios autenticados reservar salas, visualizar disponibilidad, administrar sus reservas y mantener sincronización con Google Calendar (integración opcional ya implementada).
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+El sistema incluye:
+- Login con roles
+- CRUD de Salas
+- CRUD de Reservas
+- Guards por permisos
+- Diseño responsive
+- Documentación clara
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 🚀 Tecnologías Utilizadas
 
-```bash
-ng generate component component-name
-```
+### **Frontend**
+- Angular 20 (Stand-alone Components)
+- Angular Router (lazy loading)
+- Angular Signals
+- Servicios HttpClient
+- HTML + CSS
+- Manejo de DTOs, modelos e interfaces
+- DatePipe y utilidades nativas
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### **Backend (opcional / parte de la futura tesis)**
+- Spring Boot 3.4.x
+- Spring Security + JWT
+- JPA / Hibernate
+- MySQL
+- Integración Google Calendar
 
-```bash
-ng generate --help
-```
+---
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+## 📂 Estructura del Repositorio
 
 ```bash
-ng e2e
-```
+.
+├── FRONTEND/
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── components/
+│   │   │   ├── pages/
+│   │   │   ├── services/
+│   │   │   ├── guards/
+│   │   │   ├── models/
+│   │   │   └── app.routes.ts
+│   │   ├── assets/
+│   │   └── index.html
+│   ├── angular.json
+│   ├── package.json
+│   └── README.md
+│
+└── BACKEND/ 
+    ├── src/
+    │   ├── main/
+    │   │   ├── java/com/utn/gestion_de_turnos/
+    │   │   │   ├── controller/
+    │   │   │   ├── model/
+    │   │   │   ├── dto/
+    │   │   │   ├── service/
+    │   │   │   ├── repository/
+    │   │   │   └── security/
+    │   │   └── resources/
+    │   │       └── application.properties
+    ├── pom.xml
+    └── README.md
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
-## Additional Resources
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
+
+# 🧩 Cumplimiento de los Requisitos del TP Final
+
+### ✔️ 1. Proyecto creado íntegramente en Angular 20  
+Cumplido.
+
+### ✔️ 2. Dos CRUD completos  
+- CRUD de Salas  
+- CRUD de Reservas  
+
+### ✔️ 3. Sistema de login con distintos roles  
+Roles implementados:
+- Cliente  
+- Empleado  
+- Administrador  
+
+### ✔️ 4. Guards para proteger rutas según rol  
+- `authGuard`  
+- `roleGuard`
+
+### ✔️ 5. Peticiones HTTP  
+Uso de:
+- HttpClient  
+- JSON-server o API real  
+
+### ✔️ 6. Repositorio con historial real de commits  
+Cumplido.
+
+### ✔️ 7. Presentación del software  
+Listo para exposición en la fecha establecida.
+
+---
+
+## ⭐ Requisitos para Nota Superior (7 a 10)
+
+### ✔️ Funcionalidad adicional
+- Integración con Google Calendar  
+- Módulo administrativo ampliado
+
+### ✔️ Diseño visual destacado  
+Limpio, prolijo y consistente.
+
+### ✔️ Totalmente responsive  
+Adaptado a desktop, tablet y móvil.
+
+### ✔️ Documentación completa  
+Incluye este README y material de apoyo.
+
+---
+
+# 📌 Funcionalidades Principales
+
+### 👤 Usuarios
+- Registro  
+- Login  
+- Roles con permisos  
+- Acceso a secciones protegidas  
+
+### 📅 Reservas
+- Crear reserva  
+- Verificar solapamientos  
+- Cancelar  
+- Ver “Mis Reservas”  
+- Sincronizar con Google Calendar  
+
+### 🏢 Salas
+- Crear sala  
+- Editar sala  
+- Eliminar sala  
+- Listar todas las salas  
+
+---
+
+# 🔐 Autenticación y Seguridad
+
+- JWT (si se usa backend real)  
+- Guards:
+  - `authGuard`
+  - `roleGuard`  
+- Restricción por roles en rutas críticas
+
+---
+
+# 🛠️ Cómo Ejecutar el Proyecto
+
+### **Frontend**
+```bash
+cd FRONTED/GestionDeTurnosFront
+npm install
+ng serve -o
+
