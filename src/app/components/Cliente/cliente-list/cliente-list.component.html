@@ -1,8 +1,8 @@
 <section class="clientes-list">
   <header class="clientes-list__header">
     <div>
-      <p class="clientes-list__eyebrow">Gestión de clientes</p>
-      <h1>Clientes</h1>
+      <!-- <p class="clientes-list__eyebrow">Gestión de clientes</p> -->
+      <h1> Ver Clientes</h1>
       <p class="clientes-list__lead">
         Consulta los datos básicos de cada cliente registrado en la plataforma.
       </p>
@@ -49,14 +49,7 @@
             <span class="cliente-card__dni">DNI {{ c.dni || 'N/A' }}</span>
           </header>
           <dl class="cliente-card__data">
-            <div>
-              <dt>Email</dt>
-              <dd>{{ c.email || 'Sin email' }}</dd>
-            </div>
-            <div>
-              <dt>Teléfono</dt>
-              <dd>{{ c.telefono || 'Sin teléfono' }}</dd>
-            </div>
+
           </dl>
         </article>
       }

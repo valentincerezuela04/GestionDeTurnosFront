@@ -37,7 +37,7 @@ export const routes: Routes = [
             (m) => m.EditDescription
           ),
         data: { title: 'Editar sala' },
-        canActivate: [roleGuard('ADMIN')],
+        canActivate: [roleGuard('ADMIN','EMPLEADO')],
       },
     ],
   },
