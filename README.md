@@ -14,7 +14,7 @@ El sistema incluye:
 - Login con roles
 - CRUD de Salas
 - CRUD de Reservas
-- Guards por permisos
+- Guards por rol + autenticacion
 - Diseño responsive
 - Documentación clara
 
@@ -30,6 +30,7 @@ El sistema incluye:
 - HTML + CSS
 - Manejo de DTOs, modelos e interfaces
 - DatePipe y utilidades nativas
+- libreria:FullCalendar
 
 ### **Backend (opcional / parte de la futura tesis)**
 - Spring Boot 3.4.x
