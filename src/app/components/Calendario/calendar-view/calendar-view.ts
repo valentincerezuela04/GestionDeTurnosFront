@@ -1,3 +1,4 @@
+
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild, signal, inject } from '@angular/core';
 import { CalendarService } from '../../../services/Calendar/calendar-service';
@@ -9,13 +10,14 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import esLocale from '@fullcalendar/core/locales/es';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../services/Auth/auth-service';
 
 @Component({
   selector: 'app-calendar-view',
   standalone: true,
   imports: [CommonModule, FullCalendarModule],
   templateUrl: './calendar-view.html',
-  styleUrls: ['./calendar-view.css'], // <- ojo acá
+  styleUrls: ['./calendar-view.css'],
 })
 export class CalendarViewComponent {
   @ViewChild('fc') calendar?: FullCalendarComponent;
@@ -24,9 +26,26 @@ export class CalendarViewComponent {
   onlyMine = signal(false);
 
   private router = inject(Router);
+  private calSvc = inject(CalendarService);
+  private authService = inject(AuthService);
+
+  // --- helpers de rol ---
+  private isAdminOrEmpleado(): boolean {
+    return this.authService.hasRole('ADMIN', 'EMPLEADO');
+  }
+
+  private isCliente(): boolean {
+    return this.authService.hasRole('CLIENTE');
+  }
+
+  // helper para saber si una reserva es propia (ajustá esto si tenés otro flag)
+  private esReservaMia(dto: CalendarDto): boolean {
+    return (dto.title ?? '').includes('Tuya');
+    // ej: return dto.esMia === true;
+  }
 
   calendarOptions: CalendarOptions = {
-    plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin], // <- clave
+    plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
     initialView: 'dayGridMonth',
     locale: 'es',
     locales: [esLocale],
@@ -41,43 +60,77 @@ export class CalendarViewComponent {
       this.loading.set(true);
       this.calSvc.getEvents().subscribe({
         next: (data) => {
-          const filtered = this.onlyMine()
-            ? data.filter(d => (d.title ?? '').includes('Tuya'))
+          const filtrados = this.onlyMine()
+            ? data.filter(d => this.esReservaMia(d))
             : data;
 
-          const events: EventInput[] = filtered.map((d: CalendarDto) => ({
+          const events: EventInput[] = filtrados.map((d: CalendarDto) => ({
             id: String(d.id),
             title: d.title,
             start: d.start,
-            end:   d.end,
-            extendedProps: { description: d.description }
+            end: d.end,
+            extendedProps: {
+              description: d.description,
+              esMia: this.esReservaMia(d),
+            },
           }));
 
           success(events);
           this.loading.set(false);
         },
-        error: (err) => { console.error('Error cargando eventos', err); failure(err); this.loading.set(false); }
+        error: (err) => {
+          console.error('Error cargando eventos', err);
+          failure(err);
+          this.loading.set(false);
+        },
       });
     },
     eventContent: (arg) => {
       const title = arg.event.title || '';
-      const fmt = (d: Date | null) => d ? d.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }) : '';
+      const fmt = (d: Date | null) =>
+        d ? d.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }) : '';
       const hora = `<b>${fmt(arg.event.start)} - ${fmt(arg.event.end)}</b>`;
+
       let styled = title;
-      if (title.includes('Tuya'))    styled = title.replace('Tuya', '<span style="color:#28a745;">Tuya</span>');
-      else if (title.includes('Ocupado')) styled = title.replace('Ocupado', '<span style="color:#a7288a;">Ocupado</span>');
+      if (title.includes('Tuya')) {
+        styled = title.replace('Tuya', '<span style="color:#28a745;">Tuya</span>');
+      } else if (title.includes('Ocupado')) {
+        styled = title.replace('Ocupado', '<span style="color:#a7288a;">Ocupado</span>');
+      }
       return { html: `<div>${hora}<br>${styled}</div>` };
     },
     eventClick: (info) => {
       const id = info.event.id;
-      if (id) {
-        this.router.navigate(['/reservas', id, 'details']);
+      const esMia = info.event.extendedProps['esMia'] as boolean | undefined;
+
+      // ADMIN o EMPLEADO -> pueden ver todas
+      if (this.isAdminOrEmpleado()) {
+        if (id) {
+          this.router.navigate(['/reservas', id, 'details']);
+        }
+        return;
       }
-    }
+
+      // CLIENTE -> solo sus reservas
+      if (this.isCliente()) {
+        if (!esMia) {
+          // opcional:
+          // alert('Solo podés ver el detalle de tus propias reservas.');
+          return;
+        }
+        if (id) {
+          this.router.navigate(['/reservas', id, 'details']);
+        }
+      }
+    },
   };
 
-  constructor(private calSvc: CalendarService) {}
+  refetch(): void {
+    this.calendar?.getApi().refetchEvents();
+  }
 
-  refetch(): void { this.calendar?.getApi().refetchEvents(); }
-  setOnlyMine(checked: boolean): void { this.onlyMine.set(checked); this.refetch(); }
+  setOnlyMine(checked: boolean): void {
+    this.onlyMine.set(checked);
+    this.refetch();
+  }
 }
