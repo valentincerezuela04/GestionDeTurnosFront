@@ -38,7 +38,7 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
     dni: ['', [Validators.required]],
     telefono: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
-    contrasena: ['', [Validators.required, Validators.minLength(4)]],
+    contrasena: ['', [ Validators.minLength(4)]],
     legajo: [''],
     rol: [Rol.EMPLEADO as Rol, [Validators.required]],
   });
@@ -71,7 +71,7 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
             dni: empleado.dni,
             telefono: empleado.telefono,
             email: empleado.email,
-            contrasena: empleado.contrasena,
+            contrasena: '',
             legajo: empleado.legajo ?? '',
             rol: empleado.rol,
           });
@@ -133,7 +133,7 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
       dni: this.empleado.dni,
       telefono: this.empleado.telefono,
       email: this.empleado.email,
-      contrasena: this.empleado.contrasena,
+      contrasena: '',
       legajo: this.empleado.legajo ?? '',
       rol: this.empleado.rol,
     });
@@ -147,9 +147,14 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
       return;
     }
 
+      const raw = this.empleadoForm.getRawValue();
+  const nuevaContrasena = (raw.contrasena ?? '').trim();
+
     const cambios = {
       ...this.empleado,
-      ...this.empleadoForm.getRawValue(),
+      ...raw,
+      contrasena: nuevaContrasena,
+      rol:Rol.EMPLEADO
     };
 
     this.saveInProgress.set(true);
@@ -167,7 +172,7 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
             dni: empleadoActualizado.dni,
             telefono: empleadoActualizado.telefono,
             email: empleadoActualizado.email,
-            contrasena: empleadoActualizado.contrasena,
+            contrasena: '',
             legajo: empleadoActualizado.legajo ?? '',
             rol: empleadoActualizado.rol,
           });

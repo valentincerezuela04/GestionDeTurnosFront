@@ -42,7 +42,7 @@ export class PerfilUsuario implements OnInit {
     dni: ['', Validators.required],
     telefono: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
-    contrasena: ['', [Validators.required, Validators.minLength(4)]],
+    contrasena: ['', [Validators.minLength(4)]],
   });
 
   readonly controls = this.clienteForm.controls;
@@ -139,7 +139,7 @@ export class PerfilUsuario implements OnInit {
       dni: cliente.dni !== undefined && cliente.dni !== null ? String(cliente.dni) : '',
       telefono: cliente.telefono !== undefined && cliente.telefono !== null ? String(cliente.telefono) : '',
       email: cliente.email ?? '',
-      contrasena: cliente.contrasena ?? '',
+      contrasena: '',
     });
     this.clienteForm.markAsPristine();
     this.formError.set(null);
@@ -185,6 +185,7 @@ export class PerfilUsuario implements OnInit {
       this.formError.set('DNI y teléfono deben ser valores numéricos.');
       return;
     }
+    const nuevaContrasena = (formValue.contrasena ?? '').trim();
 
     const payload: Cliente = {
       ...current,
@@ -193,7 +194,7 @@ export class PerfilUsuario implements OnInit {
       dni,
       telefono,
       email: formValue.email,
-      contrasena: formValue.contrasena,
+      contrasena: nuevaContrasena,
       rol: current.rol ?? Rol.CLIENTE,
     };
 
