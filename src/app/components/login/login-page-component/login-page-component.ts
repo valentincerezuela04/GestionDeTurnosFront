@@ -43,7 +43,17 @@ export class LoginPageComponent {
       },
       error: (err) => {
         this.loading = false;
-        this.error = err?.error ?? 'No se pudo iniciar sesi�n';
+                if (err.status === 400) {
+          // acá asumimos que 400 = email/contraseña incorrectos
+          this.error = 'Email o contraseña incorrectos.';
+        } else if (err.status === 0) {
+          // error de red / backend caído
+          this.error = 'No se pudo conectar con el servidor. Intentalo más tarde.';
+        } else {
+          this.error = 'Ocurrió un error al iniciar sesión. Intentalo de nuevo.';
+        }
+
+        // this.error = err?.error ?? 'No se pudo iniciar sesi�n';
         console.error('Login failed', err);
       },
     });
