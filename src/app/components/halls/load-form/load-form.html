@@ -55,26 +55,48 @@
     }
   </div>
 
-  <!-- Cantidad de personas -->
-  @let cantCtrl = form.get('cantidad_personas');
+
+ <!-- Tamaño de sala -->
+  @let sizeCtrl = form.get('salaSize');
   <div class="field">
-    <label for="cantidad_personas">Cantidad de personas</label>
-    <input
-      id="cantidad_personas"
-      type="number"
-      formControlName="cantidad_personas"
-      [class.invalid]="cantCtrl?.touched && cantCtrl?.invalid"
-    />
+    <label for="salaSize">Tamaño</label>
+    <select
+      id="salaSize"
+      formControlName="salaSize"
+      [class.invalid]="sizeCtrl?.touched && sizeCtrl?.invalid"
+    >
+      <option value="" disabled>Seleccione un tamaño</option>
 
-    @if (cantCtrl?.touched && cantCtrl?.hasError('required')) {
-      <p class="error">La cantidad de personas es obligatoria.</p>
-    }
+      @for (size of ['PEQUEÑA', 'MEDIANA', 'GRANDE']; track size) {
+        <option [ngValue]="size">
+          {{ size }}
+        </option>
+      }
+    </select>
 
-    @if (cantCtrl?.touched && cantCtrl?.hasError('min')) {
-      <p class="error">Debe ser al menos 1.</p>
+    @if (sizeCtrl?.touched && sizeCtrl?.hasError('required')) {
+      <p class="error">El tamaño es obligatorio.</p>
     }
   </div>
 
+  <!-- Capacidad fija (solo lectura, derivada del tamaño) -->
+  <div class="field">
+    <label for="capacidad">Cantidad de personas</label>
+    <input
+      id="capacidad"
+      type="number"
+      [value]="capacidadSeleccionada ?? ''"
+      readonly
+    />
+
+    @if (!capacidadSeleccionada) {
+      <p class="hint">Seleccioná un tamaño para ver la capacidad.</p>
+    }
+
+    @if (capacidadSeleccionada) {
+      <p class="hint">Capacidad fija según el tamaño seleccionado.</p>
+    }
+  </div>
   <button type="submit" [disabled]="form.invalid">
     Guardar
   </button>
