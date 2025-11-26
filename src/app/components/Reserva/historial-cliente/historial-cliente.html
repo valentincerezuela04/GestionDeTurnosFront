@@ -3,13 +3,57 @@
     <h2>Historial de reservas</h2>
   </div>
 
+  <!-- Filtros -->
+  <form class="historial-filtros" [formGroup]="filtrosForm">
+    <div class="filtro-group">
+      <label for="fechaDesde">Fecha desde</label>
+      <input id="fechaDesde" type="date" formControlName="fechaDesde" />
+    </div>
+
+    <div class="filtro-group">
+      <label for="fechaHasta">Fecha hasta</label>
+      <input id="fechaHasta" type="date" formControlName="fechaHasta" />
+    </div>
+
+    <div class="filtro-group">
+      <label for="estado">Estado</label>
+      <select id="estado" formControlName="estado">
+        <option *ngFor="let e of estadosDisponibles" [value]="e">
+          {{ e === 'TODOS' ? 'Todos' : e }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filtro-group">
+      <label for="salaNumero">Sala</label>
+      <select id="salaNumero" formControlName="salaNumero">
+        <option value="TODAS">Todas</option>
+        <option *ngFor="let sala of salasDisponibles" [value]="sala">
+          Sala {{ sala }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filtro-group">
+      <label for="ordenFecha">Orden fecha</label>
+      <select id="ordenFecha" formControlName="ordenFecha">
+        <option value="DESC">Más nuevas primero</option>
+        <option value="ASC">Más viejas primero</option>
+      </select>
+    </div>
+
+    <button type="button" class="limpiar-btn" (click)="resetFiltros()">
+      Limpiar filtros
+    </button>
+  </form>
+
   @if (loading) {
     <p class="no-reservas">Cargando historial...</p>
   } @else if (error) {
     <p class="no-reservas error">{{ error }}</p>
-  } @else if (historial && historial.length > 0) {
+  } @else if (historialFiltrado && historialFiltrado.length > 0) {
     <div class="reservas-grid">
-      @for (reserva of historial; track reserva.id) {
+      @for (reserva of historialFiltrado; track reserva.id) {
         <app-card-reserva
           [reserva]="reserva"
           (reservaClick)="onReservaClick($event)"

@@ -11,6 +11,7 @@ export class ReservaResponseDTO {
     public fechaFinal: string,   // LocalDateTime -> ISO local
     public tipoPago: TipoPago,
     public estado: string,       // back envía String (no enum)
-    public clienteEmail: string
+    public clienteEmail: string,
+    public monto: number,
   ) {}
 }

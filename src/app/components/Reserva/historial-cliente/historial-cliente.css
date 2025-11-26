@@ -1,1 +1,45 @@
 @import '../mis-reservas/mis-reservas.css';
+
+.historial-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  align-items: flex-end;
+}
+
+.filtro-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 140px;
+}
+
+.filtro-group label {
+  font-size: 0.8rem;
+  color: var(--rs-muted, #8f97aa);
+}
+
+.filtro-group input,
+.filtro-group select {
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background-color: rgba(12, 16, 24, 0.8);
+  color: #e7faff;
+  font-size: 0.85rem;
+}
+
+.limpiar-btn {
+  padding: 0.45rem 0.8rem;
+  border-radius: 6px;
+  border: none;
+  background: rgba(255, 255, 255, 0.06);
+  color: #e7faff;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.limpiar-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
