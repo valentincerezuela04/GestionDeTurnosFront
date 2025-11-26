@@ -20,6 +20,22 @@ export class ReservaService {
   // Inyección igual que en V1 (compatibilidad)
   private readonly http = inject(HttpClient);
 
+
+   getHistorialCliente(clienteId: number): Observable<ReservaResponseDTO[]> {
+    return this.http.get<ReservaResponseDTO[]>(
+      `${this.baseUrl}/historial/${clienteId}`,
+      { withCredentials: true }
+    );
+  }
+
+
+  getHistorialGeneral(): Observable<ReservaResponseDTO[]> {
+    return this.http.get<ReservaResponseDTO[]>(
+      `${this.baseUrl}/historial`,
+      { withCredentials: true }
+    );
+  }
+
   // READ: todas las reservas activas según el rol del usuario
   getReservasActivas(): Observable<ReservaResponseDTO[]> {
     return this.http.get<ReservaResponseDTO[]>(`${this.baseUrl}/all/activas`);

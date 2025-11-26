@@ -1,0 +1,23 @@
+<div class="mis-reservas">
+  <div class="mis-reservas-header">
+    <h2>Historial general de reservas</h2>
+  </div>
+
+  @if (loading) {
+    <p class="no-reservas">Cargando historial...</p>
+  } @else if (error) {
+    <p class="no-reservas error">{{ error }}</p>
+  } @else if (historial && historial.length > 0) {
+    <div class="reservas-grid">
+      @for (reserva of historial; track reserva.id) {
+        <app-card-reserva
+          [reserva]="reserva"
+          [mostrarCliente]="true"
+          (reservaClick)="onReservaClick($event)"
+        ></app-card-reserva>
+      }
+    </div>
+  } @else {
+    <p class="no-reservas">No hay reservas en el historial general.</p>
+  }
+</div>

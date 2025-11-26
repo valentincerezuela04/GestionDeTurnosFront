@@ -1,12 +1,37 @@
-<div class="card" (click)="onCardClick()">
-    <div class="card-header">
-        <h3>Reserva #{{reserva.id}}</h3>
+<div class="card reserva-card" (click)="onCardClick()">
+  <div class="card-header">
+    <div class="card-title">
+      Sala {{ reserva.salaNumero }} · {{ reserva.salaCapacidad }} personas
     </div>
-    <div class="card-body">
-        <p><strong>Sala:</strong> Sala {{reserva.salaNumero}} (Cap: {{reserva.salaCapacidad}})</p>
-        <p><strong>Fecha inicio:</strong> {{reserva.fechaInicio | date:'dd/MM/yyyy HH:mm'}}</p>
-        <p><strong>Fecha fin:</strong> {{reserva.fechaFinal | date:'dd/MM/yyyy HH:mm'}}</p>
-        <p><strong>Estado:</strong> {{reserva.estado}}</p>
 
-    </div>
+    <span class="chip" [ngClass]="estadoClase">
+      {{ reserva.estado }}
+    </span>
+  </div>
+
+  <div class="card-body">
+    <p>
+      <strong>Fecha:</strong>
+      {{ reserva.fechaInicio | date : 'dd/MM/yyyy' }}
+    </p>
+
+    <p>
+      <strong>Horario:</strong>
+      {{ reserva.fechaInicio | date : 'HH:mm' }} -
+      {{ reserva.fechaFinal | date : 'HH:mm' }}
+    </p>
+
+    <p *ngIf="mostrarCliente">
+      <strong>Cliente:</strong>
+      {{ reserva.clienteEmail }}
+    </p>
+
+    <p>
+      <strong>Pago:</strong>
+      {{ reserva.tipoPago }}
+      <!-- Si en tu DTO ya tenés "monto", podés mostrarlo acá:
+      · ${{ reserva.monto | number : '1.2-2' }}
+      -->
+    </p>
+  </div>
 </div>
