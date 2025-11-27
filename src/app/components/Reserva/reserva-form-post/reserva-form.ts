@@ -210,9 +210,9 @@ export class ReservaFormComponent implements OnInit {
 
   // 💰 Tarifas base por hora según tamaño de sala
   private readonly tarifaPorHoraPorSize: Record<Sala['salaSize'], number> = {
-    PEQUEÑA: 5000,
+    PEQUEÑA: 500,
     MEDIANA: 8000,
-    GRANDE: 12000,
+    GRANDE: 1200,
   };
 
   // DI
