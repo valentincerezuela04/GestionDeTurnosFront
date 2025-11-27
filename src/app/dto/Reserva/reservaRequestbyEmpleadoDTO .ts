@@ -8,6 +8,7 @@ export class ReservaRequestByEmpleadoDTO {
     public salaId: number,
     public fechaInicio: string,
     public fechaFinal: string,
-    public tipoPago: TipoPago
+    public tipoPago: TipoPago,
+    public monto: number
   ) {}
 }

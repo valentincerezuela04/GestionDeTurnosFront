@@ -12,6 +12,6 @@ export class ReservaResponseDTO {
     public tipoPago: TipoPago,
     public estado: string,       // back envía String (no enum)
     public clienteEmail: string,
-    public monto: number,
+    public monto: number
   ) {}
 }

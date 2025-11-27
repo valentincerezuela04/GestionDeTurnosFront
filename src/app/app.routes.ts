@@ -4,6 +4,7 @@ import { RegisterPageComponent } from './components/login/register-page-componen
 import { authCanMatch } from './guards/auth.guard';
 import { roleGuard } from './guards/role-guard';
 import { authGuard } from './guards/auth-guard';
+import { DashboardPagos } from './components/dashboard-pagos/dashboard-pagos';
 export const routes: Routes = [
 
   //publico>>>>>>>
@@ -166,6 +167,9 @@ export const routes: Routes = [
     data: { title: 'Perfil' },
     canActivate:[authGuard]
   },
+
+  //dashboard empleado -admi
+  {path:'dashboardPagos',canMatch:[authCanMatch],component:DashboardPagos,canActivate: [roleGuard('ADMIN', 'EMPLEADO')]},
 
   // Fallback
   { path: '**', redirectTo: 'login' },
