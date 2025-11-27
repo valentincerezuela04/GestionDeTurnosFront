@@ -61,4 +61,12 @@ export class ReservaService {
       responseType: 'text' as 'json'
     });
   }
+
+
+   generarLinkPago(reservaId: number): Observable<{ initPoint: string }> {
+    return this.http.post<{ initPoint: string }>(
+      `${this.baseUrl}/${reservaId}/pago/mercado-pago`,
+      {}
+    );
+  }
 }

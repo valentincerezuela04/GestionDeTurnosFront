@@ -103,6 +103,19 @@
       }
     </div>
   }
+  <div class="form-group">
+  <label for="monto">Monto a pagar (ARS)</label>
+  <input
+    id="monto"
+    type="number"
+    class="form-control"
+    formControlName="monto"
+    readonly
+  />
+  <small class="text-muted">
+    Se calcula automáticamente según la sala, la duración y si es fin de semana (+20%).
+  </small>
+</div>
 
   <!-- Acciones -->
   <div class="form-actions">
