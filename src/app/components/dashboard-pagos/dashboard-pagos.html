@@ -1,0 +1,98 @@
+<div class="resumen-pagos-container">
+  <h2>Resumen de Ventas / Pagos</h2>
+
+  <!-- Tarjetas principales -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Reservas pagadas</div>
+      <div class="kpi-value">{{ totalReservasPagadas }}</div>
+      <div class="kpi-sub">Total de reservas con pago acreditado</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-label">Monto total cobrado</div>
+      <div class="kpi-value">$ {{ totalMontoPagado | number: '1.0-0' }}</div>
+      <div class="kpi-sub">Suma de todas las reservas pagadas</div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-label">Promedio por reserva</div>
+      <div class="kpi-value">$ {{ promedioPorReserva | number: '1.0-0' }}</div>
+      <div class="kpi-sub">Ticket promedio de las reservas pagadas</div>
+    </div>
+
+    <div class="kpi-card kpi-secondary">
+      <div class="kpi-label">Pendientes de pago</div>
+      <div class="kpi-value">{{ totalPendientes }}</div>
+      <div class="kpi-sub">Reservas creadas pero no abonadas</div>
+    </div>
+
+    <div class="kpi-card kpi-secondary">
+      <div class="kpi-label">Canceladas</div>
+      <div class="kpi-value">{{ totalCanceladas }}</div>
+      <div class="kpi-sub">Reservas anuladas</div>
+    </div>
+  </div>
+
+  <!-- Resumen por método de pago -->
+  <div class="panel">
+    <h3>Detalle por método de pago</h3>
+
+    <table class="table-resumen">
+      <thead>
+        <tr>
+          <th>Método</th>
+          <th>Cantidad de reservas</th>
+          <th>Monto total</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (m of resumenPorMetodo; track m.metodo) {
+          <tr>
+            <td>{{ m.metodo }}</td>
+            <td>{{ m.cantidad }}</td>
+            <td>$ {{ m.monto | number: '1.0-0' }}</td>
+          </tr>
+        }
+        @if (resumenPorMetodo.length === 0) {
+          <tr>
+            <td colspan="3" class="empty">No hay registros pagados en este período.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Últimos pagos -->
+  <div class="panel">
+    <h3>Últimos pagos acreditados</h3>
+
+    <table class="table-resumen">
+      <thead>
+        <tr>
+          <th>ID Reserva</th>
+          <th>Fecha</th>
+          <th>Cliente</th>
+          <th>Método</th>
+          <th>Monto</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (p of ultimosPagos; track p.id) {
+          <tr>
+            <td>#{{ p.id }}</td>
+            <td>{{ formatFecha(p.fecha) }}</td>
+            <td>{{ p.clienteEmail }}</td>
+            <td>{{ p.metodoPago }}</td>
+            <td>$ {{ p.monto | number: '1.0-0' }}</td>
+          </tr>
+        }
+        @if (ultimosPagos.length === 0) {
+          <tr>
+            <td colspan="5" class="empty">Todavía no hay pagos acreditados.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -9,8 +9,12 @@
       <a routerLink="/clientes" routerLinkActive="active">Clientes</a>
     }
     <a routerLink="/calendar" routerLinkActive="active">Calendario</a>
+      @if (showFullMenu()) {
+      <a routerLink="/dashboardPagos" routerLinkActive="active">DashboardPagos</a>
+    }
     @if (showFullMenu()) {
       <a routerLink="/perfil" routerLinkActive="active">Perfil</a>
     }
+  
   </nav>
 </aside>
