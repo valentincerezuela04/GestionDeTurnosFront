@@ -9,13 +9,16 @@
 
 /* contenedor del form */
 .reserva-form{
+  width: 100%;
+  max-width: 820px;
+  margin: 1.25rem auto;
   background: var(--form-surface);
   border: 1px solid var(--form-border);
   border-radius: 16px;
-  padding: 1.1rem 1rem 1rem;
+  padding: 1.2rem 1.1rem 1.05rem;
   display: flex;
   flex-direction: column;
-  gap: .7rem;
+  gap: .85rem;
   box-shadow: 0 18px 35px rgba(0,0,0,.22);
 }
 
@@ -26,11 +29,30 @@
   text-shadow: 0 0 5px rgba(93,70,210,.4);
 }
 
+.reserva-form__grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: .75rem .9rem;
+}
+
 /* cada grupo */
 .form-group{
   display: flex;
   flex-direction: column;
   gap: .35rem;
+}
+
+.form-group--wide{
+  grid-column: 1 / -1;
+}
+
+.form-group--picker{
+  position: relative;
+  padding: 0.1rem 0.1rem 0.3rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(93,70,210,.16), rgba(7,10,14,.75));
+  border: 1px solid rgba(93,70,210,.22);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
 }
 
 .form-group label{
@@ -50,6 +72,45 @@
   font-size: .8rem;
   outline: none;
   transition: border .12s ease, box-shadow .12s ease, background .12s ease;
+}
+.form-control--picker{
+  cursor: pointer;
+  padding-right: 2.6rem;
+  background: linear-gradient(120deg, rgba(93,70,210,.14), rgba(7,10,14,.7));
+  border: 1px solid rgba(93,70,210,.25);
+}
+.form-control--picker::-webkit-datetime-edit,
+.form-control--picker::-webkit-datetime-edit-fields-wrapper,
+.form-control--picker::-webkit-datetime-edit-text,
+.form-control--picker::-webkit-datetime-edit-month-field,
+.form-control--picker::-webkit-datetime-edit-day-field,
+.form-control--picker::-webkit-datetime-edit-year-field,
+.form-control--picker::-webkit-datetime-edit-hour-field,
+.form-control--picker::-webkit-datetime-edit-minute-field{
+  color: #e7faff;
+  padding: 0 2px;
+}
+.form-control--picker::-webkit-calendar-picker-indicator{
+  opacity: 0;
+}
+.form-control--picker::-webkit-scrollbar{
+  width: 6px;
+}
+.form-control--picker::-webkit-scrollbar-thumb{
+  background: rgba(93,70,210,.6);
+  border-radius: 999px;
+}
+.form-group--picker::after{
+  content: '';
+  position: absolute;
+  right: .75rem;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  transform: translateY(-50%);
+  border-radius: 3px;
+  background: linear-gradient(135deg, #5ae2ff, #b7ff00);
+  box-shadow: 0 0 12px rgba(93,70,210,.35);
 }
 .form-control:focus{
   border: 1px solid rgba(93,70,210,.85);
@@ -78,12 +139,17 @@ textarea.form-control{
   width: fit-content;
 }
 
+.text-muted{
+  color: var(--form-muted);
+  font-size: .75rem;
+}
+
 /* acciones abajo */
 .form-actions{
   display: flex;
   gap: .5rem;
-  margin-top: .35rem;
-  justify-content: flex-start;
+  margin-top: .4rem;
+  justify-content: flex-end;
   flex-wrap: wrap;
 }
 
@@ -133,6 +199,9 @@ textarea.form-control{
 @media (max-width: 640px){
   .reserva-form{
     padding: .9rem .6rem .8rem;
+  }
+  .reserva-form__grid{
+    grid-template-columns: 1fr;
   }
   .form-actions{
     flex-direction: column;

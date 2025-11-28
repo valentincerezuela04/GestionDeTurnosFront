@@ -1,4 +1,4 @@
-﻿import { Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/Auth/auth-service';
 import { Router } from '@angular/router';
@@ -20,12 +20,12 @@ export class RegisterPageComponent {
   form = this.fb.group({
     nombre: ['', [Validators.required, Validators.minLength(3)]],
     apellido: ['', [Validators.required, Validators.minLength(3)]],
-    dni: ['', [Validators.required, Validators.pattern(/^[0-9]{7,8}$/)]],
-    telefono: ['', [Validators.required, Validators.pattern(/^[0-9]{10,}$/)]],
+    dni: ['', [Validators.required, Validators.maxLength(8), Validators.pattern(/^[0-9]{7,8}$/)]],
+    telefono: ['', [Validators.required, Validators.maxLength(10), Validators.pattern(/^[0-9]{10}$/)]],
     email: ['', [Validators.required, Validators.email]],
     contrasena: [
       '',
-      [Validators.required, Validators.minLength(4), Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/)],
+      [Validators.required, Validators.minLength(4), Validators.pattern(/^(?=.*\d).{4,}$/)],
     ],
   });
 
@@ -41,7 +41,7 @@ export class RegisterPageComponent {
     this.auth.register(this.form.getRawValue()).subscribe({
       next: () => {
         this.loading = false;
-        alert('Te has registrado correctamente. Por favor, inicia sesión.');
+        alert('Te registraste correctamente. Por favor, inicia sesion.');
         this.router.navigate(['/login']);
       },
       error: (err) => {
@@ -52,7 +52,6 @@ export class RegisterPageComponent {
     });
   }
 
-  // helpers para el template
   hasError(controlName: string, error: string) {
     const ctrl = this.form.get(controlName);
     return ctrl?.touched && ctrl.hasError(error);

@@ -2,6 +2,7 @@ import { Component, inject, OnInit, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClientesService } from '../../../services/Clientes/cliente-service';
 import { Cliente } from '../../../models/usuarios/cliente';
+import { AuthService } from '../../../services/Auth/auth-service';
 
 @Component({
   selector: 'app-clientes-list',
@@ -19,6 +20,8 @@ export class ClientesListComponent implements OnInit {
   readonly seleccionarCliente = output<Cliente>();
 
   clientesService = inject(ClientesService);
+  private auth = inject(AuthService);
+  eliminandoIds = new Set<number>();
 
   ngOnInit(): void {
     this.cargarClientes();
@@ -43,5 +46,32 @@ export class ClientesListComponent implements OnInit {
 
   seleccionar(cliente: Cliente): void {
     this.seleccionarCliente.emit(cliente);
+  }
+
+  get esAdmin(): boolean {
+    return this.auth.hasRole('ADMIN');
+  }
+
+  eliminarCliente(event: Event, cliente: Cliente): void {
+    event.stopPropagation();
+    event.preventDefault();
+
+    if (!this.esAdmin) return;
+    if (!confirm('Eliminar definitivamente este cliente?')) return;
+
+    this.eliminandoIds.add(cliente.id);
+    this.clientesService.delete(cliente.id).subscribe({
+      next: () => {
+        this.clientes = this.clientes.filter((c) => c.id !== cliente.id);
+      },
+      error: (err) => {
+        console.error(err);
+        this.error = 'No se pudo eliminar el cliente.';
+        this.eliminandoIds.delete(cliente.id);
+      },
+      complete: () => {
+        this.eliminandoIds.delete(cliente.id);
+      }
+    });
   }
 }

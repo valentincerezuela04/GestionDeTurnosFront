@@ -30,15 +30,13 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
   saveInProgress = signal(false);
   editMode = signal(false);
 
-  roles = Object.values(Rol);
-
   readonly empleadoForm = this.fb.nonNullable.group({
     nombre: ['', [Validators.required]],
     apellido: ['', [Validators.required]],
-    dni: ['', [Validators.required]],
-    telefono: ['', [Validators.required]],
+    dni: ['', [Validators.required, Validators.maxLength(8), Validators.pattern(/^[0-9]{7,8}$/)]],
+    telefono: ['', [Validators.required, Validators.maxLength(10), Validators.pattern(/^[0-9]{10}$/)]],
     email: ['', [Validators.required, Validators.email]],
-    contrasena: ['', [ Validators.minLength(4)]],
+    contrasena: ['', [Validators.minLength(4), Validators.pattern(/\d/)]],
     legajo: [''],
     rol: [Rol.EMPLEADO as Rol, [Validators.required]],
   });
@@ -68,8 +66,8 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
           this.empleadoForm.patchValue({
             nombre: empleado.nombre,
             apellido: empleado.apellido,
-            dni: empleado.dni,
-            telefono: empleado.telefono,
+            dni: empleado.dni != null ? String(empleado.dni) : '',
+            telefono: empleado.telefono != null ? String(empleado.telefono) : '',
             email: empleado.email,
             contrasena: '',
             legajo: empleado.legajo ?? '',
@@ -130,8 +128,8 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
     this.empleadoForm.reset({
       nombre: this.empleado.nombre,
       apellido: this.empleado.apellido,
-      dni: this.empleado.dni,
-      telefono: this.empleado.telefono,
+      dni: this.empleado.dni != null ? String(this.empleado.dni) : '',
+      telefono: this.empleado.telefono != null ? String(this.empleado.telefono) : '',
       email: this.empleado.email,
       contrasena: '',
       legajo: this.empleado.legajo ?? '',
@@ -147,14 +145,15 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
       return;
     }
 
-      const raw = this.empleadoForm.getRawValue();
-  const nuevaContrasena = (raw.contrasena ?? '').trim();
-
+    const raw = this.empleadoForm.getRawValue();
+    const nuevaContrasena = (raw.contrasena ?? '').trim();
     const cambios = {
       ...this.empleado,
       ...raw,
+      dni: raw.dni != null ? String(raw.dni) : this.empleado.dni,
+      telefono: raw.telefono != null ? String(raw.telefono) : this.empleado.telefono,
       contrasena: nuevaContrasena,
-      rol:Rol.EMPLEADO
+      rol: Rol.EMPLEADO,
     };
 
     this.saveInProgress.set(true);

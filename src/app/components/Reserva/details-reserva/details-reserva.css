@@ -1,5 +1,8 @@
 /* ===== DETALLES RESERVA ===== */
 .details-container {
+  width: 100%;
+  max-width: 1080px;
+  margin: 1.1rem auto;
   background: radial-gradient(circle at 0 0, rgba(93,70,210,.12), rgba(6,7,11,1));
   border: 1px solid rgba(255,255,255,.02);
   border-radius: 18px;
@@ -89,8 +92,8 @@
 /* contenido */
 .details-content {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem 1.1rem;
 }
 
 /* cada bloque */

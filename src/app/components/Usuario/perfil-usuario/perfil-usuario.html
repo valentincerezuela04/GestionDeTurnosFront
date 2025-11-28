@@ -1,6 +1,6 @@
 <section class="perfil-usuario">
   <header class="perfil-usuario__header">
-    <h1 style="color: aliceblue;">Mi perfil</h1>
+    <h1>Mi perfil</h1>
     @if (userInfo()) {
       <span class="perfil-usuario__badge">
         {{ rolActualTexto() }}
@@ -21,17 +21,20 @@
     @let empleado = empleadoDetalle();
     @let info = userInfo();
 
+  <div class="perfil-usuario__stack">
     @if (esCliente() && cliente) {
       @if (!editMode()) {
-        <app-card-usuario
-          [usuario]="cliente"
-          [rol]="rolActual()"
-          titulo="Datos personales"
-          [mostrarEditar]="true"
-          (editar)="habilitarEdicion()"
-        ></app-card-usuario>
+        <div class="perfil-usuario__panel">
+          <app-card-usuario
+            [usuario]="cliente"
+            [rol]="rolActual()"
+            titulo="Datos personales"
+            [mostrarEditar]="true"
+            (editar)="habilitarEdicion()"
+          ></app-card-usuario>
+        </div>
       } @else {
-        <form [formGroup]="clienteForm" class="perfil-usuario__form">
+        <form [formGroup]="clienteForm" class="perfil-usuario__form perfil-usuario__panel">
           <div class="perfil-usuario__field">
             <label for="nombre">Nombre</label>
             <input id="nombre" type="text" formControlName="nombre" />
@@ -48,16 +51,34 @@
           </div>
           <div class="perfil-usuario__field">
             <label for="dni">DNI</label>
-            <input id="dni" type="text" formControlName="dni" />
-            @if (controls.dni.invalid && controls.dni.touched) {
+            <input
+              id="dni"
+              type="text"
+              formControlName="dni"
+              maxlength="8"
+              inputmode="numeric"
+            />
+            @if (controls.dni.touched && controls.dni.hasError('required')) {
               <span class="perfil-usuario__error">El DNI es obligatorio.</span>
+            }
+            @if (controls.dni.touched && controls.dni.hasError('pattern')) {
+              <span class="perfil-usuario__error">Usa solo numeros (7 u 8 digitos).</span>
             }
           </div>
           <div class="perfil-usuario__field">
             <label for="telefono">Telefono</label>
-            <input id="telefono" type="text" formControlName="telefono" />
-            @if (controls.telefono.invalid && controls.telefono.touched) {
+            <input
+              id="telefono"
+              type="text"
+              formControlName="telefono"
+              maxlength="10"
+              inputmode="tel"
+            />
+            @if (controls.telefono.touched && controls.telefono.hasError('required')) {
               <span class="perfil-usuario__error">El telefono es obligatorio.</span>
+            }
+            @if (controls.telefono.touched && controls.telefono.hasError('pattern')) {
+              <span class="perfil-usuario__error">Debe tener exactamente 10 numeros.</span>
             }
           </div>
           <div class="perfil-usuario__field">
@@ -69,12 +90,12 @@
           </div>
           <div class="perfil-usuario__field">
             <label for="contrasena">Contrasena</label>
-            <input id="contrasena" type="text" formControlName="contrasena" />
-            @if (controls.contrasena.touched && controls.contrasena.hasError('required')) {
-              <span class="perfil-usuario__error">La contrasena es obligatoria.</span>
-            }
+            <input id="contrasena" type="password" formControlName="contrasena" />
             @if (controls.contrasena.touched && controls.contrasena.hasError('minlength')) {
               <span class="perfil-usuario__error">Debe tener al menos 4 caracteres.</span>
+            }
+            @if (controls.contrasena.touched && controls.contrasena.hasError('pattern')) {
+              <span class="perfil-usuario__error">Debe incluir al menos un numero.</span>
             }
           </div>
         </form>
@@ -95,20 +116,25 @@
         </footer>
       }
     } @else if (empleado) {
-      <app-card-usuario
-        [usuario]="empleado"
-        [rol]="rolActual()"
-        titulo="Datos del empleado"
-      ></app-card-usuario>
+      <div class="perfil-usuario__panel">
+        <app-card-usuario
+          [usuario]="empleado"
+          [rol]="rolActual()"
+          titulo="Datos del empleado"
+        ></app-card-usuario>
+      </div>
     } @else if (info) {
-      <app-card-usuario
-        [usuario]="info"
-        [rol]="rolActual()"
-        titulo="Informacion del usuario"
-      ></app-card-usuario>
+      <div class="perfil-usuario__panel">
+        <app-card-usuario
+          [usuario]="info"
+          [rol]="rolActual()"
+          titulo="Informacion del usuario"
+        ></app-card-usuario>
+      </div>
     } @else {
       <p class="perfil-usuario__status">No se encontro informacion del usuario.</p>
     }
+  </div>
   }
 </section>
 

@@ -28,7 +28,12 @@ export class DetailsReserva {
   readonly reserva = signal<ReservaResponseDTO | null>(null);
   readonly usuario = signal<UserInfoResponseDTO | null>(null);
   readonly isEditing = signal<boolean>(false);
-  readonly tipoPagoOptions = signal<TipoPago[]>([TipoPago.EFECTIVO, TipoPago.TARJETA]);
+  readonly tipoPagoOptions = signal<TipoPago[]>([
+    TipoPago.EFECTIVO,
+    TipoPago.TARJETA,
+    TipoPago.TRANSFERENCIA,
+    TipoPago.MERCADO_PAGO,
+  ]);
   readonly salas = signal<Sala[]>([]);
 
   // Estado del formulario de edición
@@ -157,7 +162,7 @@ export class DetailsReserva {
 
   cancelarReserva(): void {
     const currentReserva = this.reserva();
-    if (!currentReserva || !confirm('¿Cancelar la reserva?')) return;
+    if (!currentReserva || !confirm('Cancelar la reserva?')) return;
 
     const currentUser = this.usuario();
     const cancelarReserva = currentUser?.role === 'EMPLEADO'
@@ -178,7 +183,7 @@ export class DetailsReserva {
 
   eliminarReserva(): void {
     const currentReserva = this.reserva();
-    if (!currentReserva || !confirm('¿Eliminar definitivamente la reserva?')) return;
+    if (!currentReserva || !confirm('Eliminar definitivamente la reserva?')) return;
     
     this.reservaSrv.deleteReserva(currentReserva.id).subscribe({
       next: () => {

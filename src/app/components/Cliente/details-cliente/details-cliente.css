@@ -38,6 +38,12 @@
   color:var(--text-muted);
 }
 
+.details-cliente__actions{
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+}
+
 .details-cliente__back{
   border:1px solid rgba(231,250,255,.08);
   background: rgba(231,250,255,.02);
@@ -55,7 +61,31 @@
   transform: translateY(-1px);
 }
 
-/* mensaje vacío */
+.details-cliente__delete{
+  border:1px solid rgba(244,63,94,.35);
+  background: rgba(244,63,94,.16);
+  color:#fecdd3;
+  border-radius: 999px;
+  padding:.38rem .95rem;
+  cursor:pointer;
+  font-weight:700;
+  font-size:.78rem;
+  transition: background .16s ease, transform .08s ease, box-shadow .14s ease;
+}
+
+.details-cliente__delete:hover:not(:disabled){
+  background: rgba(244,63,94,.24);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(244,63,94,.2);
+}
+
+.details-cliente__delete:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+  box-shadow:none;
+}
+
+/* mensaje vacio / error */
 .details-cliente__empty{
   margin:0;
   font-size:.8rem;
@@ -64,6 +94,11 @@
   border-radius:12px;
   border:1px solid rgba(231,250,255,.04);
   padding:.5rem .8rem;
+}
+.details-cliente__empty--error{
+  color:#fecdd3;
+  background: rgba(244,63,94,.16);
+  border-color: rgba(244,63,94,.35);
 }
 
 /* grid con datos del cliente, similar a dl de empleado */
@@ -108,6 +143,12 @@
     align-items:flex-start;
   }
 
+  .details-cliente__actions{
+    width:100%;
+    justify-content:flex-start;
+    flex-wrap:wrap;
+  }
+
   .cliente-card__data{
     grid-template-columns:1fr;
   }
@@ -116,3 +157,4 @@
     grid-template-columns:1fr;
   }
 }
+

@@ -51,6 +51,18 @@
           <dl class="cliente-card__data">
 
           </dl>
+          @if (esAdmin) {
+            <div class="cliente-card__actions">
+              <button
+                type="button"
+                class="cliente-card__delete"
+                [disabled]="eliminandoIds.has(c.id)"
+                (click)="eliminarCliente($event, c)"
+              >
+                {{ eliminandoIds.has(c.id) ? 'Eliminando...' : 'Eliminar' }}
+              </button>
+            </div>
+          }
         </article>
       }
     </div>
