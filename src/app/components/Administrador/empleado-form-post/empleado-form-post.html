@@ -68,16 +68,20 @@
         type="text"
         formControlName="dni"
         placeholder="Ej: 40.123.456"
+        inputmode="numeric"
+        maxlength="8"
         [class.invalid]="dniCtrl?.touched && dniCtrl?.invalid"
       />
       @if (dniCtrl?.touched && dniCtrl?.hasError('required')) {
         <p class="error">El DNI es obligatorio.</p>
       }
+
         @if (dniCtrl?.touched && (dniCtrl?.hasError('minlength') || dniCtrl?.hasError('maxlength'))) {
         <p class="error">El DNI debe tener entre 7 y 8 dígitos.</p>
       }
       @if (dniCtrl?.touched && dniCtrl?.hasError('pattern')) {
         <p class="error">El DNI solo puede contener números.</p>
+
       }
     </div>
 
@@ -89,11 +93,13 @@
         type="tel"
         formControlName="telefono"
         placeholder="Ej: +54 9 11 2233 4455"
+        maxlength="10"
         [class.invalid]="telefonoCtrl?.touched && telefonoCtrl?.invalid"
       />
       @if (telefonoCtrl?.touched && telefonoCtrl?.hasError('required')) {
         <p class="error">El telefono es obligatorio.</p>
       }
+
       @if (telefonoCtrl?.touched && telefonoCtrl?.hasError('minlength')) {
         <p class="error">El telefono debe tener al menos 8 caracteres.</p>
       }
@@ -124,7 +130,7 @@
         id="contrasena"
         type="password"
         formControlName="contrasena"
-        placeholder="Minimo 4 caracteres"
+        placeholder="Minimo 4 caracteres y un numero"
         [class.invalid]="contrasenaCtrl?.touched && contrasenaCtrl?.invalid"
       />
       @if (contrasenaCtrl?.touched && contrasenaCtrl?.hasError('required')) {
@@ -135,6 +141,9 @@
       }
          @if (contrasenaCtrl?.touched && contrasenaCtrl?.hasError('pattern')) {
         <p class="error">Debe incluir al menos una letra y un numero.</p>
+      }
+      @if (contrasenaCtrl?.touched && contrasenaCtrl?.hasError('pattern')) {
+        <p class="error">Incluye al menos un numero.</p>
       }
     </div>
 
@@ -148,10 +157,12 @@
       />
     </div>
 
+
   <div class="field">
   <label>Rol</label>
   <p>Empleado</p> 
 </div>
+
 
   </div>
 

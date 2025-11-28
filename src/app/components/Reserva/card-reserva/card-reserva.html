@@ -1,13 +1,45 @@
-<div class="card" (click)="onCardClick()">
-    <div class="card-header">
-        <h3>Reserva #{{reserva.id}}</h3>
+<div class="card reserva-card" (click)="onCardClick()">
+  <div class="card-header">
+    <div class="card-title">
+      <span class="card-title__room">Sala {{ reserva.salaNumero }}</span>
+      <span class="card-title__capacity">{{ reserva.salaCapacidad }} personas</span>
     </div>
-    <div class="card-body">
-        <p><strong>Sala:</strong> Sala {{reserva.salaNumero}} (Cap: {{reserva.salaCapacidad}})</p>
-        <p><strong>Fecha inicio:</strong> {{reserva.fechaInicio | date:'dd/MM/yyyy HH:mm'}}</p>
-        <p><strong>Fecha fin:</strong> {{reserva.fechaFinal | date:'dd/MM/yyyy HH:mm'}}</p>
-        <p><strong>Estado:</strong> {{reserva.estado}}</p>
-        <p><strong>Monto:</strong> {{reserva.monto}}</p>
 
-    </div>
+    <span class="chip" [ngClass]="estadoClase">
+      {{ reserva.estado }}
+    </span>
+  </div>
+
+  <div class="card-body">
+    <p class="card-row">
+      <strong>Fecha:</strong>
+      {{ reserva.fechaInicio | date : 'dd/MM/yyyy' }}
+    </p>
+
+    <p class="card-row">
+      <strong>Horario:</strong>
+      {{ reserva.fechaInicio | date : 'HH:mm' }} - {{ reserva.fechaFinal | date : 'HH:mm' }}
+    </p>
+
+    <p class="card-row" *ngIf="mostrarCliente">
+      <strong>Cliente:</strong>
+      {{ reserva.clienteEmail }}
+    </p>
+
+    <p class="card-row">
+      <strong>Pago:</strong>
+      {{ formatTipoPago(reserva.tipoPago) }}
+    </p>
+  </div>
+
+  <div class="card-actions" *ngIf="allowDelete">
+    <button
+      type="button"
+      class="delete-btn"
+      [disabled]="deleting"
+      (click)="onDeleteClick($event)"
+    >
+      {{ deleting ? 'Eliminando...' : 'Eliminar' }}
+    </button>
+  </div>
 </div>

@@ -1,12 +1,20 @@
-// src/app/components/Pagos/resumen-pagos/resumen-pagos.ts
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+import { ReservaService } from '../../services/Reservas/reservas-service';
+import { ReservaResponseDTO } from '../../dto/Reserva';
+import { catchError, combineLatest, of } from 'rxjs';
+import { Router } from '@angular/router';
 
-type MetodoPago = 'EFECTIVO' | 'TARJETA' | 'TRANSFERENCIA' | 'MERCADO_PAGO';
+type MetodoPago =
+  | 'EFECTIVO'
+  | 'TARJETA'
+  | 'TRANSFERENCIA'
+  | 'MERCADO_PAGO'
+  | 'NO_INFORMADO';
 
-interface PagoReservaMock {
+interface PagoReserva {
   id: number;
-  fecha: string;      // ISO string
+  fecha: string;
   clienteEmail: string;
   metodoPago: MetodoPago;
   monto: number;
@@ -27,109 +35,157 @@ interface MetodoPagoResumen {
   styleUrls: ['./dashboard-pagos.css'],
 })
 export class DashboardPagos implements OnInit {
+  private readonly reservaSrv = inject(ReservaService);
+  private readonly router = inject(Router);
 
-  // 🔹 Datos mock de ejemplo (simulando reservas pagadas, pendientes, etc.)
-  pagos: PagoReservaMock[] = [
-    {
-      id: 1,
-      fecha: '2025-11-20T10:00:00',
-      clienteEmail: 'cliente1@example.com',
-      metodoPago: 'MERCADO_PAGO',
-      monto: 15000,
-      estado: 'PAGADA',
-    },
-    {
-      id: 2,
-      fecha: '2025-11-21T15:30:00',
-      clienteEmail: 'cliente2@example.com',
-      metodoPago: 'TARJETA',
-      monto: 22000,
-      estado: 'PAGADA',
-    },
-    {
-      id: 3,
-      fecha: '2025-11-22T09:00:00',
-      clienteEmail: 'cliente3@example.com',
-      metodoPago: 'EFECTIVO',
-      monto: 8000,
-      estado: 'PAGADA',
-    },
-    {
-      id: 4,
-      fecha: '2025-11-23T18:00:00',
-      clienteEmail: 'cliente4@example.com',
-      metodoPago: 'MERCADO_PAGO',
-      monto: 18000,
-      estado: 'PENDIENTE_PAGO',
-    },
-    {
-      id: 5,
-      fecha: '2025-11-24T11:15:00',
-      clienteEmail: 'cliente5@example.com',
-      metodoPago: 'TRANSFERENCIA',
-      monto: 12000,
-      estado: 'CANCELADA',
-    },
-  ];
+  pagos: PagoReserva[] = [];
+  pagosPendientes: PagoReserva[] = [];
 
-  // 🔹 KPIs generales
+  resumenPorMetodo: MetodoPagoResumen[] = [];
+
+  totalPendientePago = 0;
+
   totalReservasPagadas = 0;
   totalMontoPagado = 0;
   promedioPorReserva = 0;
-
-  // 🔹 Extra: cuentas por estado
   totalPendientes = 0;
   totalCanceladas = 0;
 
-  // 🔹 Estadísticas por método de pago
-  resumenPorMetodo: MetodoPagoResumen[] = [];
-
-  // 🔹 Últimos pagos (para mostrar abajo en tabla)
-  ultimosPagos: PagoReservaMock[] = [];
+  ultimosPagos: PagoReserva[] = [];
 
   ngOnInit(): void {
-    this.calcularResumen();
+    this.cargarDatos();
+  }
+
+  private cargarDatos(): void {
+    combineLatest([
+      this.reservaSrv.getHistorialGeneral().pipe(
+        catchError((err) => {
+          console.error(
+            'Error al cargar historial general para dashboard de pagos',
+            err
+          );
+          return of<ReservaResponseDTO[]>([]);
+        })
+      ),
+      this.reservaSrv.getReservasActivas().pipe(
+        catchError((err) => {
+          console.error(
+            'Error al cargar reservas activas para dashboard de pagos',
+            err
+          );
+          return of<ReservaResponseDTO[]>([]);
+        })
+      ),
+    ]).subscribe({
+      next: ([historial, activas]) => {
+        const reservasCompletas = this.mezclarReservas(
+          historial ?? [],
+          activas ?? []
+        );
+        this.pagos = this.mapearReservas(reservasCompletas);
+        this.calcularResumen();
+      },
+      error: (err) => {
+        console.error('Error inesperado en dashboard de pagos', err);
+        this.pagos = [];
+        this.calcularResumen();
+      },
+    });
+  }
+
+  private mapearReservas(reservas: ReservaResponseDTO[]): PagoReserva[] {
+    return reservas.map((r) => {
+      // Si el backend no envía tipoPago, lo consideramos "NO_INFORMADO"
+      const metodoPago: MetodoPago = (r.tipoPago as MetodoPago) || 'NO_INFORMADO';
+
+      const estadoBack = (r.estado ?? '').toUpperCase();
+
+      let estado: PagoReserva['estado'];
+
+      if (estadoBack === 'CANCELADO') {
+        estado = 'CANCELADA';
+      } else if (metodoPago !== 'NO_INFORMADO' || estadoBack === 'FINALIZADO') {
+        // Si ya tiene método de pago o está finalizada en el back → la consideramos pagada
+        estado = 'PAGADA';
+      } else {
+        // Todo lo que no tiene pago registrado ni está cancelada → pendiente de pago
+        estado = 'PENDIENTE_PAGO';
+      }
+
+      return {
+        id: r.id,
+        // dejamos la fecha en ISO y la formateamos con formatFecha() en el template
+        fecha: r.fechaInicio,
+        clienteEmail: r.clienteEmail ?? 'N/A',
+        metodoPago,
+        // en tu DTO la propiedad es "monto", no "precioFinal"
+        monto: r.monto ?? 0,
+        estado,
+      };
+    });
+  }
+
+  private mezclarReservas(
+    historial: ReservaResponseDTO[],
+    activas: ReservaResponseDTO[]
+  ): ReservaResponseDTO[] {
+    const mapa = new Map<number, ReservaResponseDTO>();
+
+    [...historial, ...activas].forEach((r) => mapa.set(r.id, r));
+
+    return Array.from(mapa.values());
   }
 
   private calcularResumen(): void {
     const pagadas = this.pagos.filter((p) => p.estado === 'PAGADA');
-    const pendientes = this.pagos.filter((p) => p.estado === 'PENDIENTE_PAGO');
+    const pendientes = this.pagos.filter(
+      (p) => p.estado === 'PENDIENTE_PAGO'
+    );
     const canceladas = this.pagos.filter((p) => p.estado === 'CANCELADA');
+
+    // lista de pendientes para el panel del empleado
+    this.pagosPendientes = pendientes;
 
     this.totalReservasPagadas = pagadas.length;
     this.totalPendientes = pendientes.length;
     this.totalCanceladas = canceladas.length;
 
     this.totalMontoPagado = pagadas.reduce((acc, p) => acc + p.monto, 0);
-    this.promedioPorReserva =
-      pagadas.length > 0 ? Math.round(this.totalMontoPagado / pagadas.length) : 0;
+    this.totalPendientePago = pendientes.reduce((acc, p) => acc + p.monto, 0);
 
-    // Agrupamos por método de pago
+    this.promedioPorReserva =
+      pagadas.length > 0 ? this.totalMontoPagado / pagadas.length : 0;
+
     const mapa = new Map<MetodoPago, MetodoPagoResumen>();
 
-    for (const pago of pagadas) {
-      if (!mapa.has(pago.metodoPago)) {
-        mapa.set(pago.metodoPago, {
-          metodo: pago.metodoPago,
+    pagadas.forEach((p) => {
+      const actual =
+        mapa.get(p.metodoPago) ?? {
+          metodo: p.metodoPago,
           cantidad: 0,
           monto: 0,
-        });
-      }
-      const entry = mapa.get(pago.metodoPago)!;
-      entry.cantidad += 1;
-      entry.monto += pago.monto;
-    }
+        };
+
+      actual.cantidad += 1;
+      actual.monto += p.monto;
+      mapa.set(p.metodoPago, actual);
+    });
 
     this.resumenPorMetodo = Array.from(mapa.values());
 
-    // Últimos pagos: ordenados por fecha desc, tomamos 5
-    this.ultimosPagos = [...this.pagos]
-      .filter((p) => p.estado === 'PAGADA')
-      .sort((a, b) => +new Date(b.fecha) - +new Date(a.fecha))
-      .slice(0, 5);
+    this.ultimosPagos = [...pagadas]
+      .sort(
+        (a, b) =>
+          new Date(b.fecha).getTime() - new Date(a.fecha).getTime()
+      )
+      .slice(0, 10);
   }
 
-  // Helper para mostrar fecha bonita
+  verDetalle(reservaId: number): void {
+    this.router.navigate(['/reservas', reservaId, 'details']);
+  }
+
   formatFecha(fechaIso: string): string {
     const d = new Date(fechaIso);
     return d.toLocaleString('es-AR', {

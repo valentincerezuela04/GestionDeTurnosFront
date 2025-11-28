@@ -16,6 +16,9 @@
   display:flex;
   flex-direction:column;
   gap:1.1rem;
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
 }
 
 /* header (título + volver) */
@@ -67,6 +70,12 @@
   color:#fecdd3;
   background: rgba(244,63,94,.15);
   border: 1px solid rgba(244,63,94,.35);
+}
+.detalle-empleado__status--hint{
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  padding: 0.2rem 0 0;
 }
 
 /* tarjeta principal */

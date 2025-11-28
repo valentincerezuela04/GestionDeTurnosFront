@@ -4,7 +4,14 @@
 }
 
 .content {
-    padding: 1.5rem;
+    padding: 1.5rem 2rem 1.75rem;
+    display: flex;
+    justify-content: center;
+}
+
+.content__inner {
+    width: 100%;
+    max-width: 1180px;
 }
 
 .auth-layout {
@@ -51,6 +58,10 @@
 }
 
 @media (max-width: 768px) {
+    .content {
+        padding: 1rem 1.1rem 1.25rem;
+    }
+
     .auth-layout__top {
         padding: 1rem 1.2rem 0;
     }

@@ -1,13 +1,29 @@
 <aside class="side" [class.closed]="!open()" aria-label="Navegación">
   <nav>
     <a routerLink="/hall" routerLinkActive="active">Salas</a>
+
     @if (isAdmin()) {
       <a routerLink="/empleados" routerLinkActive="active">Empleados</a>
     }
+
     <a routerLink="/reservas" routerLinkActive="active">Reservas</a>
+
+    @if (isCliente()) {
+      <a routerLink="/reservas/historial" routerLinkActive="active">
+        Mi historial
+      </a>
+    }
+
+    @if (showFullMenu()) {
+      <a routerLink="/reservas/historial-general" routerLinkActive="active">
+        Historial reservas
+      </a>
+    }
+
     @if (showFullMenu()) {
       <a routerLink="/clientes" routerLinkActive="active">Clientes</a>
     }
+
     <a routerLink="/calendar" routerLinkActive="active">Calendario</a>
       @if (showFullMenu()) {
       <a routerLink="/dashboardPagos" routerLinkActive="active">DashboardPagos</a>

@@ -175,3 +175,32 @@
   color:var(--text-main);
   word-break:break-word;
 }
+
+.cliente-card__actions{
+  display:flex;
+  justify-content:flex-end;
+  margin-top:.35rem;
+}
+
+.cliente-card__delete{
+  background: rgba(244,63,94,.14);
+  color:#fecdd3;
+  border:1px solid rgba(244,63,94,.35);
+  border-radius:10px;
+  padding:.35rem .8rem;
+  font-weight:700;
+  cursor:pointer;
+  transition: background .14s ease, transform .08s ease, box-shadow .14s ease;
+}
+
+.cliente-card__delete:hover:not(:disabled){
+  background: rgba(244,63,94,.24);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(244,63,94,.25);
+}
+
+.cliente-card__delete:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+  box-shadow:none;
+}

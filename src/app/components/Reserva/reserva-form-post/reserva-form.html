@@ -1,121 +1,132 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="reserva-form">
   <h2>{{ editMode ? "Editar" : "Nueva" }} Reserva</h2>
 
-  <!-- Sala (select) -->
-  <div class="form-group">
-    <label for="salaId">Sala *</label>
-    <select
-      id="salaId"
-      formControlName="salaId"
-      class="form-control"
-      [class.is-invalid]="form.get('salaId')?.invalid && form.get('salaId')?.touched">
-      <option value="" disabled selected>Seleccioná una sala</option>
-      @for (s of salas; track s.id) {
-        <option [value]="s.id">
-          Sala {{ s.numero }} - {{ s.descripcion }} ({{ s.cantidad_personas }} pax)
-        </option>
-      }
-    </select>
-    @if (form.get('salaId')?.invalid && form.get('salaId')?.touched) {
-      <div class="invalid-feedback">La sala es requerida</div>
-    }
-  </div>
-
-  <!-- Fecha y Hora de Inicio -->
-  <div class="form-group">
-    <label for="fechaInicio">Fecha y Hora de Inicio *</label>
-    <input
-      type="datetime-local"
-      id="fechaInicio"
-      formControlName="fechaInicio"
-      class="form-control"
-      [class.is-invalid]="form.get('fechaInicio')?.invalid && form.get('fechaInicio')?.touched" />
-    @if (form.get('fechaInicio')?.invalid && form.get('fechaInicio')?.touched) {
-      <div class="invalid-feedback">La fecha y hora de inicio son requeridas</div>
-    }
-  </div>
-
-  <!-- Fecha y Hora de Fin -->
-  <div class="form-group">
-    <label for="fechaFinal">Fecha y Hora de Fin *</label>
-    <input
-      type="datetime-local"
-      id="fechaFinal"
-      formControlName="fechaFinal"
-      class="form-control"
-      [class.is-invalid]="(form.get('fechaFinal')?.invalid && form.get('fechaFinal')?.touched) || form.hasError('dateRange')" />
-    @if (form.get('fechaFinal')?.invalid && form.get('fechaFinal')?.touched) {
-      <div class="invalid-feedback">La fecha y hora de fin son requeridas</div>
-    }
-    @if (form.hasError('dateRange') && (form.get('fechaFinal')?.touched || form.get('fechaInicio')?.touched)) {
-      <div class="invalid-feedback">La fecha final debe ser posterior a la inicial</div>
-    }
-  </div>
-
-  <!-- Tipo de Pago -->
-  <div class="form-group">
-    <label for="tipoPago">Tipo de Pago *</label>
-    <select
-      id="tipoPago"
-      formControlName="tipoPago"
-      class="form-control"
-      [class.is-invalid]="form.get('tipoPago')?.invalid && form.get('tipoPago')?.touched">
-      <option value="" disabled>Seleccioná un método</option>
-      @for (p of tipoPagos; track p) {
-        <option [value]="p">{{ p }}</option>
-      }
-    </select>
-    @if (form.get('tipoPago')?.invalid && form.get('tipoPago')?.touched) {
-      <div class="invalid-feedback">El tipo de pago es requerido</div>
-    }
-  </div>
-
-  <!-- Descripción (opcional, solo UI) -->
-  <div class="form-group">
-    <label for="descripcion">Descripción (opcional)</label>
-    <textarea
-      id="descripcion"
-      formControlName="descripcion"
-      class="form-control"
-      rows="3"
-      placeholder="Agrega notas o detalles adicionales"></textarea>
-  </div>
-
-  <!-- clienteId (solo visible para empleados) -->
-  @if (isEmpleado()) {
+  <div class="reserva-form__grid">
+    <!-- Sala (select) -->
     <div class="form-group">
-      <label for="clienteId">Cliente *</label>
+      <label for="salaId">Sala *</label>
       <select
-        id="clienteId"
-        formControlName="clienteId"
+        id="salaId"
+        formControlName="salaId"
         class="form-control"
-        [class.is-invalid]="form.get('clienteId')?.invalid && form.get('clienteId')?.touched">
-        <option [ngValue]="null" disabled>Seleccioná un cliente</option>
-        @for (c of clientes; track c.id) {
-          <option [value]="c.id">
-            #{{ c.id }} - {{ c.email }}
+        [class.is-invalid]="form.get('salaId')?.invalid && form.get('salaId')?.touched">
+        <option [ngValue]="null" disabled>Selecciona una sala</option>
+        @for (s of salas; track s.id) {
+          <option [value]="s.id">
+            Sala {{ s.numero }} - {{ s.descripcion }} ({{ s.cantidad_personas }} pax)
           </option>
         }
       </select>
-      <small class="text-muted">Mostrando ID y correo registrado del cliente.</small>
-      @if (form.get('clienteId')?.invalid && form.get('clienteId')?.touched) {
-        <div class="invalid-feedback">El cliente es requerido</div>
+      @if (form.get('salaId')?.invalid && form.get('salaId')?.touched) {
+        <div class="invalid-feedback">La sala es requerida</div>
       }
     </div>
-  }
-  <div class="form-group">
-  <label for="monto">Monto a pagar (ARS)</label>
-  <input
-    id="monto"
-    type="number"
-    class="form-control"
-    formControlName="monto"
-    readonly
-  />
-  <small class="text-muted">
-    Se calcula automáticamente según la sala, la duración y si es fin de semana (+20%).
-  </small>
-</div>
+
+    <!-- Fecha y Hora de Inicio -->
+    <div class="form-group form-group--picker">
+      <label for="fechaInicio">Fecha y hora de inicio *</label>
+      <input
+        #fechaInicioInput
+        type="datetime-local"
+        id="fechaInicio"
+        formControlName="fechaInicio"
+        class="form-control form-control--picker"
+        autocomplete="off"
+        (click)="abrirPicker(fechaInicioInput)"
+        (focus)="abrirPicker(fechaInicioInput)"
+        [class.is-invalid]="form.get('fechaInicio')?.invalid && form.get('fechaInicio')?.touched" />
+      @if (form.get('fechaInicio')?.invalid && form.get('fechaInicio')?.touched) {
+        <div class="invalid-feedback">La fecha y hora de inicio son requeridas</div>
+      }
+    </div>
+
+    <!-- Fecha y Hora de Fin -->
+    <div class="form-group form-group--picker">
+      <label for="fechaFinal">Fecha y hora de fin *</label>
+      <input
+        #fechaFinalInput
+        type="datetime-local"
+        id="fechaFinal"
+        formControlName="fechaFinal"
+        class="form-control form-control--picker"
+        autocomplete="off"
+        (click)="abrirPicker(fechaFinalInput)"
+        (focus)="abrirPicker(fechaFinalInput)"
+        [class.is-invalid]="(form.get('fechaFinal')?.invalid && form.get('fechaFinal')?.touched) || form.hasError('dateRange')" />
+      @if (form.get('fechaFinal')?.invalid && form.get('fechaFinal')?.touched) {
+        <div class="invalid-feedback">La fecha y hora de fin son requeridas</div>
+      }
+      @if (form.hasError('dateRange') && (form.get('fechaFinal')?.touched || form.get('fechaInicio')?.touched)) {
+        <div class="invalid-feedback">La fecha final debe ser posterior a la inicial</div>
+      }
+    </div>
+
+    <!-- Tipo de Pago -->
+    <div class="form-group">
+      <label for="tipoPago">Tipo de pago *</label>
+      <select
+        id="tipoPago"
+        formControlName="tipoPago"
+        class="form-control"
+        [class.is-invalid]="form.get('tipoPago')?.invalid && form.get('tipoPago')?.touched">
+        <option [ngValue]="null" disabled>Selecciona un metodo</option>
+        @for (p of tipoPagos; track p) {
+          <option [value]="p">{{ p.replace('_', ' ') }}</option>
+        }
+      </select>
+      @if (form.get('tipoPago')?.invalid && form.get('tipoPago')?.touched) {
+        <div class="invalid-feedback">El tipo de pago es requerido</div>
+      }
+    </div>
+
+    <!-- Descripcion -->
+    <div class="form-group form-group--wide">
+      <label for="descripcion">Descripcion (opcional)</label>
+      <textarea
+        id="descripcion"
+        formControlName="descripcion"
+        class="form-control"
+        rows="3"
+        placeholder="Agrega notas o detalles adicionales"></textarea>
+    </div>
+
+    <!-- clienteId (solo visible para empleados) -->
+    @if (isEmpleado()) {
+      <div class="form-group form-group--wide">
+        <label for="clienteId">Cliente *</label>
+        <select
+          id="clienteId"
+          formControlName="clienteId"
+          class="form-control"
+          [class.is-invalid]="form.get('clienteId')?.invalid && form.get('clienteId')?.touched">
+          <option [ngValue]="null" disabled>Selecciona un cliente</option>
+          @for (c of clientes; track c.id) {
+            <option [value]="c.id">
+              #{{ c.id }} - {{ c.email }}
+            </option>
+          }
+        </select>
+        <small class="text-muted">Mostrando ID y correo registrado del cliente.</small>
+        @if (form.get('clienteId')?.invalid && form.get('clienteId')?.touched) {
+          <div class="invalid-feedback">El cliente es requerido</div>
+        }
+      </div>
+    }
+
+    <div class="form-group">
+      <label for="monto">Monto a pagar (ARS)</label>
+      <input
+        id="monto"
+        type="number"
+        class="form-control"
+        formControlName="monto"
+        readonly
+      />
+      <small class="text-muted">
+        Se calcula automaticamente segun la sala, la duracion y si es fin de semana (+20%).
+      </small>
+    </div>
+  </div>
 
   <!-- Acciones -->
   <div class="form-actions">

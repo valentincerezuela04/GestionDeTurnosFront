@@ -20,9 +20,9 @@ export class EmpleadoFormPost {
   private empleadoService = inject(EmpledosService);
   private destroyRef = inject(DestroyRef);
 
-  readonly roles = Object.values(Rol);
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal<string | null>(null);
+
 
 readonly empleadoForm = this.fb.nonNullable.group({
   nombre: ['', [Validators.required, Validators.minLength(3)]],
@@ -67,10 +67,12 @@ readonly empleadoForm = this.fb.nonNullable.group({
     this.isSubmitting.set(true);
     this.errorMessage.set(null);
 
+
       const formValue = this.empleadoForm.getRawValue();
     const payload ={
       ...formValue,
       rol:Rol.EMPLEADO as Rol
+
     };
 
     this.empleadoService

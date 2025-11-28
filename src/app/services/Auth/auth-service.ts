@@ -116,6 +116,7 @@ export class AuthService {
       id: source?.id ?? fallback?.id ?? 0,
       nombre: source?.nombre ?? fallback?.nombre ?? '',
       rol: normalizedRole,
+      email: source?.email ?? (fallback as any)?.email ?? '',
       token: source?.token ?? fallback?.token ?? '',
     };
   }

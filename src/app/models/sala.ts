@@ -1,4 +1,4 @@
-export type SalaSize = 'PEQUEÑA' | 'MEDIANA' | 'GRANDE';
+export type SalaSize = 'PEQUENA' | 'PEQUEÑA' | 'MEDIANA' | 'GRANDE';
 export interface SalaDTO {
   id: number;
   numero: number;

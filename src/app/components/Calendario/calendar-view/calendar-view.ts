@@ -89,15 +89,20 @@ export class CalendarViewComponent {
       const title = arg.event.title || '';
       const fmt = (d: Date | null) =>
         d ? d.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }) : '';
-      const hora = `<b>${fmt(arg.event.start)} - ${fmt(arg.event.end)}</b>`;
+      const hora = `${fmt(arg.event.start)} - ${fmt(arg.event.end)}`;
+      const cleanTitle = (title.split('-')[0] ?? title).trim();
 
-      let styled = title;
+      const badges: string[] = [];
       if (title.includes('Tuya')) {
-        styled = title.replace('Tuya', '<span style="color:#28a745;">Tuya</span>');
+        badges.push('<span class="cal-pill cal-pill--mine">Tuya</span>');
       } else if (title.includes('Ocupado')) {
-        styled = title.replace('Ocupado', '<span style="color:#a7288a;">Ocupado</span>');
+        badges.push('<span class="cal-pill cal-pill--busy">Ocupado</span>');
       }
-      return { html: `<div>${hora}<br>${styled}</div>` };
+
+      const badgeHtml = badges.length ? `<span class="cal-pill-wrap">${badges.join('')}</span>` : '';
+      return {
+        html: `<div class="fc-event__content"><div class="fc-event__time">${hora}</div><div class="fc-event__title">${cleanTitle}${badgeHtml}</div></div>`,
+      };
     },
     eventClick: (info) => {
       const id = info.event.id;

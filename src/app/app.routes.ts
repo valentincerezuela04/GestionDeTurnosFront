@@ -83,8 +83,9 @@ export const routes: Routes = [
   },
 
   // Reservas
-  {
-    path: 'reservas', canMatch: [authCanMatch],
+    {
+    path: 'reservas',
+    canMatch: [authCanMatch],
     children: [
       {
         path: '',
@@ -94,6 +95,24 @@ export const routes: Routes = [
           ),
         data: { title: 'Mis reservas' },
         canActivate: [roleGuard('CLIENTE', 'EMPLEADO')],
+      },
+      {
+        path: 'historial',
+        loadComponent: () =>
+          import('./components/Reserva/historial-cliente/historial-cliente').then(
+            (m) => m.HistorialCliente
+          ),
+        data: { title: 'Historial de reservas' },
+        canActivate: [roleGuard('CLIENTE')],
+      },
+      {
+        path: 'historial-general',
+        loadComponent: () =>
+          import('./components/Reserva/historial-general/historial-general').then(
+            (m) => m.HistorialGeneral
+          ),
+        data: { title: 'Historial general de reservas' },
+        canActivate: [roleGuard('ADMIN', 'EMPLEADO')],
       },
       {
         path: 'new',
@@ -110,11 +129,12 @@ export const routes: Routes = [
           import('./components/Reserva/details-reserva/details-reserva').then(
             (m) => m.DetailsReserva
           ),
-        data: { title: 'Detalle reserva' },
-        canActivate: [roleGuard('CLIENTE', 'EMPLEADO')]
+        data: { title: 'Detalle de reserva' },
+        canActivate: [roleGuard('CLIENTE', 'EMPLEADO', 'ADMIN')],
       },
     ],
   },
+
   
 
   // Clientes
@@ -125,7 +145,7 @@ export const routes: Routes = [
         (m) => m.ClientesPageComponent
       ),
     data: { title: 'Clientes' },
-    canActivate: [roleGuard('CLIENTE', 'EMPLEADO')]
+    canActivate: [roleGuard('CLIENTE', 'EMPLEADO', 'ADMIN')]
   },
 
   // Calendario
