@@ -24,16 +24,39 @@ export class EmpleadoFormPost {
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal<string | null>(null);
 
-  readonly empleadoForm = this.fb.nonNullable.group({
-    nombre: ['', Validators.required],
-    apellido: ['', Validators.required],
-    dni: ['', Validators.required],
-    telefono: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    contrasena: ['', [Validators.required, Validators.minLength(4)]],
-    legajo: [''],
-    rol: [Rol.EMPLEADO as Rol, Validators.required],
-  });
+readonly empleadoForm = this.fb.nonNullable.group({
+  nombre: ['', [Validators.required, Validators.minLength(3)]],
+  apellido: ['', [Validators.required, Validators.minLength(3)]],
+  dni: [
+    '',
+    [
+      Validators.required,
+      Validators.minLength(7),
+      Validators.maxLength(8),
+      Validators.pattern(/^\d+$/),
+    ],
+  ],
+  telefono: [
+    '',
+    [
+      Validators.required,
+      Validators.minLength(8),
+      Validators.maxLength(20),
+      Validators.pattern(/^[0-9+\-\s()]+$/),
+    ],
+  ],
+  email: ['', [Validators.required, Validators.email]],
+  contrasena: [
+    '',
+    [
+      Validators.required,
+      Validators.minLength(6),
+      Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/),
+    ],
+  ],
+  legajo: [''],
+});
+
 
   submit(): void {
     if (this.empleadoForm.invalid) {
@@ -44,7 +67,11 @@ export class EmpleadoFormPost {
     this.isSubmitting.set(true);
     this.errorMessage.set(null);
 
-    const payload = this.empleadoForm.getRawValue();
+      const formValue = this.empleadoForm.getRawValue();
+    const payload ={
+      ...formValue,
+      rol:Rol.EMPLEADO as Rol
+    };
 
     this.empleadoService
       .createEmpleado(payload)

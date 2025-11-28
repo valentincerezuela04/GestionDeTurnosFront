@@ -37,6 +37,9 @@
       @if (nombreCtrl?.touched && nombreCtrl?.hasError('required')) {
         <p class="error">El nombre es obligatorio.</p>
       }
+       @if (nombreCtrl?.touched && nombreCtrl?.hasError('minlength')) {
+        <p class="error">El nombre debe tener al menos 3 caracteres.</p>
+      }
     </div>
 
     @let apellidoCtrl = empleadoForm.get('apellido');
@@ -51,6 +54,9 @@
       />
       @if (apellidoCtrl?.touched && apellidoCtrl?.hasError('required')) {
         <p class="error">El apellido es obligatorio.</p>
+      }
+        @if (apellidoCtrl?.touched && apellidoCtrl?.hasError('minlength')) {
+        <p class="error">El apellido debe tener al menos 3 caracteres.</p>
       }
     </div>
 
@@ -67,6 +73,12 @@
       @if (dniCtrl?.touched && dniCtrl?.hasError('required')) {
         <p class="error">El DNI es obligatorio.</p>
       }
+        @if (dniCtrl?.touched && (dniCtrl?.hasError('minlength') || dniCtrl?.hasError('maxlength'))) {
+        <p class="error">El DNI debe tener entre 7 y 8 dígitos.</p>
+      }
+      @if (dniCtrl?.touched && dniCtrl?.hasError('pattern')) {
+        <p class="error">El DNI solo puede contener números.</p>
+      }
     </div>
 
     @let telefonoCtrl = empleadoForm.get('telefono');
@@ -81,6 +93,12 @@
       />
       @if (telefonoCtrl?.touched && telefonoCtrl?.hasError('required')) {
         <p class="error">El telefono es obligatorio.</p>
+      }
+      @if (telefonoCtrl?.touched && telefonoCtrl?.hasError('minlength')) {
+        <p class="error">El telefono debe tener al menos 8 caracteres.</p>
+      }
+      @if (telefonoCtrl?.touched && telefonoCtrl?.hasError('pattern')) {
+        <p class="error">Ingresa un telefono válido.</p>
       }
     </div>
 
@@ -113,7 +131,10 @@
         <p class="error">La contrasena es obligatoria.</p>
       }
       @if (contrasenaCtrl?.touched && contrasenaCtrl?.hasError('minlength')) {
-        <p class="error">Debe tener al menos 4 caracteres.</p>
+        <p class="error">Debe tener al menos  caracteres.</p>
+      }
+         @if (contrasenaCtrl?.touched && contrasenaCtrl?.hasError('pattern')) {
+        <p class="error">Debe incluir al menos una letra y un numero.</p>
       }
     </div>
 
@@ -127,22 +148,11 @@
       />
     </div>
 
-    @let rolCtrl = empleadoForm.get('rol');
-    <div class="field">
-      <label for="rol">Rol</label>
-      <select
-        id="rol"
-        formControlName="rol"
-        [class.invalid]="rolCtrl?.touched && rolCtrl?.invalid"
-      >
-        @for (rol of roles; track rol) {
-          <option [ngValue]="rol">{{ rol }}</option>
-        }
-      </select>
-      @if (rolCtrl?.touched && rolCtrl?.hasError('required')) {
-        <p class="error">Selecciona un rol.</p>
-      }
-    </div>
+  <div class="field">
+  <label>Rol</label>
+  <p>Empleado</p> 
+</div>
+
   </div>
 
   @if (errorMessage()) {
