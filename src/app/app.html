@@ -3,7 +3,9 @@
   <div class="layout">
     <app-aside [open]="sideBarOpen()"></app-aside>
     <main class="content">
-      <router-outlet></router-outlet>
+      <div class="content__inner">
+        <router-outlet></router-outlet>
+      </div>
     </main>
   </div>
 } @else {

@@ -78,6 +78,14 @@ export class ReservaService {
     });
   }
 
+  // DELETE: limpiar historial completo (solo admin)
+  clearHistorial(): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/historial`, {
+      withCredentials: true,
+      responseType: 'text' as 'json'
+    });
+  }
+
 
    generarLinkPago(reservaId: number): Observable<{ initPoint: string }> {
     return this.http.post<{ initPoint: string }>(

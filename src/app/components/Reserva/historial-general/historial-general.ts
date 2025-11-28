@@ -5,11 +5,15 @@ import {
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
+
 import { Router } from '@angular/router';
+import { catchError, combineLatest, of } from 'rxjs';
+
 
 import { ReservaService } from '../../../services/Reservas/reservas-service';
 import { ReservaResponseDTO } from '../../../dto/Reserva';
 import { CardReserva } from '../card-reserva/card-reserva';
+import { AuthService } from '../../../services/Auth/auth-service';
 
 @Component({
   selector: 'app-historial-general',
@@ -22,6 +26,7 @@ export class HistorialGeneral implements OnInit {
   private readonly reservaSrv = inject(ReservaService);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
+  private readonly auth = inject(AuthService);
 
   private historialOriginal: ReservaResponseDTO[] = [];
   historialFiltrado: ReservaResponseDTO[] = [];
@@ -34,6 +39,8 @@ export class HistorialGeneral implements OnInit {
 
   loading = true;
   error: string | null = null;
+  limpiando = false;
+  eliminandoIds = new Set<number>();
 
   ngOnInit(): void {
     this.buildForm();
@@ -59,32 +66,43 @@ export class HistorialGeneral implements OnInit {
     });
   }
 
-  private cargarHistorial(): void {
-    this.reservaSrv.getHistorialGeneral().subscribe({
-      next: (reservas) => {
-        this.historialOriginal = reservas ?? [];
-        this.loading = false;
+  cargarHistorial(): void {
+  this.loading = true;
+  this.error = null;
 
-        // Salas y tipos de pago disponibles
-        this.salasDisponibles = [...new Set(
-          this.historialOriginal.map((r) => r.salaNumero)
-        )].sort((a, b) => a - b);
+  combineLatest([
+    this.reservaSrv.getHistorialGeneral().pipe(
+      catchError((err) => {
+        console.error('Error al obtener historial general', err);
+        // Si falla, devolvemos lista vacía para no romper el combineLatest
+        return of<ReservaResponseDTO[]>([]);
+      })
+    ),
+    this.reservaSrv.getReservasActivas().pipe(
+      catchError((err) => {
+        console.error('Error al obtener reservas activas', err);
+        // Si falla, simplemente no sumamos las activas
+        return of<ReservaResponseDTO[]>([]);
+      })
+    ),
+  ]).subscribe({
+    next: ([historial, activas]) => {
+      const todas = this.mezclarReservas(historial ?? [], activas ?? []);
+      this.historialOriginal = todas;
+      this.groupReservas();
+      this.aplicarFiltros();
+      this.loading = false;
+    },
+    error: (err) => {
+      console.error('Error inesperado al cargar historial', err);
+      this.error = 'Error al cargar historial de reservas';
+      this.loading = false;
+    },
+  });
+}
 
-        this.tiposPagoDisponibles = [...new Set(
-          this.historialOriginal
-            .map((r) => r.tipoPago)
-            .filter((t) => !!t)
-        )];
 
-        this.aplicarFiltros();
-      },
-      error: (err) => {
-        console.error('Error al cargar historial general:', err);
-        this.error = 'No se pudo cargar el historial general de reservas.';
-        this.loading = false;
-      },
-    });
-  }
+
 
   private aplicarFiltros(): void {
     if (!this.filtrosForm) {
@@ -175,6 +193,36 @@ export class HistorialGeneral implements OnInit {
     this.historialFiltrado = filtradas;
   }
 
+
+  // Agrupa reservas de uno o varios arreglos, evitando duplicados por id
+// y las ordena de más nueva a más vieja.
+private groupReservas(...grupos: ReservaResponseDTO[][]): ReservaResponseDTO[] {
+  const map = new Map<number, ReservaResponseDTO>();
+
+  grupos
+    .filter((g) => !!g)               // ignora null/undefined
+    .forEach((grupo) => {
+      grupo.forEach((r) => {
+        if (!r) return;
+        if (r.id == null) return;
+
+        // Si ya existe una reserva con ese id, dejamos la primera que llegó
+        // (si querés podrías mejorar acá con prioridad según estado)
+        if (!map.has(r.id)) {
+          map.set(r.id, r);
+        }
+      });
+    });
+
+  // Devolvemos las reservas únicas ordenadas por fechaInicio DESC (más nuevas primero)
+  return Array.from(map.values()).sort(
+    (a, b) =>
+      new Date(b.fechaInicio).getTime() - new Date(a.fechaInicio).getTime()
+  );
+}
+
+
+
   resetFiltros(): void {
     this.filtrosForm.reset({
       fechaDesde: '',
@@ -193,4 +241,71 @@ export class HistorialGeneral implements OnInit {
   onReservaClick(reserva: ReservaResponseDTO): void {
     this.router.navigate(['/reservas', reserva.id, 'details']);
   }
+
+  get esAdmin(): boolean {
+    return this.auth.hasRole('ADMIN');
+  }
+
+  onDeleteReserva(reserva: ReservaResponseDTO): void {
+    if (!this.esAdmin) return;
+    if (!confirm('Eliminar definitivamente esta reserva?')) return;
+
+    this.eliminandoIds.add(reserva.id);
+    this.reservaSrv.deleteReserva(reserva.id).subscribe({
+      next: () => {
+        this.historialOriginal = this.historialOriginal.filter(r => r.id !== reserva.id);
+        this.aplicarFiltros();
+      },
+      error: (err) => {
+        console.error('Error al eliminar la reserva:', err);
+        this.error = 'No se pudo eliminar la reserva.';
+        this.eliminandoIds.delete(reserva.id);
+      },
+      complete: () => {
+        this.eliminandoIds.delete(reserva.id);
+      }
+    });
+  }
+
+
+  private mezclarReservas(
+  historial: ReservaResponseDTO[],
+  activas: ReservaResponseDTO[]
+): ReservaResponseDTO[] {
+  const mapa = new Map<number, ReservaResponseDTO>();
+
+  [...historial, ...activas].forEach((r) => mapa.set(r.id, r));
+
+  return Array.from(mapa.values());
+}
+
+
+
+
+
+  limpiarHistorial(): void {
+  if (!this.esAdmin) return;
+  if (!confirm('Esto borrara el historial completo de reservas. Continuar?')) return;
+
+  this.limpiando = true;
+  this.reservaSrv.clearHistorial().subscribe({
+    next: () => {
+      // Volvemos a cargar datos (ahora solo se verán activas)
+      this.loading = true;
+      this.error = null;
+      this.cargarHistorial();
+    },
+    error: (err) => {
+      console.error('Error al limpiar el historial:', err);
+      this.error = 'No se pudo limpiar el historial.';
+      this.limpiando = false;
+    },
+    complete: () => {
+      this.limpiando = false;
+    }
+  });
+}
+
+
+
 }

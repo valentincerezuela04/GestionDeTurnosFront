@@ -95,9 +95,56 @@
 :host ::ng-deep .fc .fc-event {
   border: none;
   border-radius: 10px;
-  padding: 0.35rem;
+  padding: 0.35rem 0.5rem;
   background: linear-gradient(120deg, #ff6b6b, #f06595);
   box-shadow: 0 10px 20px rgba(240, 101, 149, 0.25);
+  color: #fff;
+  font-size: 0.92rem;
+  line-height: 1.35;
+  min-height: 64px;
+}
+
+:host ::ng-deep .fc-event__content{
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+:host ::ng-deep .fc-event__time{
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+:host ::ng-deep .fc-event__title{
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 600;
+}
+
+:host ::ng-deep .cal-pill-wrap{
+  display: inline-flex;
+  gap: 0.25rem;
+}
+
+:host ::ng-deep .cal-pill{
+  display: inline-flex;
+  align-items: center;
+  padding: 0.08rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border: 1px solid rgba(255,255,255,0.45);
+}
+:host ::ng-deep .cal-pill--mine{
+  background: rgba(34,197,94,.18);
+  border-color: rgba(34,197,94,.4);
+  color: #dcfce7;
+}
+:host ::ng-deep .cal-pill--busy{
+  background: rgba(255,255,255,.12);
+  border-color: rgba(255,255,255,.4);
   color: #fff;
 }
 

@@ -127,6 +127,20 @@
   border-radius: 6px;
 }
 
+.field--readonly .readonly-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(124, 92, 255, 0.14);
+  border: 1px dashed rgba(124, 92, 255, 0.5);
+  color: #e6e8ef;
+  border-radius: 999px;
+  padding: 0.45rem 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  width: fit-content;
+}
+
 .empleado-form__alert {
   margin: 0;
   color: #fca5a5;

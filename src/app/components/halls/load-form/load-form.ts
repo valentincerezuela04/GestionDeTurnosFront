@@ -19,9 +19,10 @@ export class LoadForm {
   //para mostrar error en el html
   numeroOcupado = false
 
-    // mapa para mostrar la capacidad fija según el tamaño
+  // mapa para mostrar la capacidad fija segun el tamano
   capacidadPorSize: Record<SalaSize, number> = {
-    PEQUEÑA: 10,
+    PEQUENA: 10,
+    'PEQUEÑA': 10,
     MEDIANA: 25,
     GRANDE: 40,
   };

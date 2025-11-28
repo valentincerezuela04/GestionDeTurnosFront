@@ -145,7 +145,7 @@ export const routes: Routes = [
         (m) => m.ClientesPageComponent
       ),
     data: { title: 'Clientes' },
-    canActivate: [roleGuard('CLIENTE', 'EMPLEADO')]
+    canActivate: [roleGuard('CLIENTE', 'EMPLEADO', 'ADMIN')]
   },
 
   // Calendario

@@ -62,10 +62,15 @@
         type="text"
         formControlName="dni"
         placeholder="Ej: 40.123.456"
+        inputmode="numeric"
+        maxlength="8"
         [class.invalid]="dniCtrl?.touched && dniCtrl?.invalid"
       />
       @if (dniCtrl?.touched && dniCtrl?.hasError('required')) {
         <p class="error">El DNI es obligatorio.</p>
+      }
+      @if (dniCtrl?.touched && dniCtrl?.hasError('pattern')) {
+        <p class="error">Solo numeros (7 u 8 digitos).</p>
       }
     </div>
 
@@ -77,10 +82,14 @@
         type="tel"
         formControlName="telefono"
         placeholder="Ej: +54 9 11 2233 4455"
+        maxlength="10"
         [class.invalid]="telefonoCtrl?.touched && telefonoCtrl?.invalid"
       />
       @if (telefonoCtrl?.touched && telefonoCtrl?.hasError('required')) {
         <p class="error">El telefono es obligatorio.</p>
+      }
+      @if (telefonoCtrl?.touched && telefonoCtrl?.hasError('pattern')) {
+        <p class="error">Debe tener exactamente 10 numeros.</p>
       }
     </div>
 
@@ -106,7 +115,7 @@
         id="contrasena"
         type="password"
         formControlName="contrasena"
-        placeholder="Minimo 4 caracteres"
+        placeholder="Minimo 4 caracteres y un numero"
         [class.invalid]="contrasenaCtrl?.touched && contrasenaCtrl?.invalid"
       />
       @if (contrasenaCtrl?.touched && contrasenaCtrl?.hasError('required')) {
@@ -114,6 +123,9 @@
       }
       @if (contrasenaCtrl?.touched && contrasenaCtrl?.hasError('minlength')) {
         <p class="error">Debe tener al menos 4 caracteres.</p>
+      }
+      @if (contrasenaCtrl?.touched && contrasenaCtrl?.hasError('pattern')) {
+        <p class="error">Incluye al menos un numero.</p>
       }
     </div>
 
@@ -126,22 +138,9 @@
         placeholder="Opcional"
       />
     </div>
-
-    @let rolCtrl = empleadoForm.get('rol');
-    <div class="field">
-      <label for="rol">Rol</label>
-      <select
-        id="rol"
-        formControlName="rol"
-        [class.invalid]="rolCtrl?.touched && rolCtrl?.invalid"
-      >
-        @for (rol of roles; track rol) {
-          <option [ngValue]="rol">{{ rol }}</option>
-        }
-      </select>
-      @if (rolCtrl?.touched && rolCtrl?.hasError('required')) {
-        <p class="error">Selecciona un rol.</p>
-      }
+    <div class="field field--readonly">
+      <label>Rol asignado</label>
+      <div class="readonly-pill">EMPLEADO</div>
     </div>
   </div>
 

@@ -1,6 +1,6 @@
 <section class="detalle-empleado">
   <header class="detalle-empleado__header">
-    <h1>Detalle del Empleado</h1>
+    <h1>Detalle del empleado</h1>
     <button type="button" class="detalle-empleado__back" (click)="volverAlListado()">Volver al listado</button>
   </header>
 
@@ -42,7 +42,6 @@
             <dt>Email</dt>
             <dd>{{ empleado.email }}</dd>
           </div>
-
         </dl>
       } @else {
         <form [formGroup]="empleadoForm" class="detalle-empleado__form">
@@ -62,16 +61,22 @@
           </div>
           <div class="detalle-empleado__field">
             <label for="dni">DNI</label>
-            <input id="dni" type="text" formControlName="dni" />
-            @if (controls.dni.invalid && controls.dni.touched) {
+            <input id="dni" type="text" formControlName="dni" inputmode="numeric" maxlength="8" />
+            @if (controls.dni.touched && controls.dni.hasError('required')) {
               <span class="detalle-empleado__error">El DNI es obligatorio.</span>
+            }
+            @if (controls.dni.touched && controls.dni.hasError('pattern')) {
+              <span class="detalle-empleado__error">Solo numeros (7 u 8 digitos).</span>
             }
           </div>
           <div class="detalle-empleado__field">
             <label for="telefono">Telefono</label>
-            <input id="telefono" type="text" formControlName="telefono" />
-            @if (controls.telefono.invalid && controls.telefono.touched) {
+            <input id="telefono" type="text" formControlName="telefono" inputmode="tel" maxlength="10" />
+            @if (controls.telefono.touched && controls.telefono.hasError('required')) {
               <span class="detalle-empleado__error">El telefono es obligatorio.</span>
+            }
+            @if (controls.telefono.touched && controls.telefono.hasError('pattern')) {
+              <span class="detalle-empleado__error">Debe tener exactamente 10 numeros.</span>
             }
           </div>
           <div class="detalle-empleado__field">
@@ -81,26 +86,28 @@
               <span class="detalle-empleado__error">Ingresa un email valido.</span>
             }
           </div>
-     <div class="detalle-empleado__field">
-  <label for="contrasena">Contraseña</label>
-  <input id="contrasena" type="password" formControlName="contrasena" />
-  @if (controls.contrasena.touched && controls.contrasena.hasError('minlength')) {
-    <span class="detalle-empleado__error">Debe tener al menos 4 caracteres.</span>
-  }
-  <p class="detalle-empleado__status">
-    Deja este campo vacío si no quieres cambiar la contraseña del empleado.
-  </p>
-</div>
+          <div class="detalle-empleado__field">
+            <label for="contrasena">Contrasena</label>
+            <input id="contrasena" type="password" formControlName="contrasena" />
+            @if (controls.contrasena.touched && controls.contrasena.hasError('minlength')) {
+              <span class="detalle-empleado__error">Debe tener al menos 4 caracteres.</span>
+            }
+            @if (controls.contrasena.touched && controls.contrasena.hasError('pattern')) {
+              <span class="detalle-empleado__error">Incluye al menos un numero.</span>
+            }
+            <p class="detalle-empleado__status detalle-empleado__status--hint">
+              Deja este campo vacio si no quieres cambiar la contrasena del empleado.
+            </p>
+          </div>
 
           <div class="detalle-empleado__field">
             <label for="legajo">Legajo</label>
             <input id="legajo" type="text" formControlName="legajo" />
           </div>
-         <div class="detalle-empleado__field">
-  <label>Rol</label>
-  <input type="text" [value]="empleado.rol" disabled />
-</div>
-
+          <div class="detalle-empleado__field">
+            <label>Rol</label>
+            <input type="text" [value]="empleado.rol" disabled />
+          </div>
         </form>
         @if (saveErrorMessage) {
           <p class="detalle-empleado__status detalle-empleado__status--error">

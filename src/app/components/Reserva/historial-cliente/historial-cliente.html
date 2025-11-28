@@ -3,7 +3,6 @@
     <h2>Historial de reservas</h2>
   </div>
 
-  <!-- Filtros -->
   <form class="historial-filtros" [formGroup]="filtrosForm">
     <div class="filtro-group">
       <label for="fechaDesde">Fecha desde</label>
@@ -37,8 +36,8 @@
     <div class="filtro-group">
       <label for="ordenFecha">Orden fecha</label>
       <select id="ordenFecha" formControlName="ordenFecha">
-        <option value="DESC">Más nuevas primero</option>
-        <option value="ASC">Más viejas primero</option>
+        <option value="DESC">Mas nuevas primero</option>
+        <option value="ASC">Mas viejas primero</option>
       </select>
     </div>
 
@@ -62,7 +61,7 @@
     </div>
   } @else {
     <p class="no-reservas">
-      Todavía no tenés reservas en tu historial.
+      Todavia no tenes reservas en tu historial.
     </p>
   }
 </div>

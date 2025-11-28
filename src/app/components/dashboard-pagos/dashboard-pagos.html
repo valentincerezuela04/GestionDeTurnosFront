@@ -95,4 +95,38 @@
       </tbody>
     </table>
   </div>
+    <!-- Reservas pendientes de pago (para empleado / admin) -->
+  <div class="panel" *ngIf="pagosPendientes.length > 0">
+    <h3>Reservas pendientes de pago</h3>
+
+    <table class="table-resumen">
+      <thead>
+        <tr>
+          <th>ID Reserva</th>
+          <th>Fecha</th>
+          <th>Cliente</th>
+          <th>Monto</th>
+          <th class="text-end">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of pagosPendientes">
+          <td>{{ p.id }}</td>
+          <td>{{ p.fecha }}</td>
+          <td>{{ p.clienteEmail }}</td>
+          <td>{{ p.monto | currency : 'ARS' : 'symbol-narrow' }}</td>
+          <td class="text-end">
+            <button
+              type="button"
+              class="btn btn-sm btn-success"
+              (click)="verDetalle(p.id)"
+            >
+              Ver / cobrar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
 </div>

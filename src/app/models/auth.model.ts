@@ -3,6 +3,7 @@ export interface AuthUser {
   nombre: string;
   rol: string;
   token: string;
+  email?: string;
 }
 
 export interface LoginRequest {

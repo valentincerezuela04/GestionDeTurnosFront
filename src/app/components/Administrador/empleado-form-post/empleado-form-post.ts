@@ -20,19 +20,18 @@ export class EmpleadoFormPost {
   private empleadoService = inject(EmpledosService);
   private destroyRef = inject(DestroyRef);
 
-  readonly roles = Object.values(Rol);
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal<string | null>(null);
 
   readonly empleadoForm = this.fb.nonNullable.group({
     nombre: ['', Validators.required],
     apellido: ['', Validators.required],
-    dni: ['', Validators.required],
-    telefono: ['', Validators.required],
+    dni: ['', [Validators.required, Validators.maxLength(8), Validators.pattern(/^[0-9]{7,8}$/)]],
+    telefono: ['', [Validators.required, Validators.maxLength(10), Validators.pattern(/^[0-9]{10}$/)]],
     email: ['', [Validators.required, Validators.email]],
-    contrasena: ['', [Validators.required, Validators.minLength(4)]],
+    contrasena: ['', [Validators.required, Validators.minLength(4), Validators.pattern(/\d/)]],
     legajo: [''],
-    rol: [Rol.EMPLEADO as Rol, Validators.required],
+    rol: this.fb.nonNullable.control(Rol.EMPLEADO as Rol),
   });
 
   submit(): void {
@@ -44,7 +43,13 @@ export class EmpleadoFormPost {
     this.isSubmitting.set(true);
     this.errorMessage.set(null);
 
-    const payload = this.empleadoForm.getRawValue();
+    const raw = this.empleadoForm.getRawValue();
+    const payload = {
+      ...raw,
+      dni: (raw.dni ?? '').toString().trim(),
+      telefono: (raw.telefono ?? '').toString().trim(),
+      rol: Rol.EMPLEADO as Rol,
+    };
 
     this.empleadoService
       .createEmpleado(payload)

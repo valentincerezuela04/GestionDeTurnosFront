@@ -1,7 +1,8 @@
 <div class="card reserva-card" (click)="onCardClick()">
   <div class="card-header">
     <div class="card-title">
-      Sala {{ reserva.salaNumero }} · {{ reserva.salaCapacidad }} personas
+      <span class="card-title__room">Sala {{ reserva.salaNumero }}</span>
+      <span class="card-title__capacity">{{ reserva.salaCapacidad }} personas</span>
     </div>
 
     <span class="chip" [ngClass]="estadoClase">
@@ -10,28 +11,35 @@
   </div>
 
   <div class="card-body">
-    <p>
+    <p class="card-row">
       <strong>Fecha:</strong>
       {{ reserva.fechaInicio | date : 'dd/MM/yyyy' }}
     </p>
 
-    <p>
+    <p class="card-row">
       <strong>Horario:</strong>
-      {{ reserva.fechaInicio | date : 'HH:mm' }} -
-      {{ reserva.fechaFinal | date : 'HH:mm' }}
+      {{ reserva.fechaInicio | date : 'HH:mm' }} - {{ reserva.fechaFinal | date : 'HH:mm' }}
     </p>
 
-    <p *ngIf="mostrarCliente">
+    <p class="card-row" *ngIf="mostrarCliente">
       <strong>Cliente:</strong>
       {{ reserva.clienteEmail }}
     </p>
 
-    <p>
+    <p class="card-row">
       <strong>Pago:</strong>
-      {{ reserva.tipoPago }}
-      <!-- Si en tu DTO ya tenés "monto", podés mostrarlo acá:
-      · ${{ reserva.monto | number : '1.2-2' }}
-      -->
+      {{ formatTipoPago(reserva.tipoPago) }}
     </p>
+  </div>
+
+  <div class="card-actions" *ngIf="allowDelete">
+    <button
+      type="button"
+      class="delete-btn"
+      [disabled]="deleting"
+      (click)="onDeleteClick($event)"
+    >
+      {{ deleting ? 'Eliminando...' : 'Eliminar' }}
+    </button>
   </div>
 </div>

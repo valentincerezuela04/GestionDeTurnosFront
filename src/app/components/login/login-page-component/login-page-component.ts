@@ -53,7 +53,7 @@ export class LoginPageComponent {
           this.error = 'Ocurrió un error al iniciar sesión. Intentalo de nuevo.';
         }
 
-        // this.error = err?.error ?? 'No se pudo iniciar sesi�n';
+        // this.error = err?.error ?? 'No se pudo iniciar sesion';
         console.error('Login failed', err);
       },
     });

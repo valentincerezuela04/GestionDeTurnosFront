@@ -19,7 +19,6 @@ import { Rol } from '../../../models/usuarios/rol';
   templateUrl: './perfil-usuario.html',
   styleUrl: './perfil-usuario.css',
 })
-// Gestiona la visualizacion integral del perfil del usuario autenticado y habilita la edicion solo cuando el rol es CLIENTE.
 export class PerfilUsuario implements OnInit {
   private authService = inject(AuthService);
   private empleadosService = inject(EmpledosService);
@@ -39,10 +38,10 @@ export class PerfilUsuario implements OnInit {
   readonly clienteForm = this.fb.nonNullable.group({
     nombre: ['', Validators.required],
     apellido: ['', Validators.required],
-    dni: ['', Validators.required],
-    telefono: ['', Validators.required],
+    dni: ['', [Validators.required, Validators.maxLength(8), Validators.pattern(/^[0-9]{7,8}$/)]],
+    telefono: ['', [Validators.required, Validators.maxLength(10), Validators.pattern(/^[0-9]{10}$/)]],
     email: ['', [Validators.required, Validators.email]],
-    contrasena: ['', [Validators.minLength(4)]],
+    contrasena: ['', [Validators.minLength(4), Validators.pattern(/\d/)]],
   });
 
   readonly controls = this.clienteForm.controls;
@@ -79,8 +78,8 @@ export class PerfilUsuario implements OnInit {
           this.cargarDetalle(info);
         },
         error: (error) => {
-          console.error('Error al obtener la información del usuario autenticado:', error);
-          this.errorMessage.set('No se pudo cargar la información del usuario.');
+          console.error('Error al obtener la informacion del usuario autenticado:', error);
+          this.errorMessage.set('No se pudo cargar la informacion del usuario.');
           this.isLoading.set(false);
         },
       });
@@ -178,14 +177,22 @@ export class PerfilUsuario implements OnInit {
     }
 
     const formValue = this.clienteForm.getRawValue();
-    const dni = Number(formValue.dni);
-    const telefono = Number(formValue.telefono);
+    const dniStr = (formValue.dni ?? '').toString().trim();
+    const telefonoStr = (formValue.telefono ?? '').toString().trim();
 
-    if (!Number.isFinite(dni) || !Number.isFinite(telefono)) {
-      this.formError.set('DNI y teléfono deben ser valores numéricos.');
+    if (!/^\d{7,8}$/.test(dniStr)) {
+      this.formError.set('El DNI debe tener solo numeros y un maximo de 8 digitos.');
       return;
     }
+
+    if (!/^\d{10}$/.test(telefonoStr)) {
+      this.formError.set('El telefono debe tener exactamente 10 digitos sin espacios.');
+      return;
+    }
+
     const nuevaContrasena = (formValue.contrasena ?? '').trim();
+    const dni = Number(dniStr);
+    const telefono = Number(telefonoStr);
 
     const payload: Cliente = {
       ...current,
@@ -231,7 +238,3 @@ export class PerfilUsuario implements OnInit {
     return role;
   }
 }
-
-
-
-
