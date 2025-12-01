@@ -63,12 +63,7 @@
 }
 
 /* por si el <app-card-reserva> no tiene estilos aún, le damos base */
-.reservas-grid app-card-reserva{
-  background: radial-gradient(circle at 3% 0, rgba(93,70,210,.10), rgba(9,11,16,1));
-  border:1px solid rgba(255,255,255,.02);
-  border-radius:16px;
-  box-shadow: 0 12px 30px rgba(0,0,0,.18);
-}
+
 
 /* texto de vacío */
 .no-reservas{

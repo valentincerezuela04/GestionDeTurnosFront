@@ -30,8 +30,6 @@ export class DetailsReserva {
   readonly isEditing = signal<boolean>(false);
   readonly tipoPagoOptions = signal<TipoPago[]>([
     TipoPago.EFECTIVO,
-    TipoPago.TARJETA,
-    TipoPago.TRANSFERENCIA,
     TipoPago.MERCADO_PAGO,
   ]);
   readonly salas = signal<Sala[]>([]);

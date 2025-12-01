@@ -4,7 +4,7 @@
   --txt: #e6e8ef;
   --txt-dim: #b7bdd1;
   --accent: #7c5cff;
-  --accent-2: #19c3a7;
+  --accent-2: #5AE2FF; /* celeste neón para labels */
 }
 
 /* ===== card de sala ===== */
@@ -15,65 +15,110 @@
   gap: 0.75rem;
   padding: 1.2rem 1.2rem 1rem;
   border-radius: 18px;
-  background: radial-gradient(circle at 0 0, rgba(124,92,255,0.15), rgba(15,18,32,1) 55%);
+  background:
+    radial-gradient(circle at 0 0, rgba(124,92,255,0.15), rgba(15,18,32,1) 55%);
   border: 1px solid rgba(124,92,255,0.12);
   box-shadow: 0 14px 28px rgba(0,0,0,0.35);
   color: var(--txt);
-  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
+  transition: transform 140ms ease,
+              box-shadow 140ms ease,
+              border-color 140ms ease,
+              background 140ms ease;
 }
+
 .card:hover {
   transform: translateY(-2px);
   border-color: rgba(124,92,255,0.4);
-  box-shadow: 0 18px 35px rgba(124,92,255,0.12);
+  box-shadow: 0 18px 35px rgba(124,92,255,0.18);
+  background:
+    radial-gradient(circle at 0 0, rgba(90,226,255,0.12), rgba(15,18,32,1) 55%);
 }
 
+/* ===== header / título ===== */
 .card-header {
   display: flex;
   align-items: flex-start;
   gap: .35rem;
-  /* los botones van flotando, así que no los forzamos acá */
 }
 
+/* contenedor del título */
 .card-title {
   font-size: 1.02rem;
   font-weight: 700;
   letter-spacing: 0.2px;
   margin: 0;
   display: inline-flex;
-  align-items: center;
-  gap: .5rem;
-}
-.card-title::after {
-  content: "";
-  height: 2px;
-  width: 28px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
-  border-radius: 2px;
-  display: block;
-  opacity: .5;
+  align-items: baseline;
+  gap: .4rem;
 }
 
+/* "SALA #" */
+.card-title-label {
+  color: #5AE2FF;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  opacity: 0.95;
+}
+
+/* "1" (número) */
+.card-title-value {
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+/* ===== cuerpo ===== */
 .card-body {
   display: grid;
   gap: 0.4rem;
 }
+
 .descripcion {
-  margin: 0;
+  margin: 0.5rem 0 0;
   color: var(--txt-dim);
   line-height: 1.4;
   font-size: 0.88rem;
 }
+
+/* línea "TAMAÑO: MEDIANA" / "CAPACIDAD: 25 personas" */
+.meta-linea {
+  margin: 0.35rem 0 0;
+  font-size: 0.8rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+/* label (TAMAÑO, CAPACIDAD) */
+.meta-label {
+  color: #5AE2FF;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  font-size: 0.7rem;
+  opacity: 0.9;
+}
+
+/* valor (MEDIANA, 25) */
+.meta-value {
+  color: #ffffff;
+  font-weight: 700;  /* como si fuera <strong> */
+  font-size: 0.9rem;
+}
+
+/* sufijo "personas" más suave */
+.meta-sufijo {
+  color: var(--txt-dim);
+  font-size: 0.78rem;
+}
+
+/* para la línea de capacidad por si querés algo extra */
 .capacidad {
-  margin: .2rem 0 0;
-  font-weight: 600;
-  font-size: .78rem;
-  color: rgba(230,232,239,.75);
+  margin-top: 0.45rem;
 }
-.capacidad strong {
-  color: var(--accent-2);
-  font-size: .85rem;
-}
-/* base (ya la tenías) */
+
+/* ===== botones flotantes editar / borrar ===== */
 .icon-btn {
   position: absolute;
   top: .65rem;
@@ -88,40 +133,62 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 120ms ease, background 120ms ease, border 120ms ease;
-  color: #fff;           /* aseguramos blanco */
-  z-index: 2;            /* por si algo lo tapa */
+  transition: transform 120ms ease,
+              background 120ms ease,
+              border 120ms ease,
+              box-shadow 120ms ease;
+  color: #fff;
+  z-index: 2;
   font-size: .9rem;
 }
 
-/* la de editar va más a la izquierda */
+/* editar más a la izquierda */
 .icon-btn.edit {
   right: 2.6rem;
 }
 
-/* ahora sí los iconos */
+/* icono lápiz */
 .icon-btn.edit::before {
   content: "✏️";
   line-height: 1;
   font-size: 1rem;
 }
+
+/* icono papelera */
 .icon-btn.delete::before {
   content: "🗑️";
   line-height: 1;
   font-size: 1rem;
 }
 
-/* hover ya lo tenías */
+/* hover general */
 .icon-btn:hover {
   transform: translateY(-1px);
   background: rgba(124,92,255,0.15);
   border: 1px solid rgba(124,92,255,0.5);
 }
+
+/* hover específico del EDIT con el box-shadow que querías */
+.icon-btn.edit:hover {
+  box-shadow:
+    0 12px 26px rgba(90, 226, 255, 0.55),
+    0 0 26px rgba(90, 226, 255, 0.35);
+}
+
+/* estilos base del delete */
 .icon-btn.delete {
   background: rgba(220, 38, 38, 0.05);
   border: 1px solid rgba(248, 113, 113, 0.12);
 }
+
 .icon-btn.delete:hover {
   background: rgba(220, 38, 38, 0.16);
   border: 1px solid rgba(248, 113, 113, 0.4);
+}
+
+/* ===== responsive ===== */
+@media (max-width: 640px){
+  .card {
+    padding: 1rem 0.95rem 0.85rem;
+  }
 }

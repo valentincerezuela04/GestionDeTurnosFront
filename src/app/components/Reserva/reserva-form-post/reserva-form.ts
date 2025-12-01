@@ -12,7 +12,7 @@ import { ClientesService } from '../../../services/Clientes/cliente-service';
 import { ReservaRequestByClienteDTO } from '../../../dto/Reserva/';
 import { ReservaRequestByEmpleadoDTO } from '../../../dto/Reserva/reservaRequestbyEmpleadoDTO ';
 import { UserInfoResponseDTO } from '../../../dto/user-info-response-dto';
-import { SalaDTO as Sala } from '../../../models/sala';
+import { SalaDTO as Sala, SalaSize } from '../../../models/sala';
 import { Cliente } from '../../../models/usuarios/cliente';
 import { TipoPago } from '../../../models/reservas/tipo-pago';
 
@@ -31,11 +31,12 @@ export class ReservaFormComponent implements OnInit {
   usuario: UserInfoResponseDTO | null = null;
   salas: Sala[] = [];
   clientes: Cliente[] = [];
-  tipoPagos: TipoPago[] = [TipoPago.MERCADO_PAGO, TipoPago.EFECTIVO, TipoPago.TARJETA, TipoPago.TRANSFERENCIA];
+  tipoPagos: TipoPago[] = [TipoPago.MERCADO_PAGO, TipoPago.EFECTIVO];
 
-  // Tarifas base por hora segun tamano de sala
-  private readonly tarifaPorHoraPorSize: Record<string, number> = {
-    PEQUENA: 500,
+  // Tarifas base por hora segun tamaño de sala
+  // CAMBIO: tipado con SalaSize y sin trucos raros con strings
+  private readonly tarifaPorHoraPorSize: Record<SalaSize, number> = {
+    PEQUEÑA: 500,
     MEDIANA: 8000,
     GRANDE: 1200,
   };
@@ -85,7 +86,10 @@ export class ReservaFormComponent implements OnInit {
         this.salas = salas ?? [];
         this.recalcularMonto();
       },
-      error: () => this.snackBar.open('No se pudieron cargar las salas', 'Cerrar', { duration: 2500 }),
+      error: () =>
+        this.snackBar.open('No se pudieron cargar las salas', 'Cerrar', {
+          duration: 2500,
+        }),
     });
   }
 
@@ -99,23 +103,33 @@ export class ReservaFormComponent implements OnInit {
 
     const v = this.form.value;
 
-    // Asegurar numericos
+    // Asegurar numéricos
     const salaId = Number(v.salaId);
     if (Number.isNaN(salaId)) {
-      this.snackBar.open('Selecciona una sala valida', 'Cerrar', { duration: 2500 });
+      this.snackBar.open('Selecciona una sala válida', 'Cerrar', { duration: 2500 });
       return;
     }
 
     const clienteId = v.clienteId != null ? Number(v.clienteId) : null;
     if (this.isEmpleado() && (clienteId == null || Number.isNaN(clienteId))) {
-      this.snackBar.open('Ingresa un cliente valido', 'Cerrar', { duration: 2500 });
+      this.snackBar.open('Ingresa un cliente válido', 'Cerrar', { duration: 2500 });
       return;
     }
 
-    // Como monto esta disabled, hay que usar getRawValue()
+    // Como monto está disabled, hay que usar getRawValue()
     const raw = this.form.getRawValue();
     const monto = raw.monto ?? 0;
     const tipoPagoSeleccionado = (v.tipoPago as TipoPago) ?? TipoPago.EFECTIVO;
+
+    // CAMBIO: si es MERCADO_PAGO, no permitimos monto <= 0 (evitamos unit_price invalid)
+    if (tipoPagoSeleccionado === TipoPago.MERCADO_PAGO && monto <= 0) {
+      this.snackBar.open(
+        'El monto calculado es inválido. Verifica sala y rango de fechas.',
+        'Cerrar',
+        { duration: 3500, panelClass: ['error-snackbar'] }
+      );
+      return;
+    }
 
     // Fechas para el back
     const payloadBase = {
@@ -141,7 +155,7 @@ export class ReservaFormComponent implements OnInit {
       const isSolape = err?.status === 409 || /solap|ocupad/i.test(rawErr);
 
       this.snackBar.open(
-        isSolape ? 'La sala no esta disponible en ese horario.' : rawErr || 'No se pudo crear la reserva',
+        isSolape ? 'La sala no está disponible en ese horario.' : rawErr || 'No se pudo crear la reserva',
         'Cerrar',
         {
           duration: 3500,
@@ -149,6 +163,8 @@ export class ReservaFormComponent implements OnInit {
         }
       );
     };
+
+    // ===================== FLUJO CLIENTE =====================
 
     if (this.usuario?.role === 'CLIENTE') {
       const dto = new ReservaRequestByClienteDTO(
@@ -159,6 +175,7 @@ export class ReservaFormComponent implements OnInit {
         payloadBase.monto
       );
 
+      // Si es MERCADO_PAGO -> crear reserva + generar link de pago
       if (tipoPagoSeleccionado === TipoPago.MERCADO_PAGO) {
         this.reservaService.createReservaCliente(dto).subscribe({
           next: (reserva: any) => {
@@ -178,6 +195,7 @@ export class ReservaFormComponent implements OnInit {
                   return;
                 }
 
+                // Abre MP en otra pestaña
                 window.open(initPoint, '_blank');
                 this.snackBar.open('Abrimos Mercado Pago para completar el pago', 'Cerrar', {
                   duration: 3200,
@@ -199,15 +217,20 @@ export class ReservaFormComponent implements OnInit {
         return;
       }
 
+      // Si es EFECTIVO -> solo crear reserva y listo (como querías)
       this.reservaService.createReservaCliente(dto).subscribe({ next: onOk, error: onError });
       return;
     }
+
+    // ===================== FLUJO EMPLEADO =====================
 
     if (this.usuario?.role === 'EMPLEADO') {
       const dto: ReservaRequestByEmpleadoDTO = { ...payloadBase, clienteId: clienteId! };
       this.reservaService.createReservaEmpleado(dto).subscribe({ next: onOk, error: onError });
     } else {
-      this.snackBar.open('No se pudo determinar el rol del usuario', 'Cerrar', { duration: 2500 });
+      this.snackBar.open('No se pudo determinar el rol del usuario', 'Cerrar', {
+        duration: 2500,
+      });
     }
   }
 
@@ -236,7 +259,10 @@ export class ReservaFormComponent implements OnInit {
   private cargarClientes(): void {
     this.clientesService.getAll().subscribe({
       next: (clientes) => (this.clientes = clientes ?? []),
-      error: () => this.snackBar.open('No se pudieron cargar los clientes', 'Cerrar', { duration: 2500 }),
+      error: () =>
+        this.snackBar.open('No se pudieron cargar los clientes', 'Cerrar', {
+          duration: 2500,
+        }),
     });
   }
 
@@ -267,9 +293,9 @@ export class ReservaFormComponent implements OnInit {
     }
     const d = new Date(value);
     const pad = (n: number) => String(n).padStart(2, '0');
-    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(
-      d.getMinutes()
-    )}`;
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(
+      d.getHours()
+    )}:${pad(d.getMinutes())}`;
   }
 
   /** Se suscribe a cambios del form y recalcula el monto. */
@@ -285,10 +311,11 @@ export class ReservaFormComponent implements OnInit {
     this.form.get('monto')?.setValue(monto, { emitEvent: false });
   }
 
-  /** Logica de calculo:
+  /**
+   * Lógica de cálculo:
    *  - busca la sala y su size
-   *  - diferencia de horas (minimo 1)
-   *  - si el inicio es sabado o domingo +20%
+   *  - diferencia de horas (mínimo 1)
+   *  - si el inicio es sábado o domingo +20%
    */
   private calcularMontoDesdeForm(): number {
     const v = this.form.value;
@@ -306,10 +333,11 @@ export class ReservaFormComponent implements OnInit {
       return 0;
     }
 
-    const size = sala.salaSize as Sala['salaSize'];
-    const sizeKey = typeof size === 'string' ? size.replace('Ñ', 'N') : size;
-    const tarifaBase = this.tarifaPorHoraPorSize[sizeKey];
-    if (!tarifaBase) return 0;
+    // CAMBIO: usamos SalaSize tal cual (PEQUEÑA, MEDIANA, GRANDE), nada de replace('Ñ','N')
+    const size = sala.salaSize as SalaSize;
+    const tarifaBase = this.tarifaPorHoraPorSize[size];
+
+    if (!tarifaBase || tarifaBase <= 0) return 0;
 
     const diffMs = fin.getTime() - inicio.getTime();
     const horas = diffMs / (1000 * 60 * 60);
@@ -317,7 +345,7 @@ export class ReservaFormComponent implements OnInit {
 
     let monto = tarifaBase * horasRedondeadas;
 
-    // 0 = domingo, 6 = sabado
+    // 0 = domingo, 6 = sábado
     const dia = inicio.getDay();
     const esFinDeSemana = dia === 0 || dia === 6;
     if (esFinDeSemana) {
