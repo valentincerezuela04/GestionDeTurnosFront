@@ -86,9 +86,14 @@
               <span class="detalle-empleado__error">Ingresa un email valido.</span>
             }
           </div>
-          <div class="detalle-empleado__field">
+                    <div class="detalle-empleado__field">
             <label for="contrasena">Contrasena</label>
-            <input id="contrasena" type="password" formControlName="contrasena" />
+            <input
+              id="contrasena"
+              type="password"
+              formControlName="contrasena"
+              placeholder="Minimo 4 caracteres y un numero"
+            />
             @if (controls.contrasena.touched && controls.contrasena.hasError('minlength')) {
               <span class="detalle-empleado__error">Debe tener al menos 4 caracteres.</span>
             }
@@ -99,6 +104,26 @@
               Deja este campo vacio si no quieres cambiar la contrasena del empleado.
             </p>
           </div>
+
+          <div class="detalle-empleado__field">
+            <label for="confirmarContrasena">Confirmar contrasena</label>
+            <input
+              id="confirmarContrasena"
+              type="password"
+              formControlName="confirmarContrasena"
+              placeholder="Repite la nueva contrasena"
+            />
+            @if (controls.confirmarContrasena.touched && controls.confirmarContrasena.hasError('minlength')) {
+              <span class="detalle-empleado__error">Debe tener al menos 4 caracteres.</span>
+            }
+            @if (controls.confirmarContrasena.touched && controls.confirmarContrasena.hasError('pattern')) {
+              <span class="detalle-empleado__error">Incluye al menos un numero.</span>
+            }
+            @if (controls.confirmarContrasena.touched && controls.confirmarContrasena.hasError('mismatch')) {
+              <span class="detalle-empleado__error">Las contrasenas no coinciden.</span>
+            }
+          </div>
+
 
           <div class="detalle-empleado__field">
             <label for="legajo">Legajo</label>

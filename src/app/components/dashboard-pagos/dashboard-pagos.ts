@@ -27,6 +27,12 @@ interface MetodoPagoResumen {
   monto: number;
 }
 
+interface GananciaPorMes {
+  mes: string;   // Ej: "2025-11"
+  monto: number;
+}
+
+
 @Component({
   selector: 'app-resumen-pagos',
   standalone: true,
@@ -40,7 +46,7 @@ export class DashboardPagos implements OnInit {
 
   pagos: PagoReserva[] = [];
   pagosPendientes: PagoReserva[] = [];
-
+  gananciasPorMes: GananciaPorMes[] = [];
   resumenPorMetodo: MetodoPagoResumen[] = [];
 
   totalPendientePago = 0;
@@ -138,49 +144,67 @@ export class DashboardPagos implements OnInit {
   }
 
   private calcularResumen(): void {
-    const pagadas = this.pagos.filter((p) => p.estado === 'PAGADA');
-    const pendientes = this.pagos.filter(
-      (p) => p.estado === 'PENDIENTE_PAGO'
-    );
-    const canceladas = this.pagos.filter((p) => p.estado === 'CANCELADA');
+  const pagadas = this.pagos.filter((p) => p.estado === 'PAGADA');
+  const pendientes = this.pagos.filter(
+    (p) => p.estado === 'PENDIENTE_PAGO'
+  );
+  const canceladas = this.pagos.filter((p) => p.estado === 'CANCELADA');
 
-    // lista de pendientes para el panel del empleado
-    this.pagosPendientes = pendientes;
+  this.pagosPendientes = pendientes;
 
-    this.totalReservasPagadas = pagadas.length;
-    this.totalPendientes = pendientes.length;
-    this.totalCanceladas = canceladas.length;
+  this.totalReservasPagadas = pagadas.length;
+  this.totalPendientes = pendientes.length;
+  this.totalCanceladas = canceladas.length;
 
-    this.totalMontoPagado = pagadas.reduce((acc, p) => acc + p.monto, 0);
-    this.totalPendientePago = pendientes.reduce((acc, p) => acc + p.monto, 0);
+  this.totalMontoPagado = pagadas.reduce((acc, p) => acc + p.monto, 0);
+  this.totalPendientePago = pendientes.reduce((acc, p) => acc + p.monto, 0);
 
-    this.promedioPorReserva =
-      pagadas.length > 0 ? this.totalMontoPagado / pagadas.length : 0;
+  this.promedioPorReserva =
+    pagadas.length > 0 ? this.totalMontoPagado / pagadas.length : 0;
 
-    const mapa = new Map<MetodoPago, MetodoPagoResumen>();
+  // --- NUEVO: ganancias por mes ---
+  const mapaMes = new Map<string, number>();
 
-    pagadas.forEach((p) => {
-      const actual =
-        mapa.get(p.metodoPago) ?? {
-          metodo: p.metodoPago,
-          cantidad: 0,
-          monto: 0,
-        };
+  pagadas.forEach((p) => {
+    const fecha = new Date(p.fecha);
+    const year = fecha.getFullYear();
+    const month = String(fecha.getMonth() + 1).padStart(2, '0'); // 01..12
+    const key = `${year}-${month}`; // ejemplo: "2025-11"
 
-      actual.cantidad += 1;
-      actual.monto += p.monto;
-      mapa.set(p.metodoPago, actual);
-    });
+    const actual = mapaMes.get(key) ?? 0;
+    mapaMes.set(key, actual + p.monto);
+  });
 
-    this.resumenPorMetodo = Array.from(mapa.values());
+  this.gananciasPorMes = Array.from(mapaMes.entries())
+    .map(([mes, monto]) => ({ mes, monto }))
+    .sort((a, b) => a.mes.localeCompare(b.mes));
 
-    this.ultimosPagos = [...pagadas]
-      .sort(
-        (a, b) =>
-          new Date(b.fecha).getTime() - new Date(a.fecha).getTime()
-      )
-      .slice(0, 10);
-  }
+  // --- lo que ya tenías para resumen por método ---
+  const mapa = new Map<MetodoPago, MetodoPagoResumen>();
+
+  pagadas.forEach((p) => {
+    const actual =
+      mapa.get(p.metodoPago) ?? {
+        metodo: p.metodoPago,
+        cantidad: 0,
+        monto: 0,
+      };
+
+    actual.cantidad += 1;
+    actual.monto += p.monto;
+    mapa.set(p.metodoPago, actual);
+  });
+
+  this.resumenPorMetodo = Array.from(mapa.values());
+
+  this.ultimosPagos = [...pagadas]
+    .sort(
+      (a, b) =>
+        new Date(b.fecha).getTime() - new Date(a.fecha).getTime()
+    )
+    .slice(0, 10);
+}
+
 
   verDetalle(reservaId: number): void {
     this.router.navigate(['/reservas', reservaId, 'details']);

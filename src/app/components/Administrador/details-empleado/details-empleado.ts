@@ -7,6 +7,33 @@ import { EmpledosService } from '../../../services/Empleados/empledos-service';
 import { EmpleadoResponseDTO } from '../../../dto/Empleado/empleado-response-dto';
 import { Rol } from '../../../models/usuarios/rol';
 
+
+function optionalMinLength(min: number) {
+  return (control: any) => {
+    const value = (control?.value ?? '') as string;
+    if (!value) {
+      return null; // si está vacío, no valida (campo opcional)
+    }
+    return value.length >= min
+      ? null
+      : { minlength: { requiredLength: min, actualLength: value.length } };
+  };
+}
+
+function optionalPattern(regex: RegExp) {
+  return (control: any) => {
+    const value = (control?.value ?? '') as string;
+    if (!value) {
+      return null;
+    }
+    return regex.test(value)
+      ? null
+      : { pattern: { requiredPattern: regex.toString(), actualValue: value } };
+  };
+}
+
+
+
 @Component({
   selector: 'app-details-empleado',
   standalone: true,
@@ -30,16 +57,20 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
   saveInProgress = signal(false);
   editMode = signal(false);
 
-  readonly empleadoForm = this.fb.nonNullable.group({
+   readonly empleadoForm = this.fb.nonNullable.group({
     nombre: ['', [Validators.required]],
     apellido: ['', [Validators.required]],
     dni: ['', [Validators.required, Validators.maxLength(8), Validators.pattern(/^[0-9]{7,8}$/)]],
     telefono: ['', [Validators.required, Validators.maxLength(10), Validators.pattern(/^[0-9]{10}$/)]],
     email: ['', [Validators.required, Validators.email]],
-    contrasena: ['', [Validators.minLength(4), Validators.pattern(/\d/)]],
+    // contraseña opcional, mismas reglas que en perfil
+    contrasena: ['', [optionalMinLength(4), optionalPattern(/\d/)]],
+    confirmarContrasena: ['', [optionalMinLength(4), optionalPattern(/\d/)]],
     legajo: [''],
     rol: [Rol.EMPLEADO as Rol, [Validators.required]],
   });
+
+
 
   readonly controls = this.empleadoForm.controls;
 
@@ -70,10 +101,12 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
             telefono: empleado.telefono != null ? String(empleado.telefono) : '',
             email: empleado.email,
             contrasena: '',
+            confirmarContrasena: '',
             legajo: empleado.legajo ?? '',
             rol: empleado.rol,
           });
           this.isLoading = false;
+
         },
         error: (error) => {
           console.error('Error al obtener el empleado:', error);
@@ -121,7 +154,7 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
     this.empleadoForm.markAsPristine();
   }
 
-  cancelarEdicion(): void {
+    cancelarEdicion(): void {
     if (!this.empleado) {
       return;
     }
@@ -132,6 +165,7 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
       telefono: this.empleado.telefono != null ? String(this.empleado.telefono) : '',
       email: this.empleado.email,
       contrasena: '',
+      confirmarContrasena: '',
       legajo: this.empleado.legajo ?? '',
       rol: this.empleado.rol,
     });
@@ -139,20 +173,70 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
     this.editMode.set(false);
   }
 
-  guardarCambios(): void {
-    if (!this.empleado || this.empleadoForm.invalid) {
+
+    guardarCambios(): void {
+    if (!this.empleado) {
+      return;
+    }
+
+    this.saveErrorMessage = null;
+
+    const raw = this.empleadoForm.getRawValue();
+    const nuevaContrasena = (raw.contrasena ?? '').trim();
+    const confirmarContrasena = (raw.confirmarContrasena ?? '').trim();
+
+    const confirmarCtrl = this.empleadoForm.get('confirmarContrasena');
+    const contrasenaCtrl = this.empleadoForm.get('contrasena');
+
+    // Limpiar error de mismatch previo
+    if (confirmarCtrl?.errors?.['mismatch']) {
+      const { mismatch, ...rest } = confirmarCtrl.errors;
+      confirmarCtrl.setErrors(Object.keys(rest).length ? rest : null);
+    }
+
+    // Si quiere cambiar la contraseña (alguno de los campos tiene algo)
+    if (nuevaContrasena || confirmarContrasena) {
+      // Ambos campos obligatorios en este caso
+      if (!nuevaContrasena || !confirmarContrasena) {
+        this.saveErrorMessage = 'Debes completar ambos campos de contrasena.';
+        contrasenaCtrl?.markAsTouched();
+        confirmarCtrl?.markAsTouched();
+        return;
+      }
+
+      // Validaciones de longitud y patron
+      if (contrasenaCtrl?.invalid || confirmarCtrl?.invalid) {
+        this.saveErrorMessage = 'La contrasena debe tener al menos 4 caracteres e incluir un numero.';
+        contrasenaCtrl?.markAsTouched();
+        confirmarCtrl?.markAsTouched();
+        return;
+      }
+
+      // Coincidencia
+      if (nuevaContrasena !== confirmarContrasena) {
+        this.saveErrorMessage = 'Las contrasenas no coinciden.';
+        confirmarCtrl?.setErrors({ ...(confirmarCtrl.errors ?? {}), mismatch: true });
+        confirmarCtrl?.markAsTouched();
+        return;
+      }
+    }
+
+    // Validaciones generales del formulario
+    if (this.empleadoForm.invalid) {
       this.empleadoForm.markAllAsTouched();
       return;
     }
 
-    const raw = this.empleadoForm.getRawValue();
-    const nuevaContrasena = (raw.contrasena ?? '').trim();
     const cambios = {
       ...this.empleado,
-      ...raw,
+      nombre: raw.nombre,
+      apellido: raw.apellido,
       dni: raw.dni != null ? String(raw.dni) : this.empleado.dni,
       telefono: raw.telefono != null ? String(raw.telefono) : this.empleado.telefono,
+      email: raw.email,
+      // mismo comportamiento que tenias antes: si va vacio, el backend decide si la ignora
       contrasena: nuevaContrasena,
+      legajo: raw.legajo ?? this.empleado.legajo,
       rol: Rol.EMPLEADO,
     };
 
@@ -172,6 +256,7 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
             telefono: empleadoActualizado.telefono,
             email: empleadoActualizado.email,
             contrasena: '',
+            confirmarContrasena: '',
             legajo: empleadoActualizado.legajo ?? '',
             rol: empleadoActualizado.rol,
           });
@@ -186,6 +271,7 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
         },
       });
   }
+
 
   volverAlListado(): void {
     this.router.navigate(['/empleados']);

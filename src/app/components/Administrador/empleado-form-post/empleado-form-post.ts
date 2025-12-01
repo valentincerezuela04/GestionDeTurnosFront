@@ -23,18 +23,40 @@ export class EmpleadoFormPost {
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal<string | null>(null);
 
-  readonly empleadoForm = this.fb.nonNullable.group({
+    readonly empleadoForm = this.fb.nonNullable.group({
     nombre: ['', Validators.required],
     apellido: ['', Validators.required],
     dni: ['', [Validators.required, Validators.maxLength(8), Validators.pattern(/^[0-9]{7,8}$/)]],
     telefono: ['', [Validators.required, Validators.maxLength(10), Validators.pattern(/^[0-9]{10}$/)]],
     email: ['', [Validators.required, Validators.email]],
     contrasena: ['', [Validators.required, Validators.minLength(4), Validators.pattern(/\d/)]],
+    confirmarContrasena: ['', [Validators.required, Validators.minLength(4), Validators.pattern(/\d/)]],
     legajo: [''],
     rol: this.fb.nonNullable.control(Rol.EMPLEADO as Rol),
   });
 
-  submit(): void {
+
+    submit(): void {
+    const raw = this.empleadoForm.getRawValue();
+
+    const contrasena = (raw.contrasena ?? '').toString().trim();
+    const confirmarContrasena = (raw.confirmarContrasena ?? '').toString().trim();
+
+    // limpiar error mismatch previo
+    const confirmarCtrl = this.empleadoForm.get('confirmarContrasena');
+    if (confirmarCtrl?.errors?.['mismatch']) {
+      const { mismatch, ...rest } = confirmarCtrl.errors;
+      confirmarCtrl.setErrors(Object.keys(rest).length ? rest : null);
+    }
+
+    if (contrasena !== confirmarContrasena) {
+      this.errorMessage.set('Las contrasenas no coinciden.');
+      this.empleadoForm.get('contrasena')?.markAsTouched();
+      confirmarCtrl?.setErrors({ ...(confirmarCtrl.errors ?? {}), mismatch: true });
+      confirmarCtrl?.markAsTouched();
+      return;
+    }
+
     if (this.empleadoForm.invalid) {
       this.empleadoForm.markAllAsTouched();
       return;
@@ -43,11 +65,14 @@ export class EmpleadoFormPost {
     this.isSubmitting.set(true);
     this.errorMessage.set(null);
 
-    const raw = this.empleadoForm.getRawValue();
     const payload = {
-      ...raw,
+      nombre: raw.nombre,
+      apellido: raw.apellido,
       dni: (raw.dni ?? '').toString().trim(),
       telefono: (raw.telefono ?? '').toString().trim(),
+      email: raw.email,
+      contrasena,
+      legajo: raw.legajo,
       rol: Rol.EMPLEADO as Rol,
     };
 
@@ -66,6 +91,7 @@ export class EmpleadoFormPost {
         },
       });
   }
+
 
   cancelar(): void {
     this.router.navigate(['/empleados']);

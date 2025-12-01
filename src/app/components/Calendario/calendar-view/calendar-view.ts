@@ -38,13 +38,55 @@ export class CalendarViewComponent {
     return this.authService.hasRole('CLIENTE');
   }
 
-  // helper para saber si una reserva es propia (ajustá esto si tenés otro flag)
+    // helper para saber si una reserva es propia (ajustá esto si tenés otro flag)
   private esReservaMia(dto: CalendarDto): boolean {
     return (dto.title ?? '').includes('Tuya');
-    // ej: return dto.esMia === true;
+    // si en el futuro el backend te manda un flag, podés cambiar a:
+    // return (dto as any).esMia === true;
   }
 
-  calendarOptions: CalendarOptions = {
+  private getEventClassNames(arg: any): string[] {
+  const esMia = !!arg.event.extendedProps['esMia'];
+  return esMia
+    ? ['cal-event', 'cal-event--mine']
+    : ['cal-event', 'cal-event--other'];
+}
+
+private buildEventContent(arg: any): { html: string } {
+  const title = arg.event.title || '';
+  const fmt = (d: Date | null) =>
+    d
+      ? d.toLocaleTimeString('es-AR', {
+          hour: '2-digit',
+          minute: '2-digit',
+        })
+      : '';
+  const hora = `${fmt(arg.event.start)} - ${fmt(arg.event.end)}`;
+  const cleanTitle = (title.split('-')[0] ?? title).trim();
+  const esMia = !!arg.event.extendedProps['esMia'];
+
+  const badgeHtml = esMia
+    ? '<span class="cal-pill cal-pill--mine">Tu reserva</span>'
+    : '<span class="cal-pill cal-pill--busy">Ocupado</span>';
+
+  return {
+    html: `
+      <div class="fc-event__content">
+        <div class="fc-event__top">
+          <div class="fc-event__time">${hora}</div>
+          <div class="cal-pill-wrap">
+            ${badgeHtml}
+          </div>
+        </div>
+        <div class="fc-event__title">${cleanTitle}</div>
+      </div>
+    `,
+  };
+}
+
+
+
+    calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
     initialView: 'dayGridMonth',
     locale: 'es',
@@ -61,7 +103,7 @@ export class CalendarViewComponent {
       this.calSvc.getEvents().subscribe({
         next: (data) => {
           const filtrados = this.onlyMine()
-            ? data.filter(d => this.esReservaMia(d))
+            ? data.filter((d) => this.esReservaMia(d))
             : data;
 
           const events: EventInput[] = filtrados.map((d: CalendarDto) => ({
@@ -85,25 +127,10 @@ export class CalendarViewComponent {
         },
       });
     },
-    eventContent: (arg) => {
-      const title = arg.event.title || '';
-      const fmt = (d: Date | null) =>
-        d ? d.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' }) : '';
-      const hora = `${fmt(arg.event.start)} - ${fmt(arg.event.end)}`;
-      const cleanTitle = (title.split('-')[0] ?? title).trim();
-
-      const badges: string[] = [];
-      if (title.includes('Tuya')) {
-        badges.push('<span class="cal-pill cal-pill--mine">Tuya</span>');
-      } else if (title.includes('Ocupado')) {
-        badges.push('<span class="cal-pill cal-pill--busy">Ocupado</span>');
-      }
-
-      const badgeHtml = badges.length ? `<span class="cal-pill-wrap">${badges.join('')}</span>` : '';
-      return {
-        html: `<div class="fc-event__content"><div class="fc-event__time">${hora}</div><div class="fc-event__title">${cleanTitle}${badgeHtml}</div></div>`,
-      };
-    },
+    // 👉 acá aplicamos clases según si es tu reserva o no
+    eventClassNames: (arg) => this.getEventClassNames(arg),
+    // 👉 y este usa el helper de arriba para el HTML del evento
+    eventContent: (arg) => this.buildEventContent(arg),
     eventClick: (info) => {
       const id = info.event.id;
       const esMia = info.event.extendedProps['esMia'] as boolean | undefined;
@@ -119,8 +146,7 @@ export class CalendarViewComponent {
       // CLIENTE -> solo sus reservas
       if (this.isCliente()) {
         if (!esMia) {
-          // opcional:
-          // alert('Solo podés ver el detalle de tus propias reservas.');
+          // Solo puede abrir el detalle de sus propias reservas
           return;
         }
         if (id) {
@@ -129,6 +155,7 @@ export class CalendarViewComponent {
       }
     },
   };
+
 
   refetch(): void {
     this.calendar?.getApi().refetchEvents();

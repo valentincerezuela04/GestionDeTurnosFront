@@ -31,6 +31,7 @@
         id="fechaInicio"
         formControlName="fechaInicio"
         class="form-control form-control--picker"
+        [min]="minFechaInicio"
         autocomplete="off"
         (click)="abrirPicker(fechaInicioInput)"
         (focus)="abrirPicker(fechaInicioInput)"
@@ -44,14 +45,15 @@
     <div class="form-group form-group--picker">
       <label for="fechaFinal">Fecha y hora de fin *</label>
       <input
-        #fechaFinalInput
-        type="datetime-local"
-        id="fechaFinal"
-        formControlName="fechaFinal"
-        class="form-control form-control--picker"
-        autocomplete="off"
-        (click)="abrirPicker(fechaFinalInput)"
-        (focus)="abrirPicker(fechaFinalInput)"
+         #fechaFinalInput
+          type="datetime-local"
+          id="fechaFinal"
+          formControlName="fechaFinal"
+          class="form-control form-control--picker"
+          [min]="minFechaInicio"
+          autocomplete="off"
+          (click)="abrirPicker(fechaFinalInput)"
+          (focus)="abrirPicker(fechaFinalInput)"
         [class.is-invalid]="(form.get('fechaFinal')?.invalid && form.get('fechaFinal')?.touched) || form.hasError('dateRange')" />
       @if (form.get('fechaFinal')?.invalid && form.get('fechaFinal')?.touched) {
         <div class="invalid-feedback">La fecha y hora de fin son requeridas</div>
