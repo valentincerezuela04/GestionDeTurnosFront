@@ -124,6 +124,8 @@
     </div>
 
     @let contrasenaCtrl = empleadoForm.get('contrasena');
+    @let confirmarContrasenaCtrl = empleadoForm.get('confirmarContrasena');
+
     <div class="field">
       <label for="contrasena">Contrasena</label>
       <input
@@ -144,6 +146,29 @@
       }
       @if (contrasenaCtrl?.touched && contrasenaCtrl?.hasError('pattern')) {
         <p class="error">Incluye al menos un numero.</p>
+      }
+    </div>
+
+    <div class="field">
+      <label for="confirmarContrasena">Confirmar contrasena</label>
+      <input
+        id="confirmarContrasena"
+        type="password"
+        formControlName="confirmarContrasena"
+        placeholder="Repite la contrasena"
+        [class.invalid]="confirmarContrasenaCtrl?.touched && confirmarContrasenaCtrl?.invalid"
+      />
+      @if (confirmarContrasenaCtrl?.touched && confirmarContrasenaCtrl?.hasError('required')) {
+        <p class="error">La confirmacion es obligatoria.</p>
+      }
+      @if (confirmarContrasenaCtrl?.touched && confirmarContrasenaCtrl?.hasError('minlength')) {
+        <p class="error">Debe tener al menos 4 caracteres.</p>
+      }
+      @if (confirmarContrasenaCtrl?.touched && confirmarContrasenaCtrl?.hasError('pattern')) {
+        <p class="error">Incluye al menos un numero.</p>
+      }
+      @if (confirmarContrasenaCtrl?.touched && confirmarContrasenaCtrl?.hasError('mismatch')) {
+        <p class="error">Las contrasenas no coinciden.</p>
       }
     </div>
 

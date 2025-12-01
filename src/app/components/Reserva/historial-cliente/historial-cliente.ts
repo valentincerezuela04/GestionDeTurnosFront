@@ -10,6 +10,8 @@ import { ReservaResponseDTO } from '../../../dto/Reserva';
 import { UserInfoResponseDTO } from '../../../dto/user-info-response-dto';
 import { CardReserva } from '../card-reserva/card-reserva';
 
+// ... imports iguales
+
 @Component({
   selector: 'app-historial-cliente',
   standalone: true,
@@ -93,7 +95,6 @@ export class HistorialCliente implements OnInit {
     const esCliente = rol === 'CLIENTE';
     const esAdmin = rol === 'ADMIN';
 
-    // Clientes: historial propio + activas filtradas por email.
     if (esCliente) {
       combineLatest([
         this.reservaSrv.getHistorialCliente(clienteId),
@@ -118,7 +119,6 @@ export class HistorialCliente implements OnInit {
       return;
     }
 
-    // Admin/Empleado: intentar historial completo; si falla, caer a activas
     this.reservaSrv.getHistorialGeneral().subscribe({
       next: (reservas) => {
         this.historialOriginal = reservas ?? [];
@@ -131,7 +131,6 @@ export class HistorialCliente implements OnInit {
           this.loading = false;
           return;
         }
-        // Fallback para empleado: al menos mostrar activas
         this.reservaSrv.getReservasActivas().subscribe({
           next: (activas) => {
             this.historialOriginal = activas ?? [];

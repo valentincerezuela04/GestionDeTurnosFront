@@ -12,6 +12,31 @@ import { EmpleadoResponseDTO } from '../../../dto/Empleado/empleado-response-dto
 import { Cliente } from '../../../models/usuarios/cliente';
 import { Rol } from '../../../models/usuarios/rol';
 
+function optionalMinLength(min: number) {
+  return (control: any) => {
+    const value = (control?.value ?? '') as string;
+    if (!value) {
+      return null; // si está vacío, no marca error (campo opcional)
+    }
+    return value.length >= min
+      ? null
+      : { minlength: { requiredLength: min, actualLength: value.length } };
+  };
+}
+
+function optionalPattern(regex: RegExp) {
+  return (control: any) => {
+    const value = (control?.value ?? '') as string;
+    if (!value) {
+      return null; // si está vacío, no marca error
+    }
+    return regex.test(value)
+      ? null
+      : { pattern: { requiredPattern: regex.toString(), actualValue: value } };
+  };
+}
+
+
 @Component({
   selector: 'app-perfil-usuario',
   standalone: true,
@@ -35,14 +60,19 @@ export class PerfilUsuario implements OnInit {
   readonly isSaving = signal(false);
   readonly formError = signal<string | null>(null);
 
-  readonly clienteForm = this.fb.nonNullable.group({
+    readonly clienteForm = this.fb.nonNullable.group({
     nombre: ['', Validators.required],
     apellido: ['', Validators.required],
     dni: ['', [Validators.required, Validators.maxLength(8), Validators.pattern(/^[0-9]{7,8}$/)]],
     telefono: ['', [Validators.required, Validators.maxLength(10), Validators.pattern(/^[0-9]{10}$/)]],
     email: ['', [Validators.required, Validators.email]],
-    contrasena: ['', [Validators.minLength(4), Validators.pattern(/\d/)]],
+    // Contraseña opcional, pero con mismas reglas que en registro cuando se usa
+    contrasena: ['', [optionalMinLength(4), optionalPattern(/\d/)]],
+    confirmarContrasena: ['', [optionalMinLength(4), optionalPattern(/\d/)]],
   });
+
+
+
 
   readonly controls = this.clienteForm.controls;
 
@@ -131,7 +161,7 @@ export class PerfilUsuario implements OnInit {
     }
   }
 
-  private patchClienteForm(cliente: Cliente): void {
+    private patchClienteForm(cliente: Cliente): void {
     this.clienteForm.patchValue({
       nombre: cliente.nombre ?? '',
       apellido: cliente.apellido?.toString() ?? '',
@@ -139,10 +169,12 @@ export class PerfilUsuario implements OnInit {
       telefono: cliente.telefono !== undefined && cliente.telefono !== null ? String(cliente.telefono) : '',
       email: cliente.email ?? '',
       contrasena: '',
+      confirmarContrasena: '',
     });
     this.clienteForm.markAsPristine();
     this.formError.set(null);
   }
+
 
   habilitarEdicion(): void {
     this.editMode.set(true);
@@ -159,11 +191,55 @@ export class PerfilUsuario implements OnInit {
     this.formError.set(null);
   }
 
-  guardarCambios(): void {
+    guardarCambios(): void {
     if (!this.esCliente() || !this.clienteDetalle()) {
       return;
     }
 
+    const formValue = this.clienteForm.getRawValue();
+
+    // --- Validación de nueva contraseña + confirmación ---
+    const nuevaContrasena = (formValue.contrasena ?? '').trim();
+    const confirmarContrasena = (formValue.confirmarContrasena ?? '').trim();
+
+    // Limpiar error de 'mismatch' previo (si lo hubiera)
+    const confirmarCtrl = this.clienteForm.get('confirmarContrasena');
+    if (confirmarCtrl?.errors?.['mismatch']) {
+      const { mismatch, ...rest } = confirmarCtrl.errors;
+      confirmarCtrl.setErrors(Object.keys(rest).length ? rest : null);
+    }
+
+    // Si el usuario quiso cambiar la contraseña (al menos uno de los dos campos tiene valor)
+    if (nuevaContrasena || confirmarContrasena) {
+      // Ambos campos deben estar completos
+      if (!nuevaContrasena || !confirmarContrasena) {
+        this.formError.set('Debes completar ambos campos de contrasena.');
+        this.clienteForm.get('contrasena')?.markAsTouched();
+        this.clienteForm.get('confirmarContrasena')?.markAsTouched();
+        return;
+      }
+
+      // Reglas de mínimo 4 caracteres + al menos un número
+      if (
+        this.clienteForm.get('contrasena')?.invalid ||
+        this.clienteForm.get('confirmarContrasena')?.invalid
+      ) {
+        this.formError.set('La contrasena debe tener al menos 4 caracteres e incluir un numero.');
+        this.clienteForm.get('contrasena')?.markAsTouched();
+        this.clienteForm.get('confirmarContrasena')?.markAsTouched();
+        return;
+      }
+
+      // Coincidencia entre ambas contraseñas
+      if (nuevaContrasena !== confirmarContrasena) {
+        this.formError.set('Las contrasenas no coinciden.');
+        confirmarCtrl?.setErrors({ ...(confirmarCtrl.errors ?? {}), mismatch: true });
+        confirmarCtrl?.markAsTouched();
+        return;
+      }
+    }
+
+    // Validaciones generales del formulario (nombre, apellido, dni, etc.)
     if (this.clienteForm.invalid) {
       this.clienteForm.markAllAsTouched();
       this.formError.set('Completa los campos obligatorios para continuar.');
@@ -176,7 +252,6 @@ export class PerfilUsuario implements OnInit {
       return;
     }
 
-    const formValue = this.clienteForm.getRawValue();
     const dniStr = (formValue.dni ?? '').toString().trim();
     const telefonoStr = (formValue.telefono ?? '').toString().trim();
 
@@ -190,7 +265,6 @@ export class PerfilUsuario implements OnInit {
       return;
     }
 
-    const nuevaContrasena = (formValue.contrasena ?? '').trim();
     const dni = Number(dniStr);
     const telefono = Number(telefonoStr);
 
@@ -201,7 +275,8 @@ export class PerfilUsuario implements OnInit {
       dni,
       telefono,
       email: formValue.email,
-      contrasena: nuevaContrasena,
+      // Si no se ingresó nueva contraseña, se mantiene la actual
+      contrasena: nuevaContrasena || current.contrasena,
       rol: current.rol ?? Rol.CLIENTE,
     };
 
@@ -226,6 +301,7 @@ export class PerfilUsuario implements OnInit {
         },
       });
   }
+
 
   private normalizarRol(role: UserInfoResponseDTO['role'] | null): Rol | null {
     if (!role) {

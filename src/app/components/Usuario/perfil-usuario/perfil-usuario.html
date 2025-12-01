@@ -88,9 +88,14 @@
               <span class="perfil-usuario__error">Ingresa un email valido.</span>
             }
           </div>
-          <div class="perfil-usuario__field">
+                    <div class="perfil-usuario__field">
             <label for="contrasena">Contrasena</label>
-            <input id="contrasena" type="password" formControlName="contrasena" />
+            <input
+              id="contrasena"
+              type="password"
+              formControlName="contrasena"
+              placeholder="Minimo 4 caracteres e incluir al menos un numero"
+            />
             @if (controls.contrasena.touched && controls.contrasena.hasError('minlength')) {
               <span class="perfil-usuario__error">Debe tener al menos 4 caracteres.</span>
             }
@@ -98,6 +103,26 @@
               <span class="perfil-usuario__error">Debe incluir al menos un numero.</span>
             }
           </div>
+
+          <div class="perfil-usuario__field">
+            <label for="confirmarContrasena">Confirmar contrasena</label>
+            <input
+              id="confirmarContrasena"
+              type="password"
+              formControlName="confirmarContrasena"
+              placeholder="Repite la nueva contrasena"
+            />
+            @if (controls.confirmarContrasena.touched && controls.confirmarContrasena.hasError('minlength')) {
+              <span class="perfil-usuario__error">Debe tener al menos 4 caracteres.</span>
+            }
+            @if (controls.confirmarContrasena.touched && controls.confirmarContrasena.hasError('pattern')) {
+              <span class="perfil-usuario__error">Debe incluir al menos un numero.</span>
+            }
+            @if (controls.confirmarContrasena.touched && controls.confirmarContrasena.hasError('mismatch')) {
+              <span class="perfil-usuario__error">Las contrasenas no coinciden.</span>
+            }
+          </div>
+
         </form>
 
         @if (formError()) {

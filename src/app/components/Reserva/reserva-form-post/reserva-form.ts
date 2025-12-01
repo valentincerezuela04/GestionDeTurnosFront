@@ -48,8 +48,21 @@ export class ReservaFormComponent implements OnInit {
   router = inject(Router);
   private snackBar = inject(MatSnackBar);
 
+  minFechaInicio!: string;
+
+  private initMinFechaInicio(): void {
+    const hoy = new Date();
+    const year = hoy.getFullYear();
+    const month = String(hoy.getMonth() + 1).padStart(2, '0');
+    const day = String(hoy.getDate()).padStart(2, '0');
+
+    // Desde las 00:00 del día de hoy (independiente de la hora actual)
+    this.minFechaInicio = `${year}-${month}-${day}T00:00`;
+  }
+
   ngOnInit(): void {
     this.obtenerUsuarioActual();
+    this.initMinFechaInicio();
 
     // Form + validador de rango (fin > inicio)
     this.form = this.fb.group(

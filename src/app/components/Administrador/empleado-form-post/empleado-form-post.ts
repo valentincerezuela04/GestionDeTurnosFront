@@ -23,42 +23,72 @@ export class EmpleadoFormPost {
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal<string | null>(null);
 
-
-readonly empleadoForm = this.fb.nonNullable.group({
-  nombre: ['', [Validators.required, Validators.minLength(3)]],
-  apellido: ['', [Validators.required, Validators.minLength(3)]],
-  dni: [
-    '',
-    [
-      Validators.required,
-      Validators.minLength(7),
-      Validators.maxLength(8),
-      Validators.pattern(/^\d+$/),
+  // 👇 Formulario combinado:
+  // - Mantiene tus campos (incluye confirmarContrasena y rol)
+  // - Usa las validaciones más completas que venían de main
+  readonly empleadoForm = this.fb.nonNullable.group({
+    nombre: ['', [Validators.required, Validators.minLength(3)]],
+    apellido: ['', [Validators.required, Validators.minLength(3)]],
+    dni: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(7),
+        Validators.maxLength(8),
+        Validators.pattern(/^\d+$/),
+      ],
     ],
-  ],
-  telefono: [
-    '',
-    [
-      Validators.required,
-      Validators.minLength(8),
-      Validators.maxLength(20),
-      Validators.pattern(/^[0-9+\-\s()]+$/),
+    telefono: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.maxLength(20),
+        Validators.pattern(/^[0-9+\-\s()]+$/),
+      ],
     ],
-  ],
-  email: ['', [Validators.required, Validators.email]],
-  contrasena: [
-    '',
-    [
-      Validators.required,
-      Validators.minLength(6),
-      Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/),
+    email: ['', [Validators.required, Validators.email]],
+    contrasena: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(6),
+        Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/),
+      ],
     ],
-  ],
-  legajo: [''],
-});
-
+    confirmarContrasena: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(6),
+        Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/),
+      ],
+    ],
+    legajo: [''],
+    rol: this.fb.nonNullable.control(Rol.EMPLEADO as Rol),
+  });
 
   submit(): void {
+    const raw = this.empleadoForm.getRawValue();
+
+    const contrasena = (raw.contrasena ?? '').toString().trim();
+    const confirmarContrasena = (raw.confirmarContrasena ?? '').toString().trim();
+
+    // limpiar error mismatch previo
+    const confirmarCtrl = this.empleadoForm.get('confirmarContrasena');
+    if (confirmarCtrl?.errors?.['mismatch']) {
+      const { mismatch, ...rest } = confirmarCtrl.errors;
+      confirmarCtrl.setErrors(Object.keys(rest).length ? rest : null);
+    }
+
+    if (contrasena !== confirmarContrasena) {
+      this.errorMessage.set('Las contraseñas no coinciden.');
+      this.empleadoForm.get('contrasena')?.markAsTouched();
+      confirmarCtrl?.setErrors({ ...(confirmarCtrl.errors ?? {}), mismatch: true });
+      confirmarCtrl?.markAsTouched();
+      return;
+    }
+
     if (this.empleadoForm.invalid) {
       this.empleadoForm.markAllAsTouched();
       return;
@@ -67,12 +97,15 @@ readonly empleadoForm = this.fb.nonNullable.group({
     this.isSubmitting.set(true);
     this.errorMessage.set(null);
 
-
-      const formValue = this.empleadoForm.getRawValue();
-    const payload ={
-      ...formValue,
-      rol:Rol.EMPLEADO as Rol
-
+    const payload = {
+      nombre: raw.nombre,
+      apellido: raw.apellido,
+      dni: (raw.dni ?? '').toString().trim(),
+      telefono: (raw.telefono ?? '').toString().trim(),
+      email: raw.email,
+      contrasena,
+      legajo: raw.legajo,
+      rol: Rol.EMPLEADO as Rol,
     };
 
     this.empleadoService
@@ -85,7 +118,9 @@ readonly empleadoForm = this.fb.nonNullable.group({
         },
         error: (error) => {
           console.error('Error al crear empleado:', error);
-          this.errorMessage.set('No se pudo crear el empleado. Verifica los datos e intenta nuevamente.');
+          this.errorMessage.set(
+            'No se pudo crear el empleado. Verifica los datos e intenta nuevamente.'
+          );
           this.isSubmitting.set(false);
         },
       });
@@ -94,5 +129,4 @@ readonly empleadoForm = this.fb.nonNullable.group({
   cancelar(): void {
     this.router.navigate(['/empleados']);
   }
-
 }

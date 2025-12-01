@@ -38,6 +38,36 @@
   <div class="panel">
     <h3>Detalle por método de pago</h3>
 
+    <!-- Ganancias por mes -->
+<div class="panel">
+  <h3>Ganancias por mes</h3>
+
+  <table class="table-resumen">
+    <thead>
+      <tr>
+        <th>Mes</th>
+        <th>Monto total</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (g of gananciasPorMes; track g.mes) {
+        <tr>
+          <td>{{ g.mes }}</td>
+          <td>$ {{ g.monto | number: '1.0-0' }}</td>
+        </tr>
+      }
+      @if (gananciasPorMes.length === 0) {
+        <tr>
+          <td colspan="2" class="empty">
+            Todavía no hay pagos acreditados para calcular ganancias mensuales.
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+
     <table class="table-resumen">
       <thead>
         <tr>

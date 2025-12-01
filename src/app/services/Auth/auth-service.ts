@@ -63,24 +63,28 @@ export class AuthService {
   }
 
   hasRole(...roles: AppRole[]): boolean {
-    const user = this.user();
-    if (!user) {
-      return false;
-    }
-    const userRole =
-      this.normalizeRole((user as any)?.rol) ??
-      this.normalizeRole((user as any)?.role);
-    if (!userRole) {
-      return false;
-    }
-    if (userRole === 'ADMIN') {
-      return true;
-    }
-    if (roles.length === 0) {
-      return true;
-    }
-    return roles.includes(userRole);
+  const user = this.user();
+  if (!user) {
+    return false;
   }
+
+  const userRole =
+    this.normalizeRole((user as any)?.rol) ??
+    this.normalizeRole((user as any)?.role);
+
+  if (!userRole) {
+    return false;
+  }
+
+  // Si no se pasan roles explícitos, alcanza con que tenga cualquier rol válido
+  if (roles.length === 0) {
+    return true;
+  }
+
+  // Solo se permite el acceso si el rol del usuario está en la lista
+  return roles.includes(userRole);
+}
+
 
 
   private getUserFromStorage(): AuthUser | null {
