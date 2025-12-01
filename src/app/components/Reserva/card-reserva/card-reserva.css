@@ -1,97 +1,89 @@
+:root {
+  --card-bg: #0f1220;
+  --card-bd: #20243a;
+  --txt: #e6e8ef;
+  --txt-dim: #b7bdd1;
+  --accent: #7c5cff;
+  --accent-2: #5AE2FF; /* celeste neón para labels */
+}
+
+/* ===== card de reserva ===== */
 .reserva-card {
+  position: relative;
   margin-bottom: 1rem;
-  border-radius: 14px;
-  padding: 1rem 1.25rem;
-  background: radial-gradient(circle at 8% 0, rgba(93, 70, 210, 0.14), rgba(9, 11, 16, 0.92));
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.28);
+  border-radius: 18px;
+  padding: 1.1rem 1.25rem 0.95rem;
+
+  box-shadow: 0 14px 28px rgba(0,0,0,0.35);
   cursor: pointer;
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
-  color: #e7faff;
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    border-color 140ms ease,
+    background 140ms ease;
+  color: var(--txt);
 }
 
 .reserva-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.35);
+  border-color: rgba(124,92,255,0.4);
+  box-shadow: 0 18px 35px rgba(124,92,255,0.18);
+  background:
+    radial-gradient(circle at 0 0, rgba(90,226,255,0.12), rgba(15,18,32,1) 55%);
 }
 
+/* ===== header ===== */
 .reserva-card .card-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 0.75rem;
   gap: 0.65rem;
 }
 
+/* título tipo "SALA # 1 · 25 personas" */
 .card-title {
   display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  font-weight: 700;
-  font-size: 1rem;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem;
 }
 
-.card-title__room {
+/* "SALA" */
+.card-title-label {
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.16em;
+  font-size: 0.7rem;
+  color: #5AE2FF;
+  opacity: 0.95;
 }
 
-.card-title__capacity {
-  font-size: 0.85rem;
-  color: rgba(231, 250, 255, 0.75);
-}
-
-.reserva-card .card-body p {
-  margin: 0.25rem 0;
-  font-size: 0.9rem;
-  color: #c7d5ff;
-}
-
-.card-row strong {
-  color: #fff;
-  margin-right: 0.35rem;
-}
-
-.card-actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 0.35rem;
-}
-
-.delete-btn {
-  background: rgba(231, 76, 60, 0.15);
-  color: #ffb4a2;
-  border: 1px solid rgba(231, 76, 60, 0.35);
-  border-radius: 10px;
-  padding: 0.35rem 0.75rem;
+/* "# 1" */
+.card-title-value {
+  font-size: 1.02rem;
   font-weight: 700;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: background 0.12s ease, transform 0.08s ease, box-shadow 0.12s ease;
+  color: #ffffff;
 }
 
-.delete-btn:hover:not(:disabled) {
-  background: rgba(231, 76, 60, 0.25);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(231, 76, 60, 0.25);
+/* "· 25 personas" */
+.card-title-capacity {
+  font-size: 0.8rem;
+  color: var(--txt-dim);
 }
 
-.delete-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
+/* ===== chip de estado ===== */
 .chip {
   display: inline-block;
   padding: 0.25rem 0.7rem;
   border-radius: 999px;
   font-size: 0.75rem;
   font-weight: 800;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   border: 1px solid rgba(255, 255, 255, 0.18);
+  text-transform: uppercase;
 }
 
+/* puedes mantener tus clases de estado tal cual: */
 .chip-activo {
   background-color: rgba(46, 204, 113, 0.15);
   color: #befae3;
@@ -108,4 +100,84 @@
   background-color: rgba(52, 152, 219, 0.2);
   color: #d7ecff;
   border-color: rgba(52, 152, 219, 0.45);
+}
+
+/* ===== cuerpo ===== */
+.reserva-card .card-body {
+  display: grid;
+  gap: 0.35rem;
+}
+
+/* línea tipo "FECHA — 10/10/2025" */
+.meta-linea {
+  margin: 0.1rem 0;
+  font-size: 0.82rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+/* label (FECHA, HORARIO, etc.) */
+.meta-label {
+  color: #5AE2FF;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  font-size: 0.69rem;
+  opacity: 0.9;
+}
+
+/* valor (10/10/2025, 18:00 - 20:00, etc.) */
+.meta-value {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.86rem;
+}
+
+/* ===== acciones ===== */
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+/* botón eliminar */
+.delete-btn {
+  background: rgba(231, 76, 60, 0.15);
+  color: #ffb4a2;
+  border: 1px solid rgba(231, 76, 60, 0.35);
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem;
+  font-weight: 700;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition:
+    background 0.12s ease,
+    transform 0.08s ease,
+    box-shadow 0.12s ease,
+    border-color 0.12s ease;
+}
+
+.delete-btn:hover:not(:disabled) {
+  background: rgba(231, 76, 60, 0.25);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(231, 76, 60, 0.25);
+}
+
+.delete-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ===== responsive ===== */
+@media (max-width: 640px) {
+  .reserva-card {
+    padding: 0.95rem 0.95rem 0.8rem;
+  }
+
+  .card-title {
+    flex-direction: row;
+    row-gap: 0.1rem;
+  }
 }

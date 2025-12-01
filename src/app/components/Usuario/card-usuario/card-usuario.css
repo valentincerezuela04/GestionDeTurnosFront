@@ -6,6 +6,7 @@
   --text-main: #e6e8ef;
   --text-muted: #9aa1bb;
   --accent: #7c5cff;
+  
 }
 
 .card-usuario {
@@ -34,7 +35,28 @@
   font-size: 1.1rem;
   color: var(--text-main);
   font-weight: 600;
+}.card-usuario__edit {
+  background: linear-gradient(135deg, #5AE2FF 0%, #B7FF00 100%);
+  border: none;
+  border-radius: 999px;
+  color: #050816; /* texto oscuro para contrastar con el fondo neón */
+  font-weight: 600;
+  padding: 0.45rem 0.95rem;
+  cursor: pointer;
+  transition: transform 120ms ease-out, box-shadow 120ms ease-out, filter 120ms ease-out;
+  box-shadow:
+    0 8px 20px rgba(90, 226, 255, 0.35),
+    0 0 18px rgba(183, 255, 0, 0.22);
 }
+
+.card-usuario__edit:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+  box-shadow:
+    0 12px 26px rgba(90, 226, 255, 0.45),
+    0 0 26px rgba(183, 255, 0, 0.3);
+}
+
 
 .card-usuario__edit {
   background: linear-gradient(135deg, var(--accent) 0%, #5d46d2 100%);
@@ -73,7 +95,7 @@
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--text-muted);
+  color: #ff4b91 !important;
   margin-bottom: 0.2rem;
 }
 

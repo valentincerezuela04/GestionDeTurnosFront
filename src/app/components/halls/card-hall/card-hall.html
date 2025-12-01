@@ -1,22 +1,28 @@
-<article class="card" >
+<article class="card">
   <header class="card-header">
-    
-    
-    <h3 class="card-title" >Sala #{{ hall().numero }}</h3>
-    
+    <h3 class="card-title">
+      <span class="card-title-label">SALA #</span>
+      <span class="card-title-value">{{ hall().numero }}</span>
+    </h3>
   </header>
 
   <div class="card-body">
     <p class="descripcion">
       {{ hall().descripcion }}
     </p>
-    
-    <p>Tamaño : <strong>{{hall().salaSize}}</strong></p>
 
-    <p class="capacidad">
-      Capacidad: <strong>{{ hall().cantidad_personas }}</strong> personas
+    <p class="meta-linea">
+      <span class="meta-label">TAMAÑO:</span>
+      <span class="meta-value">{{ hall().salaSize }}</span>
+    </p>
+
+    <p class="meta-linea capacidad">
+      <span class="meta-label">CAPACIDAD:</span>
+      <span class="meta-value">{{ hall().cantidad_personas }}</span>
+      <span class="meta-sufijo">personas</span>
     </p>
   </div>
+
   @if (canEdit()) {
     <button
       class="icon-btn edit"
@@ -30,5 +36,4 @@
       (click)="onDeleteClick()"
     ></button>
   }
-
 </article>

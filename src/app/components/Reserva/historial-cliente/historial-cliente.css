@@ -19,7 +19,11 @@
   font-size: 0.8rem;
   color: var(--rs-muted, #8f97aa);
 }
-
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);              /* lo invierte a clarito */
+  opacity: 0.9;                   /* que se vea bien */
+  cursor: pointer;
+}
 .filtro-group input,
 .filtro-group select {
   padding: 0.35rem 0.5rem;
