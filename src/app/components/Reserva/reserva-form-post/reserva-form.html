@@ -23,14 +23,14 @@
     </div>
 
     <!-- Fecha y Hora de Inicio -->
-    <div class="form-group form-group--picker">
+    <div class="form-group ">
       <label for="fechaInicio">Fecha y hora de inicio *</label>
       <input
         #fechaInicioInput
         type="datetime-local"
         id="fechaInicio"
         formControlName="fechaInicio"
-        class="form-control form-control--picker"
+        class="form-control "
         [min]="minFechaInicio"
         autocomplete="off"
         (click)="abrirPicker(fechaInicioInput)"
@@ -42,14 +42,14 @@
     </div>
 
     <!-- Fecha y Hora de Fin -->
-    <div class="form-group form-group--picker">
+    <div class="form-group ">
       <label for="fechaFinal">Fecha y hora de fin *</label>
       <input
          #fechaFinalInput
           type="datetime-local"
           id="fechaFinal"
           formControlName="fechaFinal"
-          class="form-control form-control--picker"
+          class="form-control "
           [min]="minFechaInicio"
           autocomplete="off"
           (click)="abrirPicker(fechaFinalInput)"
