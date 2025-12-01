@@ -1,8 +1,6 @@
 export enum TipoPago {
 
     EFECTIVO = 'EFECTIVO',
-    TRANSFERENCIA = 'TRANSFERENCIA',
-    TARJETA = 'TARJETA',
     MERCADO_PAGO = 'MERCADO_PAGO',
 
 }

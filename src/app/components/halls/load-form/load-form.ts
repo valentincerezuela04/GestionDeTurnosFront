@@ -21,8 +21,7 @@ export class LoadForm {
 
   // mapa para mostrar la capacidad fija segun el tamano
   capacidadPorSize: Record<SalaSize, number> = {
-    PEQUENA: 10,
-    'PEQUEÑA': 10,
+    PEQUEÑA: 10,
     MEDIANA: 25,
     GRANDE: 40,
   };
