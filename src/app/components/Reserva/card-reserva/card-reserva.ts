@@ -1,11 +1,11 @@
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ReservaResponseDTO } from '../../../dto/Reserva';
 
 @Component({
   selector: 'app-card-reserva',
   standalone: true,
-  imports: [CommonModule, DatePipe],
+  imports: [CommonModule, DatePipe, CurrencyPipe],
   templateUrl: './card-reserva.html',
   styleUrl: './card-reserva.css',
 })

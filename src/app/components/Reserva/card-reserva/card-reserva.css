@@ -133,6 +133,9 @@
   font-weight: 600;
   font-size: 0.86rem;
 }
+.meta-value--strong{
+  font-size: 0.94rem;
+}
 
 /* ===== acciones ===== */
 .card-actions {

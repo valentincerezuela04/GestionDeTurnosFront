@@ -54,6 +54,17 @@
 .nueva-reserva-btn:active{
   transform: translateY(0);
 }
+.nueva-reserva-btn--disabled{
+  opacity:.55;
+  cursor:not-allowed;
+  background: linear-gradient(180deg, rgba(93,70,210,.28), rgba(93,70,210,.16));
+  box-shadow: none;
+}
+.nueva-reserva-btn--disabled:hover,
+.nueva-reserva-btn--disabled:active{
+  transform:none;
+  box-shadow:none;
+}
 
 /* grid de cards */
 .reservas-grid{

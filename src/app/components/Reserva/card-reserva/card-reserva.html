@@ -30,6 +30,13 @@
       </span>
     </p>
 
+    <p class="meta-linea">
+      <span class="meta-label">Monto</span>
+      <span class="meta-value meta-value--strong">
+        {{ reserva.monto | currency:'ARS':'symbol':'1.0-0' }}
+      </span>
+    </p>
+
     <p class="meta-linea" *ngIf="mostrarCliente">
       <span class="meta-label">Cliente</span>
       <span class="meta-value">
