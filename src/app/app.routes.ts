@@ -94,7 +94,7 @@ export const routes: Routes = [
             (m) => m.MisReservas
           ),
         data: { title: 'Mis reservas' },
-        canActivate: [roleGuard('CLIENTE', 'EMPLEADO')],
+        canActivate: [roleGuard('CLIENTE', 'EMPLEADO', 'ADMIN')],
       },
       {
         path: 'historial',
@@ -154,7 +154,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./components/Calendario/calendar-view/calendar-view').then((m) => m.CalendarViewComponent),
     data: { title: 'Calendario' },
-    canActivate: [roleGuard('CLIENTE', 'EMPLEADO')]
+    canActivate: [roleGuard('CLIENTE', 'EMPLEADO', 'ADMIN')]
   },
 
   // Perfil del usuario

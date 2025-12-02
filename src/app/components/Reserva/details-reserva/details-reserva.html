@@ -1,29 +1,48 @@
 @if (reserva(); as reservaData) {
   <div class="details-container">
     <div class="details-header">
-      <h2>Detalles de la Reserva #{{reservaData.id}}</h2>
+      <div class="header-text">
+        <p class="eyebrow">Reserva</p>
+        <h2>Reserva #{{reservaData.id}}</h2>
+        <div class="header-chips">
+          <span class="estado-chip" [ngClass]="estadoClase(reservaData.estado)">
+            {{ reservaData.estado }}
+          </span>
+          <span class="pago-chip">
+            {{ formatTipoPago(reservaData.tipoPago) }}
+          </span>
+        </div>
+      </div>
       <button class="btn btn-secondary" (click)="volver()">Volver</button>
     </div>
 
     <div class="details-content">
       <div class="info-section">
-        <h3>Información de la Sala</h3>
+        <h3>Sala y cliente</h3>
         @if (!isEditing()) {
-          <div>
-            <p><strong>Número de Sala:</strong> {{reservaData.salaNumero}}</p>
-            <p><strong>Capacidad:</strong> {{reservaData.salaCapacidad}} personas</p>
+          <div class="detail-rows">
+            <div class="detail-row">
+              <span class="detail-label">Sala</span>
+              <span class="detail-value">
+                #{{reservaData.salaNumero}} - {{reservaData.salaCapacidad}} personas
+              </span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Cliente</span>
+              <span class="detail-value">{{reservaData.clienteEmail}}</span>
+            </div>
           </div>
         } @else {
           <div class="edit-form">
             <div class="form-group">
-              <label for="salaId">Sala:</label>
+              <label for="salaId">Sala</label>
               <select
                 id="salaId"
                 [ngModel]="editForm().salaId"
                 (ngModelChange)="updateSalaId($event)"
                 class="form-control">
                 <option [ngValue]="null" disabled>
-                  Seleccioná una sala
+                  Selecciona una sala
                 </option>
                 @for (sala of salas(); track sala.id) {
                   <option [value]="sala.id">
@@ -32,45 +51,44 @@
                 }
               </select>
             </div>
+            <div class="form-group form-group--readonly">
+              <label>Cliente</label>
+              <div class="readonly-value">{{reservaData.clienteEmail}}</div>
+            </div>
           </div>
         }
       </div>
 
       <div class="info-section">
-        <h3>Información de la Reserva</h3>
+        <h3>Pago y estado</h3>
         @if (!isEditing()) {
-          <div>
-            <p><strong>Fecha de Inicio:</strong> {{reservaData.fechaInicio | date:'dd/MM/yyyy HH:mm'}}</p>
-            <p><strong>Fecha de Fin:</strong> {{reservaData.fechaFinal | date:'dd/MM/yyyy HH:mm'}}</p>
-            <p><strong>Tipo de Pago:</strong> {{reservaData.tipoPago}}</p>
-            <p><strong>Estado:</strong> {{reservaData.estado}}</p>
-            <p><strong>Cliente:</strong> {{reservaData.clienteEmail}}</p>
+          <div class="detail-rows">
+            <div class="detail-row">
+              <span class="detail-label">Monto</span>
+              <span class="detail-value detail-value--strong">
+                {{reservaData.monto | currency:'ARS':'symbol':'1.0-0'}}
+              </span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Tipo de pago</span>
+              <span class="detail-value">{{formatTipoPago(reservaData.tipoPago)}}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Estado</span>
+              <span class="detail-value">
+                <span class="estado-chip" [ngClass]="estadoClase(reservaData.estado)">
+                  {{reservaData.estado}}
+                </span>
+              </span>
+            </div>
           </div>
         } @else {
           <div class="edit-form">
             <div class="form-group">
-              <label for="fechaInicio">Fecha de Inicio:</label>
-              <input 
-                type="datetime-local" 
-                id="fechaInicio" 
-                [ngModel]="editForm().fechaInicio" 
-                (ngModelChange)="updateFechaInicio($event)"
-                class="form-control">
-            </div>
-            <div class="form-group">
-              <label for="fechaFinal">Fecha de Fin:</label>
-              <input 
-                type="datetime-local" 
-                id="fechaFinal" 
-                [ngModel]="editForm().fechaFinal" 
-                (ngModelChange)="updateFechaFinal($event)"
-                class="form-control">
-            </div>
-            <div class="form-group">
-              <label for="tipoPago">Tipo de Pago:</label>
-              <select 
-                id="tipoPago" 
-                [ngModel]="editForm().tipoPago" 
+              <label for="tipoPago">Tipo de Pago</label>
+              <select
+                id="tipoPago"
+                [ngModel]="editForm().tipoPago"
                 (ngModelChange)="updateTipoPago($event)"
                 class="form-control">
                 @for (tipo of tipoPagoOptions(); track tipo) {
@@ -78,34 +96,90 @@
                 }
               </select>
             </div>
+            <div class="form-group form-group--readonly">
+              <label>Monto</label>
+              <div class="readonly-value">
+                {{reservaData.monto | currency:'ARS':'symbol':'1.0-0'}}
+              </div>
+            </div>
+            <div class="form-group form-group--readonly">
+              <label>Estado</label>
+              <div class="readonly-value readonly-value--chip">
+                <span class="estado-chip" [ngClass]="estadoClase(reservaData.estado)">
+                  {{reservaData.estado}}
+                </span>
+              </div>
+            </div>
           </div>
         }
       </div>
 
-      <div class="actions-section">
+      <div class="info-section">
+        <h3>Agenda</h3>
         @if (!isEditing()) {
-          <div>
-            @if (puedeEditar()) {
-              <button class="btn btn-primary" (click)="startEditing()">
-                Editar
-              </button>
-            }
-            <!-- Botón para CANCELAR (deja la reserva en estado CANCELADO y se ve en el historial) -->
-            <button class="btn btn-warning" (click)="cancelarReserva()">
-             Cancelar Reserva
-            </button>
+          <div class="detail-rows">
+            <div class="detail-row">
+              <span class="detail-label">Fecha de inicio</span>
+              <span class="detail-value">
+                {{reservaData.fechaInicio | date:'dd/MM/yyyy HH:mm'}}
+              </span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Fecha de fin</span>
+              <span class="detail-value">
+                {{reservaData.fechaFinal | date:'dd/MM/yyyy HH:mm'}}
+              </span>
+            </div>
           </div>
         } @else {
-          <div>
-            <button class="btn btn-success" (click)="guardarCambios()">
-              Guardar
-            </button>
-            <button class="btn btn-secondary" (click)="cancelEditing()">
-              Cancelar Edición
-            </button>
+          <div class="edit-form edit-form--two-cols">
+            <div class="form-group">
+              <label for="fechaInicio">Fecha de Inicio</label>
+              <input
+                type="datetime-local"
+                id="fechaInicio"
+                [ngModel]="editForm().fechaInicio"
+                (ngModelChange)="updateFechaInicio($event)"
+                class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="fechaFinal">Fecha de Fin</label>
+              <input
+                type="datetime-local"
+                id="fechaFinal"
+                [ngModel]="editForm().fechaFinal"
+                (ngModelChange)="updateFechaFinal($event)"
+                class="form-control">
+            </div>
           </div>
         }
       </div>
+
+      @if (accionesHabilitadas()) {
+        <div class="actions-section">
+          @if (!isEditing()) {
+            <div>
+              @if (puedeEditar()) {
+                <button class="btn btn-primary" (click)="startEditing()">
+                  Editar
+                </button>
+              }
+              <button class="btn btn-warning" (click)="cancelarReserva()">
+               Cancelar Reserva
+              </button>
+            </div>
+          } @else {
+            <div>
+              <button class="btn btn-success" (click)="guardarCambios()">
+                Guardar
+              </button>
+              <button class="btn btn-secondary" (click)="cancelEditing()">
+                Cancelar Edición
+              </button>
+            </div>
+          }
+        </div>
+      }
     </div>
   </div>
 } @else {

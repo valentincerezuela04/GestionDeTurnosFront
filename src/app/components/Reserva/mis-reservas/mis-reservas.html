@@ -1,8 +1,15 @@
 <div class="mis-reservas">
   <div class="mis-reservas-header">
-    <h2>Mis reservas</h2>
+    <h2>{{ tituloReservas }}</h2>
     @if (mostrarBotonNuevaReserva()) {
-      <button type="button" class="nueva-reserva-btn" (click)="onNuevaReserva()">
+      <button
+        type="button"
+        class="nueva-reserva-btn"
+        [class.nueva-reserva-btn--disabled]="esAdmin()"
+        [attr.aria-disabled]="esAdmin()"
+        [title]="esAdmin() ? 'Los administradores no pueden crear reservas' : ''"
+        (click)="onNuevaReserva()"
+      >
         Nueva reserva
       </button>
     }

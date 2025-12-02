@@ -61,7 +61,7 @@
       <select id="tipoPago" formControlName="tipoPago">
         <option value="TODOS">Todos</option>
         <option *ngFor="let t of tiposPagoDisponibles" [value]="t">
-          {{ t }}
+          {{ tipoPagoLabel(t) }}
         </option>
       </select>
     </div>

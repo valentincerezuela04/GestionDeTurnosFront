@@ -37,11 +37,21 @@ export class MisReservas {
   }
 
   onNuevaReserva(): void {
+    if (this.esAdmin()) {
+      alert(
+        'Los administradores pueden ver las reservas pero no crear nuevas. Usa una cuenta de cliente o empleado para generar una reserva.'
+      );
+      return;
+    }
     this.router.navigate(['/reservas', 'new']);
   }
 
   mostrarBotonNuevaReserva(): boolean {
-    return !this.esAdmin();
+    return this.authService.isLoggedIn();
+  }
+
+  get tituloReservas(): string {
+    return this.esCliente() ? 'Mis reservas' : 'Reservas';
   }
 
   private cargarDatos(): void {
@@ -90,7 +100,7 @@ export class MisReservas {
     return this.normalizarRol(usuario?.role) === 'CLIENTE';
   }
 
-  private esAdmin(): boolean {
+  esAdmin(): boolean {
     const rol = this.authService.user()?.rol ?? this.usuario?.role;
     return this.normalizarRol(rol) === 'ADMIN';
   }

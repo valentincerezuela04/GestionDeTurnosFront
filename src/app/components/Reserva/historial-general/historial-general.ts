@@ -8,6 +8,7 @@ import { ReservaService } from '../../../services/Reservas/reservas-service';
 import { ReservaResponseDTO } from '../../../dto/Reserva';
 import { CardReserva } from '../card-reserva/card-reserva';
 import { AuthService } from '../../../services/Auth/auth-service';
+import { TipoPago } from '../../../models/reservas/tipo-pago';
 
 @Component({
   selector: 'app-historial-general',
@@ -21,6 +22,7 @@ export class HistorialGeneral implements OnInit {
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
   private readonly auth = inject(AuthService);
+  private readonly tiposPagoPermitidos: TipoPago[] = [TipoPago.EFECTIVO, TipoPago.MERCADO_PAGO];
 
   private historialOriginal: ReservaResponseDTO[] = [];
   historialFiltrado: ReservaResponseDTO[] = [];
@@ -86,7 +88,10 @@ export class HistorialGeneral implements OnInit {
         this.salasDisponibles = [...new Set(this.historialOriginal.map((r) => r.salaNumero))].sort(
           (a, b) => a - b
         );
-        this.tiposPagoDisponibles = [...new Set(this.historialOriginal.map((r) => r.tipoPago))];
+        const presentes = [...new Set(this.historialOriginal.map((r) => r.tipoPago))]
+          .filter((t): t is TipoPago => this.tiposPagoPermitidos.includes(t as TipoPago));
+        const faltantes = this.tiposPagoPermitidos.filter((t) => !presentes.includes(t));
+        this.tiposPagoDisponibles = [...presentes, ...faltantes];
 
         this.aplicarFiltros();
         this.loading = false;
@@ -146,7 +151,7 @@ export class HistorialGeneral implements OnInit {
       );
     }
 
-    if (tipoPago && tipoPago !== 'TODOS') {
+    if (this.esTipoPagoValido(tipoPago)) {
       filtradas = filtradas.filter((r) => r.tipoPago === tipoPago);
     }
 
@@ -221,6 +226,21 @@ export class HistorialGeneral implements OnInit {
 
   get esAdmin(): boolean {
     return this.auth.hasRole('ADMIN');
+  }
+
+  tipoPagoLabel(value: string): string {
+    switch (value) {
+      case TipoPago.EFECTIVO:
+        return 'Efectivo';
+      case TipoPago.MERCADO_PAGO:
+        return 'Mercado Pago';
+      default:
+        return value;
+    }
+  }
+
+  private esTipoPagoValido(value: unknown): value is TipoPago {
+    return typeof value === 'string' && this.tiposPagoPermitidos.includes(value as TipoPago);
   }
 
   onDeleteReserva(reserva: ReservaResponseDTO): void {
