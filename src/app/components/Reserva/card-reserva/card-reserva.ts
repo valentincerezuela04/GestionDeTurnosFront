@@ -12,11 +12,8 @@ import { ReservaResponseDTO } from '../../../dto/Reserva';
 export class CardReserva {
   @Input() reserva!: ReservaResponseDTO;
   @Input() mostrarCliente = false; // true en historial general, false en historial cliente
-  @Input() allowDelete = false;
-  @Input() deleting = false;
 
   @Output() reservaClick = new EventEmitter<ReservaResponseDTO>();
-  @Output() deleteReserva = new EventEmitter<ReservaResponseDTO>();
 
   get estadoClase(): string {
     const estado = this.reserva.estado?.toUpperCase();
@@ -34,11 +31,6 @@ export class CardReserva {
 
   onCardClick(): void {
     this.reservaClick.emit(this.reserva);
-  }
-
-  onDeleteClick(event: Event): void {
-    event.stopPropagation();
-    this.deleteReserva.emit(this.reserva);
   }
 
   formatTipoPago(tipo: ReservaResponseDTO['tipoPago']): string {

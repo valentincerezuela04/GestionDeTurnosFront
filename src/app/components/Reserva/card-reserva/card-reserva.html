@@ -52,14 +52,4 @@
     </p>
   </div>
 
-  <div class="card-actions" *ngIf="allowDelete" (click)="$event.stopPropagation()">
-    <button
-      type="button"
-      class="delete-btn"
-      [disabled]="deleting"
-      (click)="onDeleteClick($event)"
-    >
-      {{ deleting ? 'Eliminando...' : 'Eliminar' }}
-    </button>
-  </div>
 </div>

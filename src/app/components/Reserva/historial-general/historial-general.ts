@@ -7,7 +7,6 @@ import { catchError, combineLatest, of } from 'rxjs';
 import { ReservaService } from '../../../services/Reservas/reservas-service';
 import { ReservaResponseDTO } from '../../../dto/Reserva';
 import { CardReserva } from '../card-reserva/card-reserva';
-import { AuthService } from '../../../services/Auth/auth-service';
 import { TipoPago } from '../../../models/reservas/tipo-pago';
 
 @Component({
@@ -21,7 +20,6 @@ export class HistorialGeneral implements OnInit {
   private readonly reservaSrv = inject(ReservaService);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
-  private readonly auth = inject(AuthService);
   private readonly tiposPagoPermitidos: TipoPago[] = [TipoPago.EFECTIVO, TipoPago.MERCADO_PAGO];
 
   private historialOriginal: ReservaResponseDTO[] = [];
@@ -35,8 +33,6 @@ export class HistorialGeneral implements OnInit {
 
   loading = true;
   error: string | null = null;
-  limpiando = false;
-  eliminandoIds = new Set<number>();
 
   ngOnInit(): void {
     this.buildForm();
@@ -53,8 +49,8 @@ export class HistorialGeneral implements OnInit {
       tipoPago: ['TODOS'],
       montoMin: [''],
       montoMax: [''],
-      ordenCampo: ['FECHA'],     // FECHA | MONTO
-      ordenDireccion: ['DESC'],  // DESC | ASC
+      ordenCampo: ['FECHA'], // FECHA | MONTO
+      ordenDireccion: ['DESC'], // DESC | ASC
     });
 
     this.filtrosForm.valueChanges.subscribe(() => {
@@ -81,7 +77,7 @@ export class HistorialGeneral implements OnInit {
       ),
     ]).subscribe({
       next: ([historial, activas]) => {
-        // ✅ usamos groupReservas para mezclar y ordenar
+        // Mezclamos y ordenamos reservas activas + historial
         this.historialOriginal = this.groupReservas(historial ?? [], activas ?? []);
 
         // Llenamos combos auxiliares
@@ -185,7 +181,7 @@ export class HistorialGeneral implements OnInit {
     this.historialFiltrado = filtradas;
   }
 
-  // ✅ Único método de mezcla y orden
+  // Metodo unico de mezcla y orden
   private groupReservas(...grupos: ReservaResponseDTO[][]): ReservaResponseDTO[] {
     const map = new Map<number, ReservaResponseDTO>();
 
@@ -224,10 +220,6 @@ export class HistorialGeneral implements OnInit {
     this.router.navigate(['/reservas', reserva.id, 'details']);
   }
 
-  get esAdmin(): boolean {
-    return this.auth.hasRole('ADMIN');
-  }
-
   tipoPagoLabel(value: string): string {
     switch (value) {
       case TipoPago.EFECTIVO:
@@ -241,48 +233,5 @@ export class HistorialGeneral implements OnInit {
 
   private esTipoPagoValido(value: unknown): value is TipoPago {
     return typeof value === 'string' && this.tiposPagoPermitidos.includes(value as TipoPago);
-  }
-
-  onDeleteReserva(reserva: ReservaResponseDTO): void {
-    if (!this.esAdmin) return;
-    if (!confirm('Eliminar definitivamente esta reserva?')) return;
-
-    this.eliminandoIds.add(reserva.id);
-    this.reservaSrv.deleteReserva(reserva.id).subscribe({
-      next: () => {
-        this.historialOriginal = this.historialOriginal.filter((r) => r.id !== reserva.id);
-        this.aplicarFiltros();
-      },
-      error: (err) => {
-        console.error('Error al eliminar la reserva:', err);
-        this.error = 'No se pudo eliminar la reserva.';
-        this.eliminandoIds.delete(reserva.id);
-      },
-      complete: () => {
-        this.eliminandoIds.delete(reserva.id);
-      },
-    });
-  }
-
-  limpiarHistorial(): void {
-    if (!this.esAdmin) return;
-    if (!confirm('Esto borrará el historial completo de reservas. Continuar?')) return;
-
-    this.limpiando = true;
-    this.reservaSrv.clearHistorial().subscribe({
-      next: () => {
-        this.loading = true;
-        this.error = null;
-        this.cargarHistorial();
-      },
-      error: (err) => {
-        console.error('Error al limpiar el historial:', err);
-        this.error = 'No se pudo limpiar el historial.';
-        this.limpiando = false;
-      },
-      complete: () => {
-        this.limpiando = false;
-      },
-    });
   }
 }
