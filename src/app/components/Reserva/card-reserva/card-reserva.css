@@ -4,7 +4,7 @@
   --txt: #e6e8ef;
   --txt-dim: #b7bdd1;
   --accent: #7c5cff;
-  --accent-2: #5AE2FF; /* celeste neón para labels */
+  --accent-2: #5ae2ff; /* celeste neon para labels */
 }
 
 /* ===== card de reserva ===== */
@@ -14,7 +14,7 @@
   border-radius: 18px;
   padding: 1.1rem 1.25rem 0.95rem;
 
-  box-shadow: 0 14px 28px rgba(0,0,0,0.35);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35);
   cursor: pointer;
   transition:
     transform 140ms ease,
@@ -26,10 +26,10 @@
 
 .reserva-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(124,92,255,0.4);
-  box-shadow: 0 18px 35px rgba(124,92,255,0.18);
+  border-color: rgba(124, 92, 255, 0.4);
+  box-shadow: 0 18px 35px rgba(124, 92, 255, 0.18);
   background:
-    radial-gradient(circle at 0 0, rgba(90,226,255,0.12), rgba(15,18,32,1) 55%);
+    radial-gradient(circle at 0 0, rgba(90, 226, 255, 0.12), rgba(15, 18, 32, 1) 55%);
 }
 
 /* ===== header ===== */
@@ -41,7 +41,7 @@
   gap: 0.65rem;
 }
 
-/* título tipo "SALA # 1 · 25 personas" */
+/* titulo tipo "SALA # 1 x 25 personas" */
 .card-title {
   display: flex;
   flex-wrap: wrap;
@@ -54,7 +54,7 @@
   text-transform: uppercase;
   letter-spacing: 0.16em;
   font-size: 0.7rem;
-  color: #5AE2FF;
+  color: var(--accent-2);
   opacity: 0.95;
 }
 
@@ -65,7 +65,7 @@
   color: #ffffff;
 }
 
-/* "· 25 personas" */
+/* "x 25 personas" */
 .card-title-capacity {
   font-size: 0.8rem;
   color: var(--txt-dim);
@@ -83,7 +83,6 @@
   text-transform: uppercase;
 }
 
-/* puedes mantener tus clases de estado tal cual: */
 .chip-activo {
   background-color: rgba(46, 204, 113, 0.15);
   color: #befae3;
@@ -108,7 +107,7 @@
   gap: 0.35rem;
 }
 
-/* línea tipo "FECHA — 10/10/2025" */
+/* linea tipo "FECHA => 10/10/2025" */
 .meta-linea {
   margin: 0.1rem 0;
   font-size: 0.82rem;
@@ -120,7 +119,7 @@
 
 /* label (FECHA, HORARIO, etc.) */
 .meta-label {
-  color: #5AE2FF;
+  color: var(--accent-2);
   text-transform: uppercase;
   letter-spacing: 0.13em;
   font-size: 0.69rem;
@@ -133,44 +132,9 @@
   font-weight: 600;
   font-size: 0.86rem;
 }
-.meta-value--strong{
+
+.meta-value--strong {
   font-size: 0.94rem;
-}
-
-/* ===== acciones ===== */
-.card-actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 0.5rem;
-}
-
-/* botón eliminar */
-.delete-btn {
-  background: rgba(231, 76, 60, 0.15);
-  color: #ffb4a2;
-  border: 1px solid rgba(231, 76, 60, 0.35);
-  border-radius: 999px;
-  padding: 0.35rem 0.9rem;
-  font-weight: 700;
-  font-size: 0.78rem;
-  cursor: pointer;
-  transition:
-    background 0.12s ease,
-    transform 0.08s ease,
-    box-shadow 0.12s ease,
-    border-color 0.12s ease;
-}
-
-.delete-btn:hover:not(:disabled) {
-  background: rgba(231, 76, 60, 0.25);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(231, 76, 60, 0.25);
-}
-
-.delete-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  box-shadow: none;
 }
 
 /* ===== responsive ===== */

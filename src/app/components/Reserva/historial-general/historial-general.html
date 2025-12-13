@@ -1,18 +1,6 @@
 <div class="mis-reservas">
   <div class="mis-reservas-header">
     <h2>Historial general de reservas</h2>
-    @if (esAdmin) {
-      <div class="historial-actions">
-        <button
-          type="button"
-          class="danger-btn"
-          (click)="limpiarHistorial()"
-          [disabled]="limpiando || loading"
-        >
-          {{ limpiando ? 'Limpiando...' : 'Borrar historial' }}
-        </button>
-      </div>
-    }
   </div>
 
   <!-- Filtros -->
@@ -107,10 +95,7 @@
         <app-card-reserva
           [reserva]="reserva"
           [mostrarCliente]="true"
-          [allowDelete]="esAdmin"
-          [deleting]="eliminandoIds.has(reserva.id)"
           (reservaClick)="onReservaClick($event)"
-          (deleteReserva)="onDeleteReserva($event)"
         ></app-card-reserva>
       }
     </div>
