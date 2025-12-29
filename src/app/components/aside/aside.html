@@ -1,4 +1,4 @@
-<aside class="side" [class.closed]="!open()" aria-label="Navegación">
+<!-- <aside class="side" [class.closed]="!open()" aria-label="Navegación">
   <nav>
     <a routerLink="/hall" routerLinkActive="active">Salas</a>
 
@@ -33,4 +33,140 @@
     }
   
   </nav>
+</aside> -->
+<!-- Botón hamburguesa (mobile) -->
+<button
+  type="button"
+  class="btn btn-text max-sm:btn-square sm:hidden"
+  (click)="open()"
+  aria-label="Abrir navegación"
+  aria-controls="collapsible-mini-sidebar"
+  [attr.aria-expanded]="open()"
+>
+  <span class="icon-[tabler--menu-2] size-5"></span>
+</button>
+
+<!-- Sidebar -->
+<aside
+  id="collapsible-mini-sidebar"
+  class="drawer drawer-start border-e border-base-content/20
+         bg-[linear-gradient(180deg,#0d1219,#0b0f13)]
+         fixed sm:static top-14 sm:top-0 left-0 z-50 sm:z-0
+         h-[calc(100dvh-56px)] sm:h-[100dvh]
+         transition-all duration-200 ease-out
+         overflow-auto"
+  [class.w-66]="!mini()"
+  [class.w-17]="mini()"
+  [class.-translate-x-full]="!open()"
+  [class.translate-x-0]="open()"
+  aria-label="Navegación"
+>
+  <div class="drawer-header px-4 py-2 w-full flex items-center justify-between gap-3">
+    <h3 class="drawer-title text-xl font-semibold" [class.hidden]="mini()">
+      Gestión de Turnos
+    </h3>
+
+    <!-- Minify (desktop) -->
+    <div class="hidden sm:block">
+      <button
+        type="button"
+        class="btn btn-circle btn-text"
+        (click)="toggleMini()"
+        [attr.aria-label]="mini() ? 'Expandir navegación' : 'Minificar navegación'"
+      >
+        <span class="icon-[tabler--menu-2] size-5"></span>
+        <span class="sr-only">Navigation Toggle</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="drawer-body px-2 pt-4">
+    <ul class="menu p-0">
+
+      <li>
+        <a routerLink="/hall" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <span class="icon-[tabler--home] size-5"></span>
+          <span [class.hidden]="mini()">Salas</span>
+        </a>
+      </li>
+
+      @if (isAdmin()) {
+        <li>
+          <a routerLink="/empleados" routerLinkActive="active">
+            <span class="icon-[tabler--users] size-5"></span>
+            <span [class.hidden]="mini()">Empleados</span>
+          </a>
+        </li>
+      }
+
+      <li>
+        <a routerLink="/reservas" routerLinkActive="active">
+          <span class="icon-[tabler--clipboard-check] size-5"></span>
+          <span [class.hidden]="mini()">Reservas</span>
+        </a>
+      </li>
+
+      @if (isCliente()) {
+        <li>
+          <a routerLink="/reservas/historial" routerLinkActive="active">
+            <span class="icon-[tabler--history] size-5"></span>
+            <span [class.hidden]="mini()">Mi historial</span>
+          </a>
+        </li>
+      }
+
+      @if (showFullMenu()) {
+        <li>
+          <a routerLink="/reservas/historial-general" routerLinkActive="active">
+            <span class="icon-[tabler--list-details] size-5"></span>
+            <span [class.hidden]="mini()">Historial reservas</span>
+          </a>
+        </li>
+
+        <li>
+          <a routerLink="/clientes" routerLinkActive="active">
+            <span class="icon-[tabler--user] size-5"></span>
+            <span [class.hidden]="mini()">Clientes</span>
+          </a>
+        </li>
+      }
+
+      <!-- Dropdown tipo “Apps” (como tu ejemplo) -->
+      <li class="dropdown relative [--adaptive:none] [--strategy:static]">
+        <button type="button" class="dropdown-toggle" aria-haspopup="menu" aria-expanded="false">
+          <span class="icon-[tabler--apps] size-5"></span>
+          <span [class.hidden]="mini()">Apps</span>
+          <span class="icon-[tabler--chevron-down] dropdown-open:rotate-180 size-4" [class.hidden]="mini()"></span>
+        </button>
+
+        <ul class="dropdown-menu mt-0 shadow-none dropdown-open:opacity-100 hidden min-w-60" role="menu">
+          <li>
+            <a routerLink="/calendar" routerLinkActive="active">
+              <span class="icon-[tabler--calendar] size-5"></span>
+              Calendario
+            </a>
+          </li>
+
+          @if (showFullMenu()) {
+            <li>
+              <a routerLink="/dashboardPagos" routerLinkActive="active">
+                <span class="icon-[tabler--credit-card] size-5"></span>
+                Dashboard Pagos
+              </a>
+            </li>
+          }
+        </ul>
+      </li>
+
+      @if (showFullMenu()) {
+        <li>
+          <a routerLink="/perfil" routerLinkActive="active">
+            <span class="icon-[tabler--id] size-5"></span>
+            <span [class.hidden]="mini()">Perfil</span>
+          </a>
+        </li>
+      }
+
+    </ul>
+  </div>
 </aside>

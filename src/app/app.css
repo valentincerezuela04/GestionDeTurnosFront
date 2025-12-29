@@ -40,7 +40,7 @@
 
 .auth-link:hover {
     transform: translateY(-1px);
-    box-shadow: 0 12px 24px rgba(124, 92, 255, 0.35);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
 }
 
 .auth-link.ghost {

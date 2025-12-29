@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input, output, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/Auth/auth-service';
 import { AppRole } from '../../models/auth.model';
@@ -13,8 +13,18 @@ import { AppRole } from '../../models/auth.model';
 export class Aside {
   private readonly auth = inject(AuthService);
 
-  // viene desde app.component: [open]="sideBarOpen()"
-  open = input.required<boolean>();
+   // ✅ esto viene del padre: <app-aside [open]="sideBarOpen()">
+  open = input<boolean>(true);
+
+  // ✅ esto es interno del aside
+  mini = signal<boolean>(false);
+  toggleMini() {
+    this.mini.update(v => !v);
+  }
+
+  // (opcional) si querés cerrar el sidebar al tocar un link en mobile
+  requestClose = output<void>();
+
 
   // rol normalizado del usuario logueado
   private readonly role = computed(() => this.auth.user()?.rol as AppRole | null);
