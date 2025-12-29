@@ -1,0 +1,96 @@
+/* src/styles/tw-theme.css */
+
+/* =========================
+   LIGHT THEME
+   ========================= */
+:root[data-theme="light"] {
+  /* Brand (violeta) */
+  --accent-300: #A89CFF;
+  --accent-400: #8B76FF;
+  --accent-500: #7C5CFF; 
+  --accent-600: #5A3DFF;
+  --accent-glow: rgba(124, 92, 255, 0.30);
+
+  /* Backgrounds */
+  --bg: #F7F7FF;
+  --bg-2: #FFFFFF;
+  --card: #FFFFFF;
+  --card-2: #F1F0FF;
+
+  /* Borders */
+  --border: rgba(10, 10, 20, 0.10);
+  --border-2: rgba(124, 92, 255, 0.22);
+
+  /* Text */
+  --text: #111129;
+  --text-2: rgba(17, 17, 41, 0.78);
+  --muted: rgba(17, 17, 41, 0.55);
+
+  /* States */
+  --success: #0FB981;
+  --warning: #B67A00;
+  --danger: #E11D48;
+
+  /* Shadows */
+  --shadow: 0 10px 30px rgba(17, 17, 41, 0.10);
+  --shadow-accent: 0 0 0 1px rgba(124, 92, 255, 0.20),
+                   0 10px 25px rgba(124, 92, 255, 0.10);
+}
+
+/* =========================
+   DARK THEME
+   ========================= */
+:root[data-theme="dark"] {
+  /* Brand (violeta) */
+  --accent-300: #B9ADFF;
+  --accent-400: #9B87FF;
+  --accent-500: #7C5CFF; 
+  --accent-600: #5A3DFF;
+  --accent-glow: rgba(124, 92, 255, 0.45); 
+
+  /* Backgrounds */
+  --bg: #0B0B12;
+  --bg-2: #101022;
+  --card: #14142A;
+  --card-2: #191936;
+
+  /* Borders */
+  --border: rgba(255, 255, 255, 0.08);
+  --border-2: rgba(124, 92, 255, 0.28);
+
+  /* Text */
+  --text: #EAEAF5;
+  --text-2: rgba(234, 234, 245, 0.78);
+  --muted: rgba(234, 234, 245, 0.55);
+
+  /* States */
+  --success: #2EE59D;
+  --warning: #FFCC66;
+  --danger: #FF4D6D;
+
+  /* Shadows */
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --shadow-accent: 0 0 0 1px rgba(124, 92, 255, 0.25),
+                   0 8px 30px rgba(124, 92, 255, 0.15);
+}
+
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-2: var(--bg-2);
+  --color-card: var(--card);
+  --color-card-2: var(--card-2);
+
+  --color-text: var(--text);
+  --color-text-2: var(--text-2);
+  --color-muted: var(--muted);
+
+  --color-accent-300: var(--accent-300);
+  --color-accent-400: var(--accent-400);
+  --color-accent-500: var(--accent-500);
+  --color-accent-600: var(--accent-600);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+}

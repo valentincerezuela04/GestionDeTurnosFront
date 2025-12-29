@@ -1,3 +1,8 @@
+@import "tailwindcss";
+@plugin "flyonui";
+@import "flyonui/variants.css";
+@source "../node_modules/flyonui/flyonui.js";
+
 :root{
   --bg:#0b0f13; --surface:#11161c; --muted:#6b7280; --text:#e5e7eb;
   --primary:#22d3ee; --primary-700:#0ea5b7; --radius:16px;

@@ -15,6 +15,8 @@ export class LoginPageComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
+  showPassword = false;
+
   loading = false;
   error = '';
   form = this.fb.group({

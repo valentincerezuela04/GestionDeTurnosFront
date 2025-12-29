@@ -1,4 +1,4 @@
-<h2>Iniciar sesión</h2>
+<!-- <h2>Iniciar sesión</h2>
 
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form" novalidate>
   <div class="field">
@@ -36,4 +36,109 @@
     <a routerLink="/register" [queryParams]="returnUrl ? { returnUrl: returnUrl } : null">Registrate acá</a>
   </p>
 </form>
+ -->
 
+ <div
+  class="flex min-h-screen items-center justify-center overflow-x-hidden
+         bg-cover bg-center bg-no-repeat py-10"
+>
+  <div class="relative flex items-center justify-center px-4 sm:px-6 lg:px-8">
+   
+
+    <div class="bg-base-100 shadow-base-300/20 z-10 w-full space-y-6 rounded-xl p-6 shadow-md sm:min-w-md lg:p-8">
+      <div class="flex items-center gap-3">
+        <img src="https://cdn.flyonui.com/fy-assets/logo/logo.png" class="size-8" alt="brand-logo" />
+        <h2 class="text-base-content text-xl font-bold">Gestión de Turnos</h2>
+      </div>
+
+      <div>
+        <h3 class="text-base-content mb-1.5 text-2xl font-semibold">Iniciar sesión</h3>
+        <p class="text-base-content/80">Entrá para gestionar tus reservas.</p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4" novalidate>
+        <div>
+          <label class="label-text" for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            placeholder="Ingresá tu email"
+            class="input"
+            formControlName="email"
+            [attr.aria-invalid]="hasError('email','required') || hasError('email','email') ? true : null"
+          />
+
+          @if (hasError('email', 'required')) {
+            <p class="mt-1 text-sm text-[var(--danger)]">El email es obligatorio.</p>
+          }
+          @if (hasError('email', 'email')) {
+            <p class="mt-1 text-sm text-[var(--danger)]">Ingresá un email válido.</p>
+          }
+        </div>
+
+        <div>
+          <label class="label-text" for="password">Contraseña</label>
+
+          <div class="input flex items-center gap-2">
+            <input
+              id="password"
+              [type]="showPassword ? 'text' : 'password'"
+              placeholder="············"
+              class="w-full bg-transparent outline-none"
+              formControlName="password"
+            />
+            <button
+              type="button"
+              class="btn btn-text btn-sm"
+              (click)="showPassword = !showPassword"
+              [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+            >
+              {{ showPassword ? '🙈' : '👁️' }}
+            </button>
+          </div>
+
+          @if (hasError('password', 'required')) {
+            <p class="mt-1 text-sm text-[var(--danger)]">La contraseña es obligatoria.</p>
+          }
+          @if (hasError('password', 'minlength')) {
+            <p class="mt-1 text-sm text-[var(--danger)]">Mínimo 4 caracteres.</p>
+          }
+        </div>
+
+        <div class="flex items-center justify-between gap-y-2">
+          <div class="flex items-center gap-2">
+            <input type="checkbox" class="checkbox checkbox-primary" id="rememberMe" formControlName="rememberMe" />
+            <label class="label-text text-base-content/80 p-0 text-base" for="rememberMe">Recordarme</label>
+          </div>
+
+          <a routerLink="/forgot-password" class="link link-animated link-primary font-normal">
+            ¿Olvidaste tu contraseña?
+          </a>
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-lg btn-primary btn-gradient btn-block"
+          [disabled]="loading || form.invalid"
+        >
+          {{ loading ? 'Ingresando...' : 'Ingresar' }}
+        </button>
+
+        @if (error) {
+          <p class="text-center text-sm text-[var(--danger)]">{{ error }}</p>
+        }
+      </form>
+
+      <p class="text-base-content/80 text-center">
+        ¿No tenés cuenta?
+        <a
+          routerLink="/register"
+          [queryParams]="returnUrl ? { returnUrl: returnUrl } : null"
+          class="link link-animated link-primary font-normal"
+        >
+          Registrate acá
+        </a>
+      </p>
+    </div>
+  </div>
+</div>

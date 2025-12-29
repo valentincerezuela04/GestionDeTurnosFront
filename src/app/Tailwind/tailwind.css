@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+/* FlyonUI (si elegís FlyonUI) */
+/* @plugin "flyonui";
+@import "flyonui/variants.css";
+@source "../node_modules/flyonui/flyonui.js"; */
+
+/* DaisyUI (si elegís DaisyUI) */
+/* @plugin "daisyui"; */
+
+@import "./tw-theme.css";
+@import "./tw-components.css";
+@import "tailwindcss";
+@plugin "flyonui";
+@import "flyonui/variants.css";
+@source "../node_modules/flyonui/flyonui.js";
