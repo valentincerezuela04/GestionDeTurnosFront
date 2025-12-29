@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/Auth/auth-service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-register-page-component',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule,RouterLink],
   templateUrl: './register-page-component.html',
   styleUrl: './register-page-component.css',
 })
@@ -13,7 +13,9 @@ export class RegisterPageComponent {
   private fb = inject(NonNullableFormBuilder);
   private auth = inject(AuthService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
+  showPassword = false
   loading = false;
   error = '';
 
@@ -28,6 +30,11 @@ export class RegisterPageComponent {
       [Validators.required, Validators.minLength(4), Validators.pattern(/^(?=.*\d).{4,}$/)],
     ],
   });
+
+    get returnUrl(): string | null {
+    return this.route.snapshot.queryParamMap.get('returnUrl');
+  }
+
 
   onSubmit() {
     if (this.form.invalid) {

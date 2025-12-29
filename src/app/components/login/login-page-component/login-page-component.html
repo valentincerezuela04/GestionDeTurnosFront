@@ -70,9 +70,10 @@
 
           @if (hasError('email', 'required')) {
             <p class="mt-1 text-sm text-[var(--danger)]">El email es obligatorio.</p>
+            <input class="border-red-600">
           }
           @if (hasError('email', 'email')) {
-            <p class="mt-1 text-sm text-[var(--danger)]">Ingresá un email válido.</p>
+            <p class="mt-1 text-sm text-red-600">Ingresá un email válido.</p>
           }
         </div>
 
@@ -83,7 +84,7 @@
             <input
               id="password"
               [type]="showPassword ? 'text' : 'password'"
-              placeholder="············"
+              placeholder=""
               class="w-full bg-transparent outline-none"
               formControlName="password"
             />
@@ -106,10 +107,7 @@
         </div>
 
         <div class="flex items-center justify-between gap-y-2">
-          <div class="flex items-center gap-2">
-            <input type="checkbox" class="checkbox checkbox-primary" id="rememberMe" formControlName="rememberMe" />
-            <label class="label-text text-base-content/80 p-0 text-base" for="rememberMe">Recordarme</label>
-          </div>
+       
 
           <a routerLink="/forgot-password" class="link link-animated link-primary font-normal">
             ¿Olvidaste tu contraseña?

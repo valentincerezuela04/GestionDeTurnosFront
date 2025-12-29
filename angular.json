@@ -25,7 +25,8 @@
               }
             ],
             "styles": [
-              "src/app/Tailwind/tailwind.css"
+              "src/app/Tailwind/tailwind.css",
+              "src/app/Tailwind/tw-theme.css"
             ],
             "scripts": [
           "node_modules/flyonui/flyonui.js"

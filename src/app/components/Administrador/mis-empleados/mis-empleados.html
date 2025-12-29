@@ -1,31 +1,43 @@
-<section class="mis-empleados">
-  <header class="mis-empleados__header">
-    <h1>Empleados</h1>
-    <div class="mis-empleados__actions">
-      <button type="button" class="mis-empleados__add" (click)="crearEmpleado()">
-        Nuevo empleado
-      </button>
-      <!-- <button type="button" class="mis-empleados__refresh" (click)="ObtenerEmpleados()" [disabled]="isLoading()">
-        {{ isLoading() ? 'Cargando...' : 'Actualizar' }}
-      </button> -->
-    </div>
-  </header>
+<div class="w-full overflow-x-auto">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>DNI</th>
+        <th>Email</th>
+        <th>Teléfono</th>
+        <th>Legajo</th>
+        <th>Rol</th>
+      </tr>
+    </thead>
 
-  @if (errorMessage()) {
-    <p class="mis-empleados__error">{{ errorMessage() }}</p>
-  }
-  @if (!isLoading() && !errorMessage() && empleados().length === 0) {
-    <p class="mis-empleados__empty">
-      No hay empleados registrados.
-    </p>
-  }
+    <tbody>
+      <tr class="row-hover" *ngFor="let empleado of empleados()" (click)="onEmpleadoSelected(empleado)">
+        <td>{{ empleado.dni }}</td>
+        <td>{{ empleado.email }}</td>
 
-  <div class="mis-empleados__grid">
-    @for (empleado of empleados(); track empleado.id) {
-      <app-card-empleados
-        [empleado]="empleado"
-        (viewDetails)="onEmpleadoSelected($event)">
-      </app-card-empleados>
-    }
-  </div>
-</section>
+        <td>
+          <span class="badge badge-soft badge-primary text-xs">
+            {{ empleado.telefono }}
+          </span>
+        </td>
+
+        <td>{{ empleado.legajo || 'N/A' }}</td>
+
+        <td>
+          <span class="badge badge-soft badge-success text-xs">
+            {{ empleado.rol }}
+          </span>
+        </td>
+
+       
+
+      </tr>
+
+      <tr *ngIf="empleados().length === 0">
+        <td colspan="6" class="text-center opacity-70 py-6">
+          No hay empleados aún
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,7 +1,7 @@
 <section class="detalle-empleado">
   <header class="detalle-empleado__header">
     <h1>Detalle del empleado</h1>
-    <button type="button" class="detalle-empleado__back" (click)="volverAlListado()">Volver al listado</button>
+    <button type="button" class="btn btn-soft btn-primary" (click)="volverAlListado()">Volver al listado</button>
   </header>
 
   @if (isLoading) {
@@ -143,18 +143,18 @@
 
       <footer class="detalle-empleado__actions">
         @if (editMode()) {
-          <button type="button" class="detalle-empleado__cancel" (click)="cancelarEdicion()" [disabled]="saveInProgress()">
+          <button type="button" class="btn btn-soft" (click)="cancelarEdicion()" [disabled]="saveInProgress()">
             Cancelar
           </button>
-          <button type="button" class="detalle-empleado__save" (click)="guardarCambios()" [disabled]="saveInProgress()">
+          <button type="button" class="btn btn-soft btn-success" (click)="guardarCambios()" [disabled]="saveInProgress()">
             {{ saveInProgress() ? 'Guardando...' : 'Guardar cambios' }}
           </button>
         } @else {
-          <button type="button" class="detalle-empleado__edit" (click)="habilitarEdicion()">
+          <button type="button" class="btn btn-soft btn-warning" (click)="habilitarEdicion()">
             Editar empleado
           </button>
         }
-        <button type="button" class="detalle-empleado__delete" (click)="eliminarEmpleado()" [disabled]="deleteInProgress">
+        <button type="button" class="btn btn-soft btn-error" (click)="eliminarEmpleado()" [disabled]="deleteInProgress">
           {{ deleteInProgress ? 'Eliminando...' : 'Eliminar empleado' }}
         </button>
       </footer>

@@ -1,4 +1,4 @@
-<h2>Crear cuenta</h2>
+<!-- <h2>Crear cuenta</h2>
 
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="register-form" novalidate>
   <div class="field">
@@ -77,4 +77,159 @@
   @if (error) {
     <p class="error global-error">{{ error }}</p>
   }
-</form>
+</form> -->
+<div
+  class="flex h-auto min-h-screen items-center justify-center overflow-x-hidden
+         bg-[url('https://cdn.flyonui.com/fy-assets/blocks/marketing-ui/auth/auth-background-2.png')]
+         bg-cover bg-center bg-no-repeat py-10"
+>
+  <div class="relative flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <!-- Decoración SVG (opcional). Podés pegarla tal cual acá. -->
+    <!-- <div class="absolute"> ...TU SVG... </div> -->
+
+    <div class="bg-base-100 shadow-base-300/20 z-10 w-full space-y-6 rounded-xl p-6 shadow-md sm:min-w-md lg:p-8">
+      <!-- Header -->
+      <div class="flex items-center gap-3">
+        <img src="https://cdn.flyonui.com/fy-assets/logo/logo.png" class="size-8" alt="brand-logo" />
+        <h2 class="text-base-content text-xl font-bold">Gestión de Turnos</h2>
+      </div>
+
+      <!-- Title -->
+      <div>
+        <h3 class="text-base-content mb-1.5 text-2xl font-semibold">Crear cuenta</h3>
+        <p class="text-base-content/80">Registrate para empezar a reservar turnos.</p>
+      </div>
+
+      <!-- Form Angular -->
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4" novalidate>
+        <!-- Nombre -->
+        <div>
+          <label class="label-text" for="nombre">Nombre*</label>
+          <input id="nombre" type="text" placeholder="Tu nombre" class="input"
+                 formControlName="nombre"
+                 [class.border-red-600]="hasError('nombre','required') || hasError('nombre','minlength')" />
+          @if (hasError('nombre', 'required')) {
+            <p class="mt-1 text-sm text-[var(--danger)]">El nombre es obligatorio.</p>
+          }
+          @if (hasError('nombre', 'minlength')) {
+            <p class="mt-1 text-sm text-[var(--danger)]">Debe tener al menos 3 caracteres.</p>
+          }
+        </div>
+
+        <!-- Apellido -->
+        <div>
+          <label class="label-text" for="apellido">Apellido*</label>
+          <input id="apellido" type="text" placeholder="Tu apellido" class="input"
+                 formControlName="apellido"
+                 [class.border-red-600]="hasError('apellido','required') || hasError('apellido','minlength')" />
+          @if (hasError('apellido', 'required')) {
+            <p class="mt-1 text-sm text-[var(--danger)]">El apellido es obligatorio.</p>
+          }
+          @if (hasError('apellido', 'minlength')) {
+            <p class="mt-1 text-sm text-[var(--danger)]">Debe tener al menos 3 caracteres.</p>
+          }
+        </div>
+
+        <!-- DNI -->
+        <div>
+          <label class="label-text" for="dni">DNI*</label>
+          <input id="dni" type="text" inputmode="numeric" maxlength="8"
+                 placeholder="7 u 8 dígitos" class="input"
+                 formControlName="dni"
+                 [class.border-red-600]="hasError('dni','required') || hasError('dni','pattern')" />
+          @if (hasError('dni', 'required')) {
+            <p class="mt-1 text-sm text-[var(--danger)]">El DNI es obligatorio.</p>
+          }
+          @if (hasError('dni', 'pattern')) {
+            <p class="mt-1 text-sm text-[var(--danger)]">Solo números (7 u 8 dígitos).</p>
+          }
+        </div>
+
+        <!-- Teléfono -->
+        <div>
+          <label class="label-text" for="telefono">Teléfono*</label>
+          <input id="telefono" type="text" inputmode="tel" maxlength="10"
+                 placeholder="10 dígitos" class="input"
+                 formControlName="telefono"
+                 [class.border-red-600]="hasError('telefono','required') || hasError('telefono','pattern')" />
+          @if (hasError('telefono', 'required')) {
+            <p class="mt-1 text-sm text-[var(--danger)]">El teléfono es obligatorio.</p>
+          }
+          @if (hasError('telefono', 'pattern')) {
+            <p class="mt-1 text-sm text-[var(--danger)]">Debe tener exactamente 10 números.</p>
+          }
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label class="label-text" for="email">Email*</label>
+          <input id="email" type="email" placeholder="nombre@correo.com" class="input"
+                 formControlName="email"
+                 [class.border-red-600]="hasError('email','required') || hasError('email','email')" />
+          @if (hasError('email', 'required')) {
+            <p class="mt-1 text-sm text-[var(--danger)]">El email es obligatorio.</p>
+          }
+          @if (hasError('email', 'email')) {
+            <p class="mt-1 text-sm text-[var(--danger)]">Formato de email inválido.</p>
+          }
+        </div>
+
+        <!-- Contraseña -->
+        <div>
+          <label class="label-text" for="contrasena">Contraseña*</label>
+
+          <div class="input flex items-center gap-2">
+            <input
+              id="contrasena"
+              [type]="showPassword ? 'text' : 'password'"
+              placeholder="········"
+              class="w-full bg-transparent outline-none"
+              formControlName="contrasena"
+            />
+            <button
+              type="button"
+              class="btn btn-text btn-sm"
+              (click)="showPassword = !showPassword"
+              [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+            >
+              {{ showPassword ? '🙈' : '👁️' }}
+            </button>
+          </div>
+
+          @if (hasError('contrasena', 'required')) {
+            <p class="mt-1 text-sm text-[var(--danger)]">La contraseña es obligatoria.</p>
+          }
+          @if (hasError('contrasena', 'minlength')) {
+            <p class="mt-1 text-sm text-[var(--danger)]">Mínimo 4 caracteres.</p>
+          }
+          @if (hasError('contrasena', 'pattern')) {
+            <p class="mt-1 text-sm text-[var(--danger)]">Incluye al menos un número.</p>
+          }
+        </div>
+
+        <!-- Submit -->
+        <button
+          type="submit"
+          class="btn btn-lg btn-primary btn-gradient btn-block"
+          [disabled]="loading || form.invalid"
+        >
+          {{ loading ? 'Creando...' : 'Registrarme' }}
+        </button>
+
+        @if (error) {
+          <p class="text-center text-sm text-[var(--danger)]">{{ error }}</p>
+        }
+      </form>
+
+      <!-- Link a login -->
+      <p class="text-base-content/80 text-center">
+        ¿Ya tenés cuenta?
+        <a  routerLink="/login" 
+        [queryParams]="returnUrl ? { returnUrl: returnUrl } : null"
+        class="link link-animated link-primary font-normal">
+          Iniciá sesión
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
