@@ -93,4 +93,100 @@
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-danger: var(--danger);
+
+ 
+  /* Core colors */
+  --color-bg: var(--bg);
+  --color-bg-2: var(--bg-2);
+  --color-card: var(--card);
+  --color-card-2: var(--card-2);
+
+  --color-text: var(--text);
+  --color-text-2: var(--text-2);
+  --color-muted: var(--muted);
+
+  --color-accent-300: var(--accent-300);
+  --color-accent-400: var(--accent-400);
+  --color-accent-500: var(--accent-500);
+  --color-accent-600: var(--accent-600);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+
+  --color-border: var(--border);
+  --color-border-2: var(--border-2);
+
+  /* Shadows */
+  --shadow-base: var(--shadow);
+  --shadow-accent: var(--shadow-accent);
+
+  /* Sidebar (y navegación) */
+  --color-sidebar-bg: linear-gradient(180deg, var(--bg-2), var(--bg));
+  --color-sidebar-border: var(--border);
+
+  --color-nav-text: var(--text-2);
+  --color-nav-text-active: var(--text);
+  --color-nav-hover: var(--accent-glow);
+  --color-nav-border-active: var(--border-2);
+
+
+
+
 }
+
+.app-sidebar{
+  background: var(--color-sidebar-bg);
+  color: var(--color-text);
+  border-right: 1px solid var(--color-sidebar-border);
+  box-shadow: var(--shadow-base);
+}
+
+.app-sidebar .menu > li > a{
+  color: var(--color-nav-text);
+  border-radius: 12px;
+  transition: background-color .15s ease, color .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+
+.app-sidebar .menu > li > a:hover{
+  background: var(--color-nav-hover);
+  color: var(--color-nav-text-active);
+  box-shadow: var(--shadow-accent);
+}
+
+.app-sidebar .menu > li > a.active{
+  background: var(--color-nav-hover);
+  color: var(--color-nav-text-active);
+  border: 1px solid var(--color-nav-border-active);
+  box-shadow: var(--shadow-accent);
+}
+
+.app-sidebar [class*="icon-"]{
+  color: var(--color-accent-400);
+}
+
+.app-sidebar .dropdown-menu{
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 8px;
+}
+
+.app-sidebar .dropdown-menu a{
+  color: var(--color-text-2);
+  border-radius: 12px;
+}
+
+.app-sidebar .dropdown-menu a:hover{
+  background: var(--color-card-2);
+  color: var(--color-text);
+}
+
+.app-sidebar .dropdown-menu a:hover{
+  background: var(--color-card-2);
+  color: var(--color-text);
+}
+
+
+
+

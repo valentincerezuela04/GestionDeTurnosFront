@@ -49,12 +49,13 @@
 <!-- Sidebar -->
 <aside
   id="collapsible-mini-sidebar"
-  class="drawer drawer-start border-e border-base-content/20
-         bg-[linear-gradient(180deg,#0d1219,#0b0f13)]
-         fixed sm:static top-14 sm:top-0 left-0 z-50 sm:z-0
+class="drawer drawer-start fixed sm:static top-14 sm:top-0 left-0 z-50 sm:z-0
          h-[calc(100dvh-56px)] sm:h-[100dvh]
-         transition-all duration-200 ease-out
-         overflow-auto"
+         transition-all duration-200 ease-out overflow-auto
+         bg-[linear-gradient(180deg,var(--bg-2),var(--bg))]
+         text-[var(--text)]
+         border-e border-[var(--border)]
+         shadow-[var(--shadow)]"
   [class.w-66]="!mini()"
   [class.w-17]="mini()"
   [class.-translate-x-full]="!open()"

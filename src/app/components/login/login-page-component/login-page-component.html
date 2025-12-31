@@ -63,7 +63,7 @@
             id="email"
             type="email"
             placeholder="Ingresá tu email"
-            class="input"
+            class="form-input"
             formControlName="email"
             [attr.aria-invalid]="hasError('email','required') || hasError('email','email') ? true : null"
           />
@@ -84,7 +84,7 @@
             <input
               id="password"
               [type]="showPassword ? 'text' : 'password'"
-              placeholder=""
+              placeholder="*********"
               class="w-full bg-transparent outline-none"
               formControlName="password"
             />
