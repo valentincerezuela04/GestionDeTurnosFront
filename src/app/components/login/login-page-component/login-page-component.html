@@ -57,54 +57,68 @@
       </div>
 
       <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4" novalidate>
-        <div>
-          <label class="label-text" for="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            placeholder="Ingresá tu email"
-            class="form-input"
-            formControlName="email"
-            [attr.aria-invalid]="hasError('email','required') || hasError('email','email') ? true : null"
-          />
+<div class="input-floating w-96">
+  <input
+    id="email"
+    type="email"
+    placeholder="ejemploMail@gmail.com"
+    class="input hover:bg-[var(--bg)]"
+    formControlName="email"
+    [class.is-invalid]="isInvalid('email')"
+    [class.is-valid]="isValid('email')"
+    [attr.aria-invalid]="isInvalid('email') ? 'true' : null"
+  />
 
-          @if (hasError('email', 'required')) {
-            <p class="mt-1 text-sm text-[var(--danger)]">El email es obligatorio.</p>
-            <input class="border-red-600">
-          }
-          @if (hasError('email', 'email')) {
-            <p class="mt-1 text-sm text-red-600">Ingresá un email válido.</p>
-          }
-        </div>
+  <label class="input-floating-label" for="email">Email</label>
 
-        <div>
-          <label class="label-text" for="password">Contraseña</label>
+  @if (isInvalid('email')) {
+    <span class="helper-text ps-3 text-[var(--danger)]">
+      @if (hasError('email','required')) { El email es obligatorio. }
+      @else if (hasError('email','email')) { Ingresá un email válido. }
+      @else { Campo inválido. }
+    </span>
+  } @else if (isValid('email')) {
+    <span class="helper-text ps-3">Se ve bien.</span>
+  }
+</div>
 
-          <div class="input flex items-center gap-2">
-            <input
-              id="password"
-              [type]="showPassword ? 'text' : 'password'"
-              placeholder="*********"
-              class="w-full bg-transparent outline-none"
-              formControlName="password"
-            />
-            <button
-              type="button"
-              class="btn btn-text btn-sm"
-              (click)="showPassword = !showPassword"
-              [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
-            >
-              {{ showPassword ? '🙈' : '👁️' }}
-            </button>
-          </div>
 
-          @if (hasError('password', 'required')) {
-            <p class="mt-1 text-sm text-[var(--danger)]">La contraseña es obligatoria.</p>
-          }
-          @if (hasError('password', 'minlength')) {
-            <p class="mt-1 text-sm text-[var(--danger)]">Mínimo 4 caracteres.</p>
-          }
-        </div>
+<div class="input-floating w-96 relative">
+  <input
+    id="password"
+    [type]="showPassword ? 'text' : 'password'"
+    placeholder="*********"
+    class="input hover:bg-[var(--bg)] pr-12"
+    formControlName="password"
+    [class.is-invalid]="isInvalid('password')"
+    [class.is-valid]="isValid('password')"
+    [attr.aria-invalid]="isInvalid('password') ? 'true' : null"
+  />
+
+  <label class="input-floating-label" for="password">Contraseña</label>
+
+  <button
+    type="button"
+    class="btn btn-text btn-sm absolute right-2 top-1/2 -translate-y-1/2"
+    (click)="showPassword = !showPassword"
+    [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+    tabindex="-1"
+  >
+    {{ showPassword ? '🙈' : '👁️' }}
+  </button>
+
+  @if (isInvalid('password')) {
+    <span class="helper-text ps-3 text-[var(--danger)]">
+      @if (hasError('password','required')) { La contraseña es obligatoria. }
+      @else if (hasError('password','minlength')) { Mínimo 4 caracteres. }
+      @else { Campo inválido. }
+    </span>
+  } @else if (isValid('password')) {
+    <span class="helper-text ps-3">Se ve bien.</span>
+  }
+</div>
+
+
 
         <div class="flex items-center justify-between gap-y-2">
        
