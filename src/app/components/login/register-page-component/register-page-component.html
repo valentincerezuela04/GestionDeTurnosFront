@@ -100,136 +100,182 @@
         <p class="text-base-content/80">Registrate para empezar a reservar turnos.</p>
       </div>
 
-      <!-- Form Angular -->
-      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4" novalidate>
-        <!-- Nombre -->
-        <div>
-          <label class="label-text" for="nombre">Nombre*</label>
-          <input id="nombre" type="text" placeholder="Tu nombre" class="input"
-                 formControlName="nombre"
-                 [class.border-red-600]="hasError('nombre','required') || hasError('nombre','minlength')" />
-          @if (hasError('nombre', 'required')) {
-            <p class="mt-1 text-sm text-[var(--danger)]">El nombre es obligatorio.</p>
-          }
-          @if (hasError('nombre', 'minlength')) {
-            <p class="mt-1 text-sm text-[var(--danger)]">Debe tener al menos 3 caracteres.</p>
-          }
-        </div>
+   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4" novalidate>
 
-        <!-- Apellido -->
-        <div>
-          <label class="label-text" for="apellido">Apellido*</label>
-          <input id="apellido" type="text" placeholder="Tu apellido" class="input"
-                 formControlName="apellido"
-                 [class.border-red-600]="hasError('apellido','required') || hasError('apellido','minlength')" />
-          @if (hasError('apellido', 'required')) {
-            <p class="mt-1 text-sm text-[var(--danger)]">El apellido es obligatorio.</p>
-          }
-          @if (hasError('apellido', 'minlength')) {
-            <p class="mt-1 text-sm text-[var(--danger)]">Debe tener al menos 3 caracteres.</p>
-          }
-        </div>
+  <!-- Nombre -->
+  <div class="input-floating w-96">
+    <input
+      id="nombre"
+      type="text"
+      placeholder="Tu nombre"
+      class="input hover:bg-[var(--bg)]"
+      formControlName="nombre"
+      [class.is-invalid]="isInvalid('nombre')"
+      [class.is-valid]="isValid('nombre')"
+      [attr.aria-invalid]="isInvalid('nombre') ? 'true' : null"
+    />
+    <label class="input-floating-label" for="nombre">Nombre</label>
 
-        <!-- DNI -->
-        <div>
-          <label class="label-text" for="dni">DNI*</label>
-          <input id="dni" type="text" inputmode="numeric" maxlength="8"
-                 placeholder="7 u 8 dígitos" class="input"
-                 formControlName="dni"
-                 [class.border-red-600]="hasError('dni','required') || hasError('dni','pattern')" />
-          @if (hasError('dni', 'required')) {
-            <p class="mt-1 text-sm text-[var(--danger)]">El DNI es obligatorio.</p>
-          }
-          @if (hasError('dni', 'pattern')) {
-            <p class="mt-1 text-sm text-[var(--danger)]">Solo números (7 u 8 dígitos).</p>
-          }
-        </div>
-
-        <!-- Teléfono -->
-        <div>
-          <label class="label-text" for="telefono">Teléfono*</label>
-          <input id="telefono" type="text" inputmode="tel" maxlength="10"
-                 placeholder="10 dígitos" class="input"
-                 formControlName="telefono"
-                 [class.border-red-600]="hasError('telefono','required') || hasError('telefono','pattern')" />
-          @if (hasError('telefono', 'required')) {
-            <p class="mt-1 text-sm text-[var(--danger)]">El teléfono es obligatorio.</p>
-          }
-          @if (hasError('telefono', 'pattern')) {
-            <p class="mt-1 text-sm text-[var(--danger)]">Debe tener exactamente 10 números.</p>
-          }
-        </div>
-
-        <!-- Email -->
-        <div>
-          <label class="label-text" for="email">Email*</label>
-          <input id="email" type="email" placeholder="nombre@correo.com" class="input"
-                 formControlName="email"
-                 [class.border-red-600]="hasError('email','required') || hasError('email','email')" />
-          @if (hasError('email', 'required')) {
-            <p class="mt-1 text-sm text-[var(--danger)]">El email es obligatorio.</p>
-          }
-          @if (hasError('email', 'email')) {
-            <p class="mt-1 text-sm text-[var(--danger)]">Formato de email inválido.</p>
-          }
-        </div>
-
-        <!-- Contraseña -->
-        <div>
-          <label class="label-text" for="contrasena">Contraseña*</label>
-
-          <div class="input flex items-center gap-2">
-            <input
-              id="contrasena"
-              [type]="showPassword ? 'text' : 'password'"
-              placeholder="········"
-              class="w-full bg-transparent outline-none"
-              formControlName="contrasena"
-            />
-            <button
-              type="button"
-              class="btn btn-text btn-sm"
-              (click)="showPassword = !showPassword"
-              [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
-            >
-              {{ showPassword ? '🙈' : '👁️' }}
-            </button>
-          </div>
-
-          @if (hasError('contrasena', 'required')) {
-            <p class="mt-1 text-sm text-[var(--danger)]">La contraseña es obligatoria.</p>
-          }
-          @if (hasError('contrasena', 'minlength')) {
-            <p class="mt-1 text-sm text-[var(--danger)]">Mínimo 4 caracteres.</p>
-          }
-          @if (hasError('contrasena', 'pattern')) {
-            <p class="mt-1 text-sm text-[var(--danger)]">Incluye al menos un número.</p>
-          }
-        </div>
-
-        <!-- Submit -->
-        <button
-          type="submit"
-          class="btn btn-lg btn-primary btn-gradient btn-block"
-          [disabled]="loading || form.invalid"
-        >
-          {{ loading ? 'Creando...' : 'Registrarme' }}
-        </button>
-
-        @if (error) {
-          <p class="text-center text-sm text-[var(--danger)]">{{ error }}</p>
-        }
-      </form>
-
-      <!-- Link a login -->
-      <p class="text-base-content/80 text-center">
-        ¿Ya tenés cuenta?
-        <a  routerLink="/login" 
-        [queryParams]="returnUrl ? { returnUrl: returnUrl } : null"
-        class="link link-animated link-primary font-normal">
-          Iniciá sesión
-        </a>
-      </p>
-    </div>
+    @if (isInvalid('nombre')) {
+      <span class="helper-text ps-3 text-[var(--danger)]">
+        @if (hasError('nombre','required')) { El nombre es obligatorio. }
+        @else if (hasError('nombre','minlength')) { Debe tener al menos 3 caracteres. }
+        @else { Campo inválido. }
+      </span>
+    } @else if (isValid('nombre')) {
+      <span class="helper-text ps-3">Se ve bien.</span>
+    }
   </div>
-</div>
+
+  <!-- Apellido -->
+  <div class="input-floating w-96">
+    <input
+      id="apellido"
+      type="text"
+      placeholder="Tu apellido"
+      class="input hover:bg-[var(--bg)]"
+      formControlName="apellido"
+      [class.is-invalid]="isInvalid('apellido')"
+      [class.is-valid]="isValid('apellido')"
+      [attr.aria-invalid]="isInvalid('apellido') ? 'true' : null"
+    />
+    <label class="input-floating-label" for="apellido">Apellido</label>
+
+    @if (isInvalid('apellido')) {
+      <span class="helper-text ps-3 text-[var(--danger)]">
+        @if (hasError('apellido','required')) { El apellido es obligatorio. }
+        @else if (hasError('apellido','minlength')) { Debe tener al menos 3 caracteres. }
+        @else { Campo inválido. }
+      </span>
+    } @else if (isValid('apellido')) {
+      <span class="helper-text ps-3">Se ve bien.</span>
+    }
+  </div>
+
+  <!-- DNI -->
+  <div class="input-floating w-96">
+    <input
+      id="dni"
+      type="text"
+      inputmode="numeric"
+      maxlength="8"
+      placeholder="7 u 8 dígitos"
+      class="input hover:bg-[var(--bg)]"
+      formControlName="dni"
+      [class.is-invalid]="isInvalid('dni')"
+      [class.is-valid]="isValid('dni')"
+      [attr.aria-invalid]="isInvalid('dni') ? 'true' : null"
+    />
+    <label class="input-floating-label" for="dni">DNI</label>
+
+    @if (isInvalid('dni')) {
+      <span class="helper-text ps-3 text-[var(--danger)]">
+        @if (hasError('dni','required')) { El DNI es obligatorio. }
+        @else if (hasError('dni','pattern')) { Solo números (7 u 8 dígitos). }
+        @else { Campo inválido. }
+      </span>
+    } @else if (isValid('dni')) {
+      <span class="helper-text ps-3">Se ve bien.</span>
+    }
+  </div>
+
+  <!-- Teléfono -->
+  <div class="input-floating w-96">
+    <input
+      id="telefono"
+      type="text"
+      inputmode="tel"
+      maxlength="10"
+      placeholder="10 dígitos"
+      class="input hover:bg-[var(--bg)]"
+      formControlName="telefono"
+      [class.is-invalid]="isInvalid('telefono')"
+      [class.is-valid]="isValid('telefono')"
+      [attr.aria-invalid]="isInvalid('telefono') ? 'true' : null"
+    />
+    <label class="input-floating-label" for="telefono">Teléfono</label>
+
+    @if (isInvalid('telefono')) {
+      <span class="helper-text ps-3 text-[var(--danger)]">
+        @if (hasError('telefono','required')) { El teléfono es obligatorio. }
+        @else if (hasError('telefono','pattern')) { Debe tener exactamente 10 números. }
+        @else { Campo inválido. }
+      </span>
+    } @else if (isValid('telefono')) {
+      <span class="helper-text ps-3">Se ve bien.</span>
+    }
+  </div>
+
+  <!-- Email -->
+  <div class="input-floating w-96">
+    <input
+      id="email"
+      type="email"
+      placeholder="nombre@correo.com"
+      class="input hover:bg-[var(--bg)]"
+      formControlName="email"
+      [class.is-invalid]="isInvalid('email')"
+      [class.is-valid]="isValid('email')"
+      [attr.aria-invalid]="isInvalid('email') ? 'true' : null"
+    />
+    <label class="input-floating-label" for="email">Email</label>
+
+    @if (isInvalid('email')) {
+      <span class="helper-text ps-3 text-[var(--danger)]">
+        @if (hasError('email','required')) { El email es obligatorio. }
+        @else if (hasError('email','email')) { Formato de email inválido. }
+        @else { Campo inválido. }
+      </span>
+    } @else if (isValid('email')) {
+      <span class="helper-text ps-3">Se ve bien.</span>
+    }
+  </div>
+
+  <!-- Contraseña (floating igual al email + botón ojo) -->
+  <div class="input-floating w-96 relative">
+    <input
+      id="contrasena"
+      [type]="showPassword ? 'text' : 'password'"
+      class="input hover:bg-[var(--bg)] pr-12"
+      formControlName="contrasena"
+      [class.is-invalid]="isInvalid('contrasena')"
+      [class.is-valid]="isValid('contrasena')"
+      [attr.aria-invalid]="isInvalid('contrasena') ? 'true' : null"
+    />
+    <label class="input-floating-label" for="contrasena">Contraseña</label>
+
+    <button
+      type="button"
+      class="btn btn-text btn-sm absolute right-2 top-1/2 -translate-y-1/2"
+      (click)="showPassword = !showPassword"
+      [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+      tabindex="-1"
+    >
+      {{ showPassword ? '🙈' : '👁️' }}
+    </button>
+
+    @if (isInvalid('contrasena')) {
+      <span class="helper-text ps-3 text-[var(--danger)]">
+        @if (hasError('contrasena','required')) { La contraseña es obligatoria. }
+        @else if (hasError('contrasena','minlength')) { Mínimo 4 caracteres. }
+        @else if (hasError('contrasena','pattern')) { Incluye al menos un número. }
+        @else { Campo inválido. }
+      </span>
+    } @else if (isValid('contrasena')) {
+      <span class="helper-text ps-3">Se ve bien.</span>
+    }
+  </div>
+
+  <!-- Submit -->
+  <button
+    type="submit"
+    class="btn btn-lg btn-primary btn-gradient btn-block"
+    [disabled]="loading || form.invalid"
+  >
+    {{ loading ? 'Creando...' : 'Registrarme' }}
+  </button>
+
+  @if (error) {
+    <p class="text-center text-sm text-[var(--danger)]">{{ error }}</p>
+  }
+</form>
