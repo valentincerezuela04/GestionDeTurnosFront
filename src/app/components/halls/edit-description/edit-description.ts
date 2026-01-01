@@ -57,4 +57,27 @@ export class EditDescription {
       error: (err) => console.error(err),
     });
   }
+
+
+  submitted = false;
+
+private interacted(name: string): boolean {
+  const c = this.form.get(name);
+  return !!c && (this.submitted || c.touched || c.dirty);
+}
+
+isInvalid(name: string): boolean {
+  const c = this.form.get(name);
+  return !!c && this.interacted(name) && c.invalid;
+}
+
+isValid(name: string): boolean {
+  const c = this.form.get(name);
+  return !!c && this.interacted(name) && c.valid;
+}
+
+hasError(name: string, key: string): boolean {
+  const c = this.form.get(name);
+  return !!c && this.interacted(name) && !!c.errors?.[key];
+}
 }
