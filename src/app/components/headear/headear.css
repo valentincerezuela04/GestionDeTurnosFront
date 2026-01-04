@@ -115,7 +115,7 @@
 /* =========================
    Botones (base)
    ========================= */
-.btn{
+/* .btn{
   --btn-bg: rgba(255,255,255,0.03);
   --btn-bd: rgba(255,255,255,0.10);
   --btn-fg: #e7faff;
@@ -141,7 +141,7 @@
     color .18s ease,
     box-shadow .18s ease,
     transform .08s ease;
-}
+} */
 
 /* Primario violeta */
 .btn.primary{

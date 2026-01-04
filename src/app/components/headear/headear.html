@@ -26,7 +26,7 @@
   Gestión de Turnos
 
   <!-- glow base -->
-  <span
+  <!-- <span
     class="
       pointer-events-none absolute left-0 -bottom-2
       h-[3px] w-full rounded-full
@@ -35,16 +35,17 @@
       transition-opacity duration-300
       group-hover:opacity-60
     "
-  ></span>
+  ></span> -->
 
   <!-- moving underline (slides + grows) -->
   <span
     class="
-      pointer-events-none absolute left-0 -bottom-2
-      h-[3px] w-0 rounded-full
-      bg-[var(--accent-500)]
-      transition-all duration-300 ease-out
-      group-hover:w-full
+    pointer-events-none absolute left-0 -bottom-2
+    h-[3px] w-0 rounded-full
+    bg-[var(--accent-500)]
+    transition-all duration-300 ease-out
+    group-hover:w-full
+    group-hover:drop-shadow-[0_0_10px_var(--accent-glow)]
     "
   ></span>
 
@@ -52,10 +53,23 @@
   
   </div>
   <div class="right">
-    @if (auth.user()) {
+    <app-theme-toggle class="flex items-center"></app-theme-toggle>
+
+        <button class="btn btn-square btn-primary icon " (click)="goProfile()" aria-label="Mi cuenta">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4S8 5.79 8 8s1.79 4 4 4Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M5.5 20.5c0-3 2.9-5 6.5-5s6.5 2 6.5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+        @if (auth.user()) {
       <div class="user-box">
         
-        <button class="btn logout" (click)="logout()">Salir</button>
+        <button class="btn btn-text btn-error transition
+         hover:bg-red-500/20 hover:text-red-300
+         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/40" (click)="logout()">
+          <span class="icon-[tabler--logout] text-red-500 size-5" aria-hidden="true"></span>
+        </button>
       </div>
     } @else {
       <div class="auth-actions">
@@ -65,11 +79,6 @@
         }
       </div>
     }
-        <button class="btn ghost icon" (click)="goProfile()" aria-label="Mi cuenta">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4S8 5.79 8 8s1.79 4 4 4Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M5.5 20.5c0-3 2.9-5 6.5-5s6.5 2 6.5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </button>
+    
   </div>
 </header>

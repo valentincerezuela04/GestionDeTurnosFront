@@ -1,10 +1,11 @@
 import { Component, inject, output } from '@angular/core';
 import { AuthService } from '../../services/Auth/auth-service';
 import { Router } from '@angular/router';
+import { ThemeToggle } from "../theme-toggle/theme-toggle";
 
 @Component({
   selector: 'app-headear',
-  imports: [],
+  imports: [ThemeToggle],
   standalone:true,
   templateUrl: './headear.html',
   styleUrl: './headear.css',
