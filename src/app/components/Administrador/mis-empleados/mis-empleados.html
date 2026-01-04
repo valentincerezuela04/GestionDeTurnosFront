@@ -1,43 +1,51 @@
-<div class="w-full overflow-x-auto">
-  <table class="table">
-    <thead>
-      <tr>
-        <th>DNI</th>
-        <th>Email</th>
-        <th>Teléfono</th>
-        <th>Legajo</th>
-        <th>Rol</th>
-      </tr>
-    </thead>
+<button class="btn btn-primary mb-2" (click)="crearEmpleado()">Nuevo Empleado</button>
 
-    <tbody>
-      <tr class="row-hover" *ngFor="let empleado of empleados()" (click)="onEmpleadoSelected(empleado)">
-        <td>{{ empleado.dni }}</td>
-        <td>{{ empleado.email }}</td>
+<div class="bg-base-100 flex flex-col rounded-md shadow-base-300/20 shadow-sm">
+  <div class="w-full overflow-x-auto">
+    <table class="table min-w-full">
+      <thead class="border-b-2 border-[var(--border-2)]">
+        <tr>
+          <th class="text-base-content/80">DNI</th>
+          <th class="text-base-content/80">Email</th>
+          <th class="text-base-content/80">Teléfono</th>
+          <th class="text-base-content/80">Legajo</th>
+          <th class="text-base-content/80">Rol</th>
+        </tr>
+      </thead>
 
-        <td>
-          <span class="badge badge-soft badge-primary text-xs">
-            {{ empleado.telefono }}
-          </span>
-        </td>
+      <tbody>
+        <tr
+          class="row-hover cursor-pointer border-b border-[var(--border-2)] last:border-b-0"
+          *ngFor="let empleado of empleados()"
+          (click)="onEmpleadoSelected(empleado)"
+        >
+          <td class="font-medium">{{ empleado.dni }}</td>
+          <td class="text-base-content/80">{{ empleado.email }}</td>
 
-        <td>{{ empleado.legajo || 'N/A' }}</td>
+          <td>
+            <span class="badge badge-soft badge-primary text-xs">
+              {{ empleado.telefono }}
+            </span>
+          </td>
 
-        <td>
-          <span class="badge badge-soft badge-success text-xs">
-            {{ empleado.rol }}
-          </span>
-        </td>
+          <td>{{ empleado.legajo || 'N/A' }}</td>
 
-       
+          <td>
+            <span class="badge badge-soft badge-success text-xs">
+              {{ empleado.rol }}
+            </span>
+          </td>
+        </tr>
 
-      </tr>
-
-      <tr *ngIf="empleados().length === 0">
-        <td colspan="6" class="text-center opacity-70 py-6">
-          No hay empleados aún
-        </td>
-      </tr>
-    </tbody>
-  </table>
+        <tr *ngIf="empleados().length === 0">
+          <td colspan="5" class="py-10">
+            <div class="flex flex-col items-center justify-center text-center">
+              <span class="icon-[tabler--users-off] size-7 text-base-content/70"></span>
+              <p class="mt-2 text-sm text-base-content/80">No hay empleados aún</p>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

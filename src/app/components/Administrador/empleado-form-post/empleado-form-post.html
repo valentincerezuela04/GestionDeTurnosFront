@@ -1,207 +1,268 @@
-<form
-  [formGroup]="empleadoForm"
-  (ngSubmit)="submit()"
-  class="empleado-form"
-  novalidate
+<div
+  class="flex min-h-screen items-center justify-center overflow-x-hidden py-10
+         bg-[url('https://cdn.flyonui.com/fy-assets/blocks/marketing-ui/auth/auth-background-2.png')]
+         bg-cover bg-center bg-no-repeat"
 >
-  <header class="empleado-form__header">
-    <div class="empleado-form__heading">
-      <p class="empleado-form__eyebrow">Gestion de equipo</p>
-      <h2>Nuevo empleado</h2>
-      <p class="empleado-form__lead">
-        Completa los datos para sumar un nuevo integrante a tu equipo.
-      </p>
-    </div>
+  <div class="relative flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div
+      class="bg-base-100 shadow-base-300/20 z-10 w-full space-y-6 rounded-xl p-6 shadow-md sm:min-w-md lg:p-8"
+      style="
+        --color-primary: var(--accent-500);
+        --color-primary-content: #ffffff;
 
-    <button
-      type="button"
-      class="empleado-form__cancel"
-      (click)="cancelar()"
-      [disabled]="isSubmitting()"
+        --color-base-100: var(--card);
+        --color-base-200: var(--card-2);
+        --color-base-300: var(--border);
+        --color-base-content: var(--text);
+
+        --color-success: var(--success);
+        --color-warning: var(--warning);
+        --color-error: var(--danger);
+      "
     >
-      Cancelar
-    </button>
-  </header>
+      <div class="flex items-center gap-3">
+        <h2 class="text-base-content text-xl font-bold">Gestión de Turnos</h2>
+      </div>
 
-  <div class="empleado-form__body">
-    @let nombreCtrl = empleadoForm.get('nombre');
-    <div class="field">
-      <label for="nombre">Nombre</label>
-      <input
-        id="nombre"
-        type="text"
-        formControlName="nombre"
-        placeholder="Ej: Sofia"
-        [class.invalid]="nombreCtrl?.touched && nombreCtrl?.invalid"
-      />
-      @if (nombreCtrl?.touched && nombreCtrl?.hasError('required')) {
-        <p class="error">El nombre es obligatorio.</p>
-      }
-       @if (nombreCtrl?.touched && nombreCtrl?.hasError('minlength')) {
-        <p class="error">El nombre debe tener al menos 3 caracteres.</p>
-      }
+      <div>
+        <h3 class="text-base-content mb-1.5 text-2xl font-semibold">Nuevo empleado</h3>
+        <p class="text-base-content/80">Completá los datos para crear un empleado.</p>
+      </div>
+
+      <form [formGroup]="empleadoForm" (ngSubmit)="submit()" class="space-y-4" novalidate>
+        <div class="input-floating w-96">
+          <input
+            id="nombre"
+            type="text"
+            placeholder="Tu nombre"
+            formControlName="nombre"
+            [class.is-invalid]="isInvalid('nombre')"
+            [class.is-valid]="isValid('nombre')"
+            [ngClass]="[inputBase, isInvalid('nombre') ? hoverBad : hoverOk]"
+            [attr.aria-invalid]="isInvalid('nombre') ? 'true' : null"
+          />
+          <label class="input-floating-label" for="nombre">Nombre</label>
+
+          @if (isInvalid('nombre')) {
+            <span class="helper-text ps-3 text-[var(--danger)]">
+              @if (hasError('nombre','required')) { El nombre es obligatorio. }
+              @else if (hasError('nombre','minlength')) { Debe tener al menos 3 caracteres. }
+              @else { Campo inválido. }
+            </span>
+          } @else if (isValid('nombre')) {
+            <span class="helper-text ps-3 text-base-content/70">Se ve bien.</span>
+          }
+        </div>
+
+        <div class="input-floating w-96">
+          <input
+            id="apellido"
+            type="text"
+            placeholder="Tu apellido"
+            formControlName="apellido"
+            [class.is-invalid]="isInvalid('apellido')"
+            [class.is-valid]="isValid('apellido')"
+            [ngClass]="[inputBase, isInvalid('apellido') ? hoverBad : hoverOk]"
+            [attr.aria-invalid]="isInvalid('apellido') ? 'true' : null"
+          />
+          <label class="input-floating-label" for="apellido">Apellido</label>
+
+          @if (isInvalid('apellido')) {
+            <span class="helper-text ps-3 text-[var(--danger)]">
+              @if (hasError('apellido','required')) { El apellido es obligatorio. }
+              @else if (hasError('apellido','minlength')) { Debe tener al menos 3 caracteres. }
+              @else { Campo inválido. }
+            </span>
+          } @else if (isValid('apellido')) {
+            <span class="helper-text ps-3 text-base-content/70">Se ve bien.</span>
+          }
+        </div>
+
+        <div class="input-floating w-96">
+          <input
+            id="dni"
+            type="text"
+            inputmode="numeric"
+            maxlength="8"
+            placeholder="7 u 8 dígitos"
+            formControlName="dni"
+            [class.is-invalid]="isInvalid('dni')"
+            [class.is-valid]="isValid('dni')"
+            [ngClass]="[inputBase, isInvalid('dni') ? hoverBad : hoverOk]"
+            [attr.aria-invalid]="isInvalid('dni') ? 'true' : null"
+          />
+          <label class="input-floating-label" for="dni">DNI</label>
+
+          @if (isInvalid('dni')) {
+            <span class="helper-text ps-3 text-[var(--danger)]">
+              @if (hasError('dni','required')) { El DNI es obligatorio. }
+              @else if (hasError('dni','pattern')) { Solo números (7 u 8 dígitos). }
+              @else { Campo inválido. }
+            </span>
+          } @else if (isValid('dni')) {
+            <span class="helper-text ps-3 text-base-content/70">Se ve bien.</span>
+          }
+        </div>
+
+        <div class="input-floating w-96">
+          <input
+            id="telefono"
+            type="text"
+            inputmode="tel"
+            maxlength="20"
+            placeholder="Teléfono"
+            formControlName="telefono"
+            [class.is-invalid]="isInvalid('telefono')"
+            [class.is-valid]="isValid('telefono')"
+            [ngClass]="[inputBase, isInvalid('telefono') ? hoverBad : hoverOk]"
+            [attr.aria-invalid]="isInvalid('telefono') ? 'true' : null"
+          />
+          <label class="input-floating-label" for="telefono">Teléfono</label>
+
+          @if (isInvalid('telefono')) {
+            <span class="helper-text ps-3 text-[var(--danger)]">
+              @if (hasError('telefono','required')) { El teléfono es obligatorio. }
+              @else if (hasError('telefono','pattern')) { Ingresá un teléfono válido. }
+              @else { Campo inválido. }
+            </span>
+          } @else if (isValid('telefono')) {
+            <span class="helper-text ps-3 text-base-content/70">Se ve bien.</span>
+          }
+        </div>
+
+        <div class="input-floating w-96">
+          <input
+            id="email"
+            type="email"
+            placeholder="nombre@correo.com"
+            formControlName="email"
+            [class.is-invalid]="isInvalid('email')"
+            [class.is-valid]="isValid('email')"
+            [ngClass]="[inputBase, isInvalid('email') ? hoverBad : hoverOk]"
+            [attr.aria-invalid]="isInvalid('email') ? 'true' : null"
+          />
+          <label class="input-floating-label" for="email">Email</label>
+
+          @if (isInvalid('email')) {
+            <span class="helper-text ps-3 text-[var(--danger)]">
+              @if (hasError('email','required')) { El email es obligatorio. }
+              @else if (hasError('email','email')) { Formato de email inválido. }
+              @else { Campo inválido. }
+            </span>
+          } @else if (isValid('email')) {
+            <span class="helper-text ps-3 text-base-content/70">Se ve bien.</span>
+          }
+        </div>
+
+        <div class="input-floating w-96 relative">
+          <input
+            id="contrasena"
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder=""
+            formControlName="contrasena"
+            class="pr-12"
+            [class.is-invalid]="isInvalid('contrasena')"
+            [class.is-valid]="isValid('contrasena')"
+            [ngClass]="[inputBase, isInvalid('contrasena') ? hoverBad : hoverOk]"
+            [attr.aria-invalid]="isInvalid('contrasena') ? 'true' : null"
+          />
+          <label class="input-floating-label" for="contrasena">Contraseña</label>
+
+          <button
+            type="button"
+            class="btn btn-text btn-sm absolute right-2 top-1/2 -translate-y-1/2"
+            (click)="showPassword = !showPassword"
+            [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+            tabindex="-1"
+          >
+            {{ showPassword ? '🙈' : '👁️' }}
+          </button>
+
+          @if (isInvalid('contrasena')) {
+            <span class="helper-text ps-3 text-[var(--danger)]">
+              @if (hasError('contrasena','required')) { La contraseña es obligatoria. }
+              @else if (hasError('contrasena','minlength')) { Mínimo 6 caracteres. }
+              @else if (hasError('contrasena','pattern')) { Debe incluir al menos una letra y un número. }
+              @else { Campo inválido. }
+            </span>
+          } @else if (isValid('contrasena')) {
+            <span class="helper-text ps-3 text-base-content/70">Se ve bien.</span>
+          }
+        </div>
+
+        <div class="input-floating w-96 relative">
+          <input
+            id="confirmarContrasena"
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder=""
+            formControlName="confirmarContrasena"
+            class="pr-12"
+            [class.is-invalid]="isInvalid('confirmarContrasena')"
+            [class.is-valid]="isValid('confirmarContrasena')"
+            [ngClass]="[inputBase, isInvalid('confirmarContrasena') ? hoverBad : hoverOk]"
+            [attr.aria-invalid]="isInvalid('confirmarContrasena') ? 'true' : null"
+          />
+          <label class="input-floating-label" for="confirmarContrasena">Confirmar contraseña</label>
+
+          <button
+            type="button"
+            class="btn btn-text btn-sm absolute right-2 top-1/2 -translate-y-1/2"
+            (click)="showPassword = !showPassword"
+            [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+            tabindex="-1"
+          >
+            {{ showPassword ? '🙈' : '👁️' }}
+          </button>
+
+          @if (isInvalid('confirmarContrasena')) {
+            <span class="helper-text ps-3 text-[var(--danger)]">
+              @if (hasError('confirmarContrasena','required')) { La confirmación es obligatoria. }
+              @else if (hasError('confirmarContrasena','minlength')) { Mínimo 6 caracteres. }
+              @else if (hasError('confirmarContrasena','pattern')) { Debe incluir al menos una letra y un número. }
+              @else if (hasError('confirmarContrasena','mismatch')) { Las contraseñas no coinciden. }
+              @else { Campo inválido. }
+            </span>
+          } @else if (isValid('confirmarContrasena')) {
+            <span class="helper-text ps-3 text-base-content/70">Se ve bien.</span>
+          }
+        </div>
+
+        <div class="input-floating w-96">
+          <input
+            id="legajo"
+            type="text"
+            placeholder="Opcional"
+            formControlName="legajo"
+            [class.is-invalid]="isInvalid('legajo')"
+            [class.is-valid]="isValid('legajo')"
+            [ngClass]="[inputBase, hoverOk]"
+          />
+          <label class="input-floating-label" for="legajo">Legajo (opcional)</label>
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-lg btn-primary btn-gradient btn-block"
+          [disabled]="isSubmitting() || empleadoForm.invalid"
+        >
+          {{ isSubmitting() ? 'Creando...' : 'Guardar empleado' }}
+        </button>
+
+        @if (errorMessage()) {
+          <p class="text-center text-sm text-[var(--danger)]">
+            {{ errorMessage() }}
+          </p>
+        }
+
+        <button
+          type="button"
+          class="btn btn-text btn-block"
+          (click)="cancelar()"
+          [disabled]="isSubmitting()"
+        >
+          Cancelar
+        </button>
+      </form>
     </div>
-
-    @let apellidoCtrl = empleadoForm.get('apellido');
-    <div class="field">
-      <label for="apellido">Apellido</label>
-      <input
-        id="apellido"
-        type="text"
-        formControlName="apellido"
-        placeholder="Ej: Torres"
-        [class.invalid]="apellidoCtrl?.touched && apellidoCtrl?.invalid"
-      />
-      @if (apellidoCtrl?.touched && apellidoCtrl?.hasError('required')) {
-        <p class="error">El apellido es obligatorio.</p>
-      }
-        @if (apellidoCtrl?.touched && apellidoCtrl?.hasError('minlength')) {
-        <p class="error">El apellido debe tener al menos 3 caracteres.</p>
-      }
-    </div>
-
-    @let dniCtrl = empleadoForm.get('dni');
-    <div class="field">
-      <label for="dni">DNI</label>
-      <input
-        id="dni"
-        type="text"
-        formControlName="dni"
-        placeholder="Ej: 40.123.456"
-        inputmode="numeric"
-        maxlength="8"
-        [class.invalid]="dniCtrl?.touched && dniCtrl?.invalid"
-      />
-      @if (dniCtrl?.touched && dniCtrl?.hasError('required')) {
-        <p class="error">El DNI es obligatorio.</p>
-      }
-
-        @if (dniCtrl?.touched && (dniCtrl?.hasError('minlength') || dniCtrl?.hasError('maxlength'))) {
-        <p class="error">El DNI debe tener entre 7 y 8 dígitos.</p>
-      }
-      @if (dniCtrl?.touched && dniCtrl?.hasError('pattern')) {
-        <p class="error">El DNI solo puede contener números.</p>
-
-      }
-    </div>
-
-    @let telefonoCtrl = empleadoForm.get('telefono');
-    <div class="field">
-      <label for="telefono">Telefono</label>
-      <input
-        id="telefono"
-        type="tel"
-        formControlName="telefono"
-        placeholder="Ej: +54 9 11 2233 4455"
-        maxlength="10"
-        [class.invalid]="telefonoCtrl?.touched && telefonoCtrl?.invalid"
-      />
-      @if (telefonoCtrl?.touched && telefonoCtrl?.hasError('required')) {
-        <p class="error">El telefono es obligatorio.</p>
-      }
-
-      @if (telefonoCtrl?.touched && telefonoCtrl?.hasError('minlength')) {
-        <p class="error">El telefono debe tener al menos 8 caracteres.</p>
-      }
-      @if (telefonoCtrl?.touched && telefonoCtrl?.hasError('pattern')) {
-        <p class="error">Ingresa un telefono válido.</p>
-      }
-    </div>
-
-    @let emailCtrl = empleadoForm.get('email');
-    <div class="field">
-      <label for="email">Email</label>
-      <input
-        id="email"
-        type="email"
-        formControlName="email"
-        placeholder="Ej: sofia@empresa.com"
-        [class.invalid]="emailCtrl?.touched && emailCtrl?.invalid"
-      />
-      @if (emailCtrl?.touched && emailCtrl?.invalid) {
-        <p class="error">Ingresa un email valido.</p>
-      }
-    </div>
-
-    @let contrasenaCtrl = empleadoForm.get('contrasena');
-    @let confirmarContrasenaCtrl = empleadoForm.get('confirmarContrasena');
-
-    <div class="field">
-      <label for="contrasena">Contrasena</label>
-      <input
-        id="contrasena"
-        type="password"
-        formControlName="contrasena"
-        placeholder="Minimo 4 caracteres y un numero"
-        [class.invalid]="contrasenaCtrl?.touched && contrasenaCtrl?.invalid"
-      />
-      @if (contrasenaCtrl?.touched && contrasenaCtrl?.hasError('required')) {
-        <p class="error">La contrasena es obligatoria.</p>
-      }
-      @if (contrasenaCtrl?.touched && contrasenaCtrl?.hasError('minlength')) {
-        <p class="error">Debe tener al menos  caracteres.</p>
-      }
-         @if (contrasenaCtrl?.touched && contrasenaCtrl?.hasError('pattern')) {
-        <p class="error">Debe incluir al menos una letra y un numero.</p>
-      }
-      @if (contrasenaCtrl?.touched && contrasenaCtrl?.hasError('pattern')) {
-        <p class="error">Incluye al menos un numero.</p>
-      }
-    </div>
-
-    <div class="field">
-      <label for="confirmarContrasena">Confirmar contrasena</label>
-      <input
-        id="confirmarContrasena"
-        type="password"
-        formControlName="confirmarContrasena"
-        placeholder="Repite la contrasena"
-        [class.invalid]="confirmarContrasenaCtrl?.touched && confirmarContrasenaCtrl?.invalid"
-      />
-      @if (confirmarContrasenaCtrl?.touched && confirmarContrasenaCtrl?.hasError('required')) {
-        <p class="error">La confirmacion es obligatoria.</p>
-      }
-      @if (confirmarContrasenaCtrl?.touched && confirmarContrasenaCtrl?.hasError('minlength')) {
-        <p class="error">Debe tener al menos 4 caracteres.</p>
-      }
-      @if (confirmarContrasenaCtrl?.touched && confirmarContrasenaCtrl?.hasError('pattern')) {
-        <p class="error">Incluye al menos un numero.</p>
-      }
-      @if (confirmarContrasenaCtrl?.touched && confirmarContrasenaCtrl?.hasError('mismatch')) {
-        <p class="error">Las contrasenas no coinciden.</p>
-      }
-    </div>
-
-    <div class="field">
-      <label for="legajo">Legajo</label>
-      <input
-        id="legajo"
-        type="text"
-        formControlName="legajo"
-        placeholder="Opcional"
-      />
-    </div>
-
-
-  <div class="field">
-  <label>Rol</label>
-  <p>Empleado</p> 
-</div>
-
-
   </div>
-
-  @if (errorMessage()) {
-    <p class="empleado-form__alert">{{ errorMessage() }}</p>
-  }
-
-  <footer class="empleado-form__actions">
-    <button
-      type="submit"
-      class="empleado-form__submit"
-      [disabled]="isSubmitting() || empleadoForm.invalid"
-    >
-      {{ isSubmitting() ? 'Guardando...' : 'Guardar empleado' }}
-    </button>
-  </footer>
-</form>
+</div>

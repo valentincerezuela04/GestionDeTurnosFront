@@ -1,4 +1,4 @@
-/* src/styles/tw-theme.css */
+
 
 /* =========================
    LIGHT THEME
@@ -134,6 +134,48 @@
 
 
 }
+
+/* cards ----------------------------------- */
+@layer components {
+.gdt-card{
+  position: relative;
+  overflow: hidden;
+  padding: 1.25rem;
+  border-radius: 1rem; /* equivalente a rounded-2xl */
+  border: 1px solid var(--border-2);
+  background: var(--card);
+  box-shadow: var(--shadow);
+  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
+}
+
+  .gdt-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(124, 92, 255, 0.45);
+    box-shadow: var(--shadow-accent);
+  }
+
+  .gdt-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 12% 8%, rgba(124, 92, 255, 0.16), transparent 55%);
+  }
+
+  .gdt-card::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    pointer-events: none;
+    opacity: 0.6;
+    background: linear-gradient(90deg, transparent, var(--accent-500), transparent);
+  }
+}
+
+
  /* inputs------------------------- */
 .input:hover:not(.is-invalid):not(.is-valid) {
   background: var(--bg);

@@ -1,163 +1,287 @@
-<section class="detalle-empleado">
-  <header class="detalle-empleado__header">
-    <h1>Detalle del empleado</h1>
-    <button type="button" class="btn btn-soft btn-primary" (click)="volverAlListado()">Volver al listado</button>
+<section class="max-w-4xl mx-auto px-4 py-6">
+  <header class="flex items-center justify-between gap-3 mb-5">
+    <h1 class="text-xl font-extrabold tracking-tight text-[var(--text)]">
+      Detalle del empleado
+    </h1>
+
+    <button
+      type="button"
+      class="
+        inline-flex items-center gap-2
+        h-9 rounded-xl px-3
+        border border-[var(--border-2)]
+        bg-[var(--card)]
+        text-[var(--accent-500)]
+        transition
+        hover:bg-[var(--card-2)]
+        hover:border-[color:rgba(124,92,255,0.55)]
+        focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-400)]
+      "
+      (click)="volverAlListado()"
+    >
+      <span class="icon-[tabler--arrow-left] size-5" aria-hidden="true"></span>
+      <span class="text-sm font-semibold">Volver</span>
+    </button>
   </header>
 
   @if (isLoading) {
-    <p class="detalle-empleado__status">Cargando empleado...</p>
+    <p class="text-sm text-[var(--muted)]">Cargando empleado...</p>
   }
+
   @if (errorMessage) {
-    <p class="detalle-empleado__status detalle-empleado__status--error">
-      {{ errorMessage }}
-    </p>
+    <p class="text-sm text-[var(--danger)]">{{ errorMessage }}</p>
   }
 
   @if (empleado && !isLoading) {
-    <article class="detalle-empleado__card">
-      <header>
-        <h2>{{ empleado.nombre }} {{ empleado.apellido }}</h2>
-        <span class="detalle-empleado__rol">{{ empleado.rol }}</span>
+    <article
+      class="
+        relative overflow-hidden rounded-2xl p-5
+        border border-[var(--border-2)]
+        bg-[var(--card)]
+        shadow-[var(--shadow)]
+        transition hover:-translate-y-0.5
+        hover:border-[color:rgba(124,92,255,0.45)]
+        hover:shadow-[var(--shadow-accent)]
+      "
+    >
+      <div
+        class="
+          pointer-events-none absolute inset-0
+          bg-[radial-gradient(circle_at_12%_8%,rgba(124,92,255,0.16),transparent_55%)]
+        "
+      ></div>
+
+      <header class="relative flex items-start justify-between gap-3">
+        <div class="min-w-0">
+          <h2 class="m-0 truncate text-lg font-extrabold tracking-tight text-[var(--text)]">
+            {{ empleado.nombre }} {{ empleado.apellido }}
+          </h2>
+
+          <p class="m-0 mt-1 text-sm text-[var(--muted)]">
+            <span class="text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">ID:</span>
+            <span class="ml-2 font-semibold text-[var(--text)]">{{ empleado.id }}</span>
+          </p>
+        </div>
+
+        <span
+          class="
+            shrink-0 rounded-xl px-3 py-1
+            text-[10px] font-extrabold uppercase tracking-[0.22em]
+            border border-[var(--border-2)]
+            bg-[var(--card-2)]
+            text-[var(--accent-500)]
+          "
+        >
+          {{ empleado.rol }}
+        </span>
       </header>
 
-      <div class="detalle-empleado__meta">
-        <span>ID: {{ empleado.id }}</span>
+      <div class="relative mt-4">
+        @if (!editMode()) {
+          <dl class="grid grid-cols-2 gap-3 max-sm:grid-cols-1">
+            <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3">
+              <dt class="text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">Legajo</dt>
+              <dd class="mt-1 text-sm font-semibold text-[var(--text)]">{{ empleado.legajo || 'N/A' }}</dd>
+            </div>
+
+            <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3">
+              <dt class="text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">DNI</dt>
+              <dd class="mt-1 text-sm font-semibold text-[var(--text)]">{{ empleado.dni }}</dd>
+            </div>
+
+            <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3">
+              <dt class="text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">Teléfono</dt>
+              <dd class="mt-1 text-sm font-semibold text-[var(--text)]">{{ empleado.telefono }}</dd>
+            </div>
+
+            <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3 col-span-2 max-sm:col-span-1">
+              <dt class="text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">Email</dt>
+              <dd class="mt-1 text-sm font-semibold text-[var(--text)] break-all">{{ empleado.email }}</dd>
+            </div>
+          </dl>
+        } @else {
+          <form [formGroup]="empleadoForm" class="grid grid-cols-2 gap-3 max-sm:grid-cols-1">
+            <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3">
+              <label for="nombre" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
+                Nombre
+              </label>
+              <input id="nombre" type="text" formControlName="nombre" class="input mt-2 w-full" />
+              @if (controls.nombre.invalid && controls.nombre.touched) {
+                <span class="mt-2 block text-xs text-[var(--danger)]">El nombre es obligatorio.</span>
+              }
+            </div>
+
+            <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3">
+              <label for="apellido" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
+                Apellido
+              </label>
+              <input id="apellido" type="text" formControlName="apellido" class="input mt-2 w-full" />
+              @if (controls.apellido.invalid && controls.apellido.touched) {
+                <span class="mt-2 block text-xs text-[var(--danger)]">El apellido es obligatorio.</span>
+              }
+            </div>
+
+            <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3">
+              <label for="dni" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
+                DNI
+              </label>
+              <input id="dni" type="text" formControlName="dni" inputmode="numeric" maxlength="8" class="input mt-2 w-full" />
+              @if (controls.dni.touched && controls.dni.hasError('required')) {
+                <span class="mt-2 block text-xs text-[var(--danger)]">El DNI es obligatorio.</span>
+              }
+              @if (controls.dni.touched && controls.dni.hasError('pattern')) {
+                <span class="mt-2 block text-xs text-[var(--danger)]">Solo números (7 u 8 dígitos).</span>
+              }
+            </div>
+
+            <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3">
+              <label for="telefono" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
+                Teléfono
+              </label>
+              <input id="telefono" type="text" formControlName="telefono" inputmode="tel" maxlength="10" class="input mt-2 w-full" />
+              @if (controls.telefono.touched && controls.telefono.hasError('required')) {
+                <span class="mt-2 block text-xs text-[var(--danger)]">El teléfono es obligatorio.</span>
+              }
+              @if (controls.telefono.touched && controls.telefono.hasError('pattern')) {
+                <span class="mt-2 block text-xs text-[var(--danger)]">Debe tener exactamente 10 números.</span>
+              }
+            </div>
+
+            <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3 col-span-2 max-sm:col-span-1">
+              <label for="email" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
+                Email
+              </label>
+              <input id="email" type="email" formControlName="email" class="input mt-2 w-full" />
+              @if (controls.email.invalid && controls.email.touched) {
+                <span class="mt-2 block text-xs text-[var(--danger)]">Ingresá un email válido.</span>
+              }
+            </div>
+
+            <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3">
+              <label for="contrasena" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
+                Contraseña
+              </label>
+              <input id="contrasena" type="password" formControlName="contrasena" class="input mt-2 w-full" placeholder="Mínimo 4 caracteres y un número" />
+              @if (controls.contrasena.touched && controls.contrasena.hasError('minlength')) {
+                <span class="mt-2 block text-xs text-[var(--danger)]">Debe tener al menos 4 caracteres.</span>
+              }
+              @if (controls.contrasena.touched && controls.contrasena.hasError('pattern')) {
+                <span class="mt-2 block text-xs text-[var(--danger)]">Incluye al menos un número.</span>
+              }
+              <p class="mt-2 text-xs text-[var(--muted)]">
+                Dejá este campo vacío si no querés cambiar la contraseña.
+              </p>
+            </div>
+
+            <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3">
+              <label for="confirmarContrasena" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
+                Confirmar contraseña
+              </label>
+              <input id="confirmarContrasena" type="password" formControlName="confirmarContrasena" class="input mt-2 w-full" placeholder="Repite la nueva contraseña" />
+              @if (controls.confirmarContrasena.touched && controls.confirmarContrasena.hasError('minlength')) {
+                <span class="mt-2 block text-xs text-[var(--danger)]">Debe tener al menos 4 caracteres.</span>
+              }
+              @if (controls.confirmarContrasena.touched && controls.confirmarContrasena.hasError('pattern')) {
+                <span class="mt-2 block text-xs text-[var(--danger)]">Incluye al menos un número.</span>
+              }
+              @if (controls.confirmarContrasena.touched && controls.confirmarContrasena.hasError('mismatch')) {
+                <span class="mt-2 block text-xs text-[var(--danger)]">Las contraseñas no coinciden.</span>
+              }
+            </div>
+
+            <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3">
+              <label for="legajo" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
+                Legajo
+              </label>
+              <input id="legajo" type="text" formControlName="legajo" class="input mt-2 w-full" />
+            </div>
+
+            <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3">
+              <label class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
+                Rol
+              </label>
+              <input type="text" [value]="empleado.rol" disabled class="input mt-2 w-full opacity-70" />
+            </div>
+          </form>
+
+          @if (saveErrorMessage) {
+            <p class="mt-3 text-sm text-[var(--danger)]">{{ saveErrorMessage }}</p>
+          }
+        }
       </div>
 
-      @if (!editMode()) {
-        <dl>
-          <div>
-            <dt>Legajo</dt>
-            <dd>{{ empleado.legajo || 'N/A' }}</dd>
-          </div>
-          <div>
-            <dt>DNI</dt>
-            <dd>{{ empleado.dni }}</dd>
-          </div>
-          <div>
-            <dt>Telefono</dt>
-            <dd>{{ empleado.telefono }}</dd>
-          </div>
-          <div>
-            <dt>Email</dt>
-            <dd>{{ empleado.email }}</dd>
-          </div>
-        </dl>
-      } @else {
-        <form [formGroup]="empleadoForm" class="detalle-empleado__form">
-          <div class="detalle-empleado__field">
-            <label for="nombre">Nombre</label>
-            <input id="nombre" type="text" formControlName="nombre" />
-            @if (controls.nombre.invalid && controls.nombre.touched) {
-              <span class="detalle-empleado__error">El nombre es obligatorio.</span>
-            }
-          </div>
-          <div class="detalle-empleado__field">
-            <label for="apellido">Apellido</label>
-            <input id="apellido" type="text" formControlName="apellido" />
-            @if (controls.apellido.invalid && controls.apellido.touched) {
-              <span class="detalle-empleado__error">El apellido es obligatorio.</span>
-            }
-          </div>
-          <div class="detalle-empleado__field">
-            <label for="dni">DNI</label>
-            <input id="dni" type="text" formControlName="dni" inputmode="numeric" maxlength="8" />
-            @if (controls.dni.touched && controls.dni.hasError('required')) {
-              <span class="detalle-empleado__error">El DNI es obligatorio.</span>
-            }
-            @if (controls.dni.touched && controls.dni.hasError('pattern')) {
-              <span class="detalle-empleado__error">Solo numeros (7 u 8 digitos).</span>
-            }
-          </div>
-          <div class="detalle-empleado__field">
-            <label for="telefono">Telefono</label>
-            <input id="telefono" type="text" formControlName="telefono" inputmode="tel" maxlength="10" />
-            @if (controls.telefono.touched && controls.telefono.hasError('required')) {
-              <span class="detalle-empleado__error">El telefono es obligatorio.</span>
-            }
-            @if (controls.telefono.touched && controls.telefono.hasError('pattern')) {
-              <span class="detalle-empleado__error">Debe tener exactamente 10 numeros.</span>
-            }
-          </div>
-          <div class="detalle-empleado__field">
-            <label for="email">Email</label>
-            <input id="email" type="email" formControlName="email" />
-            @if (controls.email.invalid && controls.email.touched) {
-              <span class="detalle-empleado__error">Ingresa un email valido.</span>
-            }
-          </div>
-                    <div class="detalle-empleado__field">
-            <label for="contrasena">Contrasena</label>
-            <input
-              id="contrasena"
-              type="password"
-              formControlName="contrasena"
-              placeholder="Minimo 4 caracteres y un numero"
-            />
-            @if (controls.contrasena.touched && controls.contrasena.hasError('minlength')) {
-              <span class="detalle-empleado__error">Debe tener al menos 4 caracteres.</span>
-            }
-            @if (controls.contrasena.touched && controls.contrasena.hasError('pattern')) {
-              <span class="detalle-empleado__error">Incluye al menos un numero.</span>
-            }
-            <p class="detalle-empleado__status detalle-empleado__status--hint">
-              Deja este campo vacio si no quieres cambiar la contrasena del empleado.
-            </p>
-          </div>
-
-          <div class="detalle-empleado__field">
-            <label for="confirmarContrasena">Confirmar contrasena</label>
-            <input
-              id="confirmarContrasena"
-              type="password"
-              formControlName="confirmarContrasena"
-              placeholder="Repite la nueva contrasena"
-            />
-            @if (controls.confirmarContrasena.touched && controls.confirmarContrasena.hasError('minlength')) {
-              <span class="detalle-empleado__error">Debe tener al menos 4 caracteres.</span>
-            }
-            @if (controls.confirmarContrasena.touched && controls.confirmarContrasena.hasError('pattern')) {
-              <span class="detalle-empleado__error">Incluye al menos un numero.</span>
-            }
-            @if (controls.confirmarContrasena.touched && controls.confirmarContrasena.hasError('mismatch')) {
-              <span class="detalle-empleado__error">Las contrasenas no coinciden.</span>
-            }
-          </div>
-
-
-          <div class="detalle-empleado__field">
-            <label for="legajo">Legajo</label>
-            <input id="legajo" type="text" formControlName="legajo" />
-          </div>
-          <div class="detalle-empleado__field">
-            <label>Rol</label>
-            <input type="text" [value]="empleado.rol" disabled />
-          </div>
-        </form>
-        @if (saveErrorMessage) {
-          <p class="detalle-empleado__status detalle-empleado__status--error">
-            {{ saveErrorMessage }}
-          </p>
-        }
-      }
-
-      <footer class="detalle-empleado__actions">
+      <footer class="relative mt-5 flex items-center justify-end gap-2">
         @if (editMode()) {
-          <button type="button" class="btn btn-soft" (click)="cancelarEdicion()" [disabled]="saveInProgress()">
+          <button
+            type="button"
+            class="
+              inline-flex items-center gap-2 h-9 rounded-xl px-3
+              border border-[var(--border-2)] bg-[var(--card)] text-[var(--text)]
+              transition hover:bg-[var(--card-2)]
+              focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-400)]
+            "
+            (click)="cancelarEdicion()"
+            [disabled]="saveInProgress()"
+          >
+            <span class="icon-[tabler--x] size-5" aria-hidden="true"></span>
             Cancelar
           </button>
-          <button type="button" class="btn btn-soft btn-success" (click)="guardarCambios()" [disabled]="saveInProgress()">
+
+          <button
+            type="button"
+            class="
+              inline-flex items-center gap-2 h-9 rounded-xl px-3
+              border border-[color:rgba(15,185,129,0.35)]
+              bg-[var(--card)] text-[var(--success)]
+              transition hover:bg-[color:rgba(15,185,129,0.10)]
+              focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:rgba(15,185,129,0.30)]
+            "
+            (click)="guardarCambios()"
+            [disabled]="saveInProgress()"
+          >
+            <span class="icon-[tabler--device-floppy] size-5" aria-hidden="true"></span>
             {{ saveInProgress() ? 'Guardando...' : 'Guardar cambios' }}
           </button>
         } @else {
-          <button type="button" class="btn btn-soft btn-warning" (click)="habilitarEdicion()">
+          <button
+            type="button"
+            class="
+              inline-flex items-center gap-2 h-9 rounded-xl px-3
+              border border-[var(--border-2)] bg-[var(--card)] text-[var(--accent-500)]
+              transition hover:bg-[var(--card-2)] hover:border-[color:rgba(124,92,255,0.55)]
+              focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-400)]
+            "
+            (click)="habilitarEdicion()"
+          >
+            <span class="icon-[tabler--pencil] size-5" aria-hidden="true"></span>
             Editar empleado
           </button>
         }
-        <button type="button" class="btn btn-soft btn-error" (click)="eliminarEmpleado()" [disabled]="deleteInProgress">
+
+        <button
+          type="button"
+          class="
+            inline-flex items-center gap-2 h-9 rounded-xl px-3
+            border border-[color:rgba(225,29,72,0.30)]
+            bg-[var(--card)] text-[var(--danger)]
+            transition hover:bg-[color:rgba(225,29,72,0.12)] hover:border-[color:rgba(225,29,72,0.55)]
+            focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:rgba(225,29,72,0.35)]
+          "
+          (click)="eliminarEmpleado()"
+          [disabled]="deleteInProgress"
+        >
+          <span class="icon-[tabler--trash] size-5" aria-hidden="true"></span>
           {{ deleteInProgress ? 'Eliminando...' : 'Eliminar empleado' }}
         </button>
       </footer>
+
+      <div
+        class="
+          pointer-events-none absolute bottom-0 left-0 h-[2px] w-full
+          bg-[linear-gradient(90deg,transparent,var(--accent-500),transparent)]
+          opacity-60
+        "
+      ></div>
     </article>
   }
 </section>
