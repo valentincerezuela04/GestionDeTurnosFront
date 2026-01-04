@@ -16,39 +16,7 @@
   color: var(--txt);
   letter-spacing: 0.2px;
 }
-.header-hall button {
-  position: relative;
-  background: linear-gradient(135deg, var(--accent-2) 0%, #10937f 100%);
-  border: none;
-  border-radius: 9999px;
-  padding: 0.4rem 1.15rem 0.4rem 1.55rem;
-  color: #fff; /* antes era muy claro, ahora legible */
-  font-weight: 600;
-  font-size: 0.85rem;
-  cursor: pointer;
-  box-shadow: 0 10px 22px rgba(25, 195, 167, 0.35);
-  transition: transform 120ms ease, box-shadow 120ms ease;
-}
-.header-hall button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 12px 26px rgba(25, 195, 167, 0.45);
-}
-.header-hall button::before {
-  content: "+";
-  position: absolute;
-  left: .55rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 1.1rem;
-  height: 1.1rem;
-  border-radius: 9999px;
-  background: rgba(15, 18, 32, 0.15);
-  display: grid;
-  place-items: center;
-  font-weight: 700;
-  color: #fff;
-  backdrop-filter: blur(3px);
-}
+
 
 .container {
   max-width: 1100px;
