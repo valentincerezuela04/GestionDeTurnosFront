@@ -10,12 +10,12 @@
   </div>
 } @else {
   <div class="auth-layout">
-    <header class="auth-layout__top">
+    <header class="auth-layout__top bg-[var(--bg)] shadow-md">
       @if (!isRegisterRoute()) {
         <a routerLink="/register" class="auth-link">Registrarse</a>
       }
     </header>
-    <main class="auth-layout__main">
+    <main class="auth-layout__main bg-[var(--bg)]">
       <router-outlet></router-outlet>
     </main>
   </div>

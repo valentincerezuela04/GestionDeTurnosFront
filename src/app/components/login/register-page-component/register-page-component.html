@@ -1,4 +1,4 @@
-<!-- <h2>Crear cuenta</h2>
+﻿<!-- <h2>Crear cuenta</h2>
 
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="register-form" novalidate>
   <div class="field">
@@ -36,7 +36,7 @@
 
   <div class="field">
     <label for="telefono">Telefono</label>
-    <input id="telefono" formControlName="telefono" type="text" inputmode="tel" maxlength="10" />
+    <input id="telefono" formControlName="telefono" type="text" i+nputmode="tel" maxlength="10" />
     @if (hasError('telefono', 'required')) {
       <p class="error">El telefono es obligatorio.</p>
     }
@@ -237,6 +237,7 @@
       id="contrasena"
       [type]="showPassword ? 'text' : 'password'"
       class="input hover:bg-[var(--bg)] pr-12"
+      placeholder=""
       formControlName="contrasena"
       [class.is-invalid]="isInvalid('contrasena')"
       [class.is-valid]="isValid('contrasena')"
