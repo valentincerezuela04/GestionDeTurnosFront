@@ -26,10 +26,15 @@
             ],
             "styles": [
               "src/app/Tailwind/tailwind.css",
-              "src/app/Tailwind/tw-theme.css"
+              "src/app/Tailwind/tw-theme.css",
+                "node_modules/datatables.net-dt/css/dataTables.dataTables.min.css"
+
             ],
             "scripts": [
-          "node_modules/flyonui/flyonui.js"
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/datatables.net/js/dataTables.min.js",
+          "node_modules/flyonui/flyonui.js",
+            "node_modules/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"
           ]
 
           },

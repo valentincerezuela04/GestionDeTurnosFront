@@ -8,3 +8,6 @@
 
 @source "../../../src/**/*.{html,ts}";
 @import "./form-styles.css";
+
+@import "tailwindcss-intersect";
+@plugin "tailwindcss-motion";

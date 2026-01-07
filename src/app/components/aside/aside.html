@@ -1,40 +1,4 @@
-<!-- <aside class="side" [class.closed]="!open()" aria-label="Navegación">
-  <nav>
-    <a routerLink="/hall" routerLinkActive="active">Salas</a>
 
-    @if (isAdmin()) {
-      <a routerLink="/empleados" routerLinkActive="active">Empleados</a>
-    }
-
-    <a routerLink="/reservas" routerLinkActive="active">Reservas</a>
-
-    @if (isCliente()) {
-      <a routerLink="/reservas/historial" routerLinkActive="active">
-        Mi historial
-      </a>
-    }
-
-    @if (showFullMenu()) {
-      <a routerLink="/reservas/historial-general" routerLinkActive="active">
-        Historial reservas
-      </a>
-    }
-
-    @if (showFullMenu()) {
-      <a routerLink="/clientes" routerLinkActive="active">Clientes</a>
-    }
-
-    <a routerLink="/calendar" routerLinkActive="active">Calendario</a>
-      @if (showFullMenu()) {
-      <a routerLink="/dashboardPagos" routerLinkActive="active">DashboardPagos</a>
-    }
-    @if (showFullMenu()) {
-      <a routerLink="/perfil" routerLinkActive="active">Perfil</a>
-    }
-  
-  </nav>
-</aside> -->
-<!-- Botón hamburguesa (mobile) -->
 <button
   type="button"
   class="btn btn-text max-sm:btn-square sm:hidden"
@@ -55,7 +19,9 @@ class="drawer drawer-start fixed sm:static top-14 sm:top-0 left-0 z-50 sm:z-0
          bg-[linear-gradient(180deg,var(--bg-2),var(--bg))]
          text-[var(--text)]
          border-e border-[var(--border)]
-         shadow-[var(--shadow)]"
+         shadow-[var(--shadow)]
+         h-screen sticky top-0 bg-base-100 border-r border-base-300/30 overflow-hidden
+         transition-[width] duration-600 ease-out"
   [class.w-66]="!mini()"
   [class.w-17]="mini()"
   [class.-translate-x-full]="!open()"

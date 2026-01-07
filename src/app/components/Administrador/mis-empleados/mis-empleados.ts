@@ -9,7 +9,7 @@ import { CardEmpleados } from '../card-empleados/card-empleados';
 @Component({
   selector: 'app-mis-empleados',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './mis-empleados.html',
   styleUrl: './mis-empleados.css',
 })
