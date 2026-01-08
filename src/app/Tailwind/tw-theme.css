@@ -134,6 +134,13 @@
 
 
 }
+/* <div class="flex items-center gap-2">
+  <svg class="h-8 w-8">
+    <use href="assets/sprites.svg#icon-instagram"></use>
+  </svg>
+  <span>Instagram</span>
+</div>
+
 
 /* cards ----------------------------------- */
 @layer components {

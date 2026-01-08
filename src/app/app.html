@@ -1,21 +1,41 @@
 @if (showShell()) {
-  <app-headear (menuToongle)="toggleSidebar()"></app-headear>
-  <div class="layout">
-    <app-aside [open]="sideBarOpen()"></app-aside>
-    <main class="content">
-      <div class="content__inner">
-        <router-outlet></router-outlet>
-      </div>
-    </main>
+  <div class="min-h-screen">
+    <app-headear (menuToongle)="toggleSidebar()" class="block"></app-headear>
+
+    <!-- FILA: aside | contenido -->
+    <div class="flex min-h-[calc(100vh-64px)]">
+      <!-- ASIDE -->
+      <app-aside
+        [open]="sideBarOpen()"
+        class="shrink-0 h-auto"
+        [class.w-64]="sideBarOpen()"
+        [class.w-20]="!sideBarOpen()"
+      ></app-aside>
+
+      <!-- CONTENT -->
+      <main class="flex-1 p-6 flex">
+        <div class="w-full max-w-[1180px]">
+          <router-outlet></router-outlet>
+        </div>
+      </main>
+    </div>
   </div>
 } @else {
-  <div class="auth-layout">
-    <header class="auth-layout__top bg-[var(--bg)] shadow-md">
+  <div class="min-h-screen flex flex-col">
+    <header class="flex justify-end px-8 pt-6">
       @if (!isRegisterRoute()) {
-        <a routerLink="/register" class="auth-link">Registrarse</a>
+        <a
+          routerLink="/register"
+          class="font-semibold text-white rounded-full px-4 py-1.5
+                 bg-[linear-gradient(135deg,var(--accent)_0%,var(--accent-600)_100%)]
+                 transition hover:-translate-y-0.5 hover:shadow-[0_12px_24px_rgba(0,0,0,.35)]"
+        >
+          Registrarse
+        </a>
       }
     </header>
-    <main class="auth-layout__main bg-[var(--bg)]">
+
+    <main class="flex-1 grid place-items-center p-8">
       <router-outlet></router-outlet>
     </main>
   </div>
