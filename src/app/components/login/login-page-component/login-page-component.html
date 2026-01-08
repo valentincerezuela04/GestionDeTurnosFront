@@ -199,29 +199,58 @@
 </div>
 
 
-<div class="input-floating w-96 relative">
-  <input
-    id="password"
-    [type]="showPassword ? 'text' : 'password'"
-    placeholder=""
-    class="input hover:bg-[var(--bg)] pr-12"
-    formControlName="password"
-    [class.is-invalid]="isInvalid('password')"
-    [class.is-valid]="isValid('password')"
-    [attr.aria-invalid]="isInvalid('password') ? 'true' : null"
-  />
+<div class="w-96">
+  <div class="input" [class.is-invalid]="isInvalid('password')" [class.is-valid]="isValid('password')">
+    <div class="input-floating grow">
+      <input
+        id="password"
+        [type]="showPassword ? 'text' : 'password'"
+        placeholder=" "
+        class="pr-12"
+        formControlName="password"
+        [class.is-invalid]="isInvalid('password')"
+        [class.is-valid]="isValid('password')"
+        [attr.aria-invalid]="isInvalid('password') ? 'true' : null"
+      />
 
-  <label class="input-floating-label" for="password">Contraseña</label>
+      <label class="input-floating-label ms-0" for="password">Contraseña</label>
+    </div>
 
-  <button
-    type="button"
-    class="btn btn-text btn-sm absolute right-2 top-1/2 -translate-y-1/2"
-    (click)="showPassword = !showPassword"
-    [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
-    tabindex="-1"
-  >
-    {{ showPassword ? '🙈' : '👁️' }}
-  </button>
+<button
+  type="button"
+  class="
+    group block cursor-pointer rounded-md p-2
+    transition
+    focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-400)]
+  "
+  (click)="showPassword = !showPassword"
+  [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+  tabindex="-1"
+>
+  <span
+    class="
+      icon-[tabler--eye] size-5 shrink-0
+      text-base-content/70 transition
+      group-hover:text-[var(--accent-400)]
+      group-hover:scale-110
+      group-active:scale-95
+    "
+    [class.hidden]="!showPassword"
+  ></span>
+
+  <span
+    class="
+      icon-[tabler--eye-off] size-5 shrink-0
+      text-base-content/70 transition
+      group-hover:text-[var(--accent-400)]
+      group-hover:scale-110
+      group-active:scale-95
+    "
+    [class.hidden]="showPassword"
+  ></span>
+</button>
+
+  </div>
 
   @if (isInvalid('password')) {
     <span class="helper-text ps-3 text-[var(--danger)]">

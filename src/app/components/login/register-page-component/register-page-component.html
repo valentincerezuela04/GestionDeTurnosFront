@@ -78,11 +78,11 @@
     <p class="error global-error">{{ error }}</p>
   }
 </form> -->
-<div
+<!-- <div
   class="flex h-auto min-h-screen items-center justify-center overflow-x-hidden
          bg-[url('https://cdn.flyonui.com/fy-assets/blocks/marketing-ui/auth/auth-background-2.png')]
          bg-cover bg-center bg-no-repeat py-10"
->
+> -->
   <div class="relative flex items-center justify-center px-4 sm:px-6 lg:px-8">
     <!-- Decoración SVG (opcional). Podés pegarla tal cual acá. -->
     <!-- <div class="absolute"> ...TU SVG... </div> -->
@@ -90,7 +90,7 @@
     <div class="bg-base-100 shadow-base-300/20 z-10 w-full space-y-6 rounded-xl p-6 shadow-md sm:min-w-md lg:p-8">
       <!-- Header -->
       <div class="flex items-center gap-3">
-        <img src="https://cdn.flyonui.com/fy-assets/logo/logo.png" class="size-8" alt="brand-logo" />
+       
         <h2 class="text-base-content text-xl font-bold">Gestión de Turnos</h2>
       </div>
 
@@ -232,40 +232,70 @@
   </div>
 
   <!-- Contraseña (floating igual al email + botón ojo) -->
-  <div class="input-floating w-96 relative">
-    <input
-      id="contrasena"
-      [type]="showPassword ? 'text' : 'password'"
-      class="input hover:bg-[var(--bg)] pr-12"
-      placeholder=""
-      formControlName="contrasena"
-      [class.is-invalid]="isInvalid('contrasena')"
-      [class.is-valid]="isValid('contrasena')"
-      [attr.aria-invalid]="isInvalid('contrasena') ? 'true' : null"
-    />
-    <label class="input-floating-label" for="contrasena">Contraseña</label>
+  <div class="w-96">
+  <div class="input" [class.is-invalid]="isInvalid('contrasena')" [class.is-valid]="isValid('contrasena')">
+    <div class="input-floating grow">
+      <input
+        id="contrasena"
+        [type]="showPassword ? 'text' : 'password'"
+        placeholder=" "
+        class="pr-12"
+        formControlName="contrasena"
+        [class.is-invalid]="isInvalid('contrasena')"
+        [class.is-valid]="isValid('contrasena')"
+        [attr.aria-invalid]="isInvalid('contrasena') ? 'true' : null"
+      />
+
+      <label class="input-floating-label ms-0" for="contrasena">Contraseña</label>
+    </div>
 
     <button
       type="button"
-      class="btn btn-text btn-sm absolute right-2 top-1/2 -translate-y-1/2"
+      class="
+        group block cursor-pointer rounded-md p-2
+        transition
+        focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-400)]
+      "
       (click)="showPassword = !showPassword"
       [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
       tabindex="-1"
     >
-      {{ showPassword ? '🙈' : '👁️' }}
-    </button>
+      <span
+        class="
+          icon-[tabler--eye] size-5 shrink-0
+          text-base-content/70 transition
+          group-hover:text-[var(--accent-400)]
+          group-hover:scale-110
+          group-active:scale-95
+        "
+        [class.hidden]="!showPassword"
+      ></span>
 
-    @if (isInvalid('contrasena')) {
-      <span class="helper-text ps-3 text-[var(--danger)]">
-        @if (hasError('contrasena','required')) { La contraseña es obligatoria. }
-        @else if (hasError('contrasena','minlength')) { Mínimo 4 caracteres. }
-        @else if (hasError('contrasena','pattern')) { Incluye al menos un número. }
-        @else { Campo inválido. }
-      </span>
-    } @else if (isValid('contrasena')) {
-      <span class="helper-text ps-3">Se ve bien.</span>
-    }
+      <span
+        class="
+          icon-[tabler--eye-off] size-5 shrink-0
+          text-base-content/70 transition
+          group-hover:text-[var(--accent-400)]
+          group-hover:scale-110
+          group-active:scale-95
+        "
+        [class.hidden]="showPassword"
+      ></span>
+    </button>
   </div>
+
+  @if (isInvalid('contrasena')) {
+    <span class="helper-text ps-3 text-[var(--danger)]">
+      @if (hasError('contrasena','required')) { La contraseña es obligatoria. }
+      @else if (hasError('contrasena','minlength')) { Mínimo 4 caracteres. }
+      @else if (hasError('contrasena','pattern')) { Incluye al menos un número. }
+      @else { Campo inválido. }
+    </span>
+  } @else if (isValid('contrasena')) {
+    <span class="helper-text ps-3">Se ve bien.</span>
+  }
+</div>
+
 
   <!-- Submit -->
   <button
