@@ -1,4 +1,4 @@
-
+<!-- Botón abrir (mobile) -->
 <button
   type="button"
   class="btn btn-text max-sm:btn-square sm:hidden"
@@ -10,28 +10,44 @@
   <span class="icon-[tabler--menu-2] size-5"></span>
 </button>
 
-<!-- Sidebar -->
+<!-- DOCK / SIDEBAR -->
 <aside
   id="collapsible-mini-sidebar"
-class="drawer drawer-start fixed sm:static top-14 sm:top-0 left-0 z-50 sm:z-0
-         h-[calc(100dvh-56px)] sm:h-[100dvh]
-         transition-all duration-200 ease-out overflow-auto
-         bg-[linear-gradient(180deg,var(--bg-2),var(--bg))]
-         text-[var(--text)]
-         border-e border-[var(--border)]
-         shadow-[var(--shadow)]
-         h-screen sticky top-0 bg-base-100 border-r border-base-300/30 overflow-hidden
-         transition-[width] duration-600 ease-out"
+  class="
+    drawer drawer-start
+    fixed sm:fixed
+    z-50 sm:z-10
+
+    /* Mobile: debajo del header */
+    top-14 left-0
+    h-[calc(100dvh-56px)]
+
+    /* Desktop: dock flotante centrado verticalmente */
+    sm:top-1/2 sm:left-4 sm:-translate-y-1/2
+    sm:h-auto sm:w-fit
+    sm:inline-flex sm:flex-col
+
+    overflow-hidden
+
+    transition-[width,transform] duration-300 ease-out
+
+    bg-[linear-gradient(180deg,var(--bg-2),var(--bg))]
+    text-[var(--text)]
+    border border-[var(--border)]
+    shadow-[0_18px_50px_-25px_rgba(0,0,0,.65)]
+    sm:shadow-[0_22px_70px_-35px_var(--accent-glow)]
+    sm:rounded-3xl
+    sm:backdrop-blur-md
+    sm:ring-1 sm:ring-white/5
+  "
   [class.w-66]="!mini()"
   [class.w-17]="mini()"
   [class.-translate-x-full]="!open()"
   [class.translate-x-0]="open()"
   aria-label="Navegación"
 >
-  <div class="drawer-header px-4 py-2 w-full flex items-center justify-between gap-3">
-  
-
-    <!-- Minify (desktop) -->
+  <!-- Header del dock: botón mini (desktop) -->
+  <div class="px-3 py-2 w-full flex items-center justify-between gap-3">
     <div class="hidden sm:block">
       <button
         type="button"
@@ -45,9 +61,9 @@ class="drawer drawer-start fixed sm:static top-14 sm:top-0 left-0 z-50 sm:z-0
     </div>
   </div>
 
-  <div class="drawer-body px-2 pt-4">
+  <!-- Body (alto = contenido en desktop) -->
+  <div class="px-2 pb-2">
     <ul class="menu p-0">
-
       <li>
         <a routerLink="/hall" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           <span class="icon-[tabler--home] size-5"></span>
@@ -96,7 +112,7 @@ class="drawer drawer-start fixed sm:static top-14 sm:top-0 left-0 z-50 sm:z-0
         </li>
       }
 
-      <!-- Dropdown tipo “Apps” (como tu ejemplo) -->
+      <!-- Dropdown Apps -->
       <li class="dropdown relative [--adaptive:none] [--strategy:static]">
         <button type="button" class="dropdown-toggle" aria-haspopup="menu" aria-expanded="false">
           <span class="icon-[tabler--apps] size-5"></span>
@@ -131,7 +147,6 @@ class="drawer drawer-start fixed sm:static top-14 sm:top-0 left-0 z-50 sm:z-0
           </a>
         </li>
       }
-
     </ul>
   </div>
 </aside>
