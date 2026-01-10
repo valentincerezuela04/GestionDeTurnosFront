@@ -1,165 +1,310 @@
-<section class="perfil-usuario">
-  <header class="perfil-usuario__header">
-    <h1>Mi perfil</h1>
+<section class="max-w-4xl mx-auto px-4 py-6">
+  <!-- Header -->
+  <header class="flex items-center justify-between gap-3 mb-5">
+    <div class="min-w-0">
+      <h1 class="text-xl font-extrabold tracking-tight text-[color:var(--text)]">
+        Mi perfil
+      </h1>
+
+      @if (userInfo()) {
+        <p class="mt-1 text-sm text-[color:var(--muted)]">
+          Gestioná tu información personal y credenciales.
+        </p>
+      }
+    </div>
+
     @if (userInfo()) {
-      <span class="perfil-usuario__badge">
+      <span
+        class="
+          shrink-0 rounded-xl px-3 py-1
+          text-[10px] font-extrabold uppercase tracking-[0.22em]
+          border border-[color:var(--border-2)]
+          bg-[color:var(--card-2)]
+          text-[color:var(--accent-500)]
+        "
+      >
         {{ rolActualTexto() }}
       </span>
     }
   </header>
 
+  <!-- Status -->
   @if (isLoading()) {
-    <p class="perfil-usuario__status">Cargando informacion del perfil...</p>
+    <p class="text-sm text-[color:var(--muted)]">Cargando informacion del perfil...</p>
   } @else {
     @if (errorMessage()) {
-      <p class="perfil-usuario__status perfil-usuario__status--error">
-        {{ errorMessage() }}
-      </p>
+      <p class="text-sm text-[color:var(--danger)]">{{ errorMessage() }}</p>
     }
 
     @let cliente = clienteDetalle();
     @let empleado = empleadoDetalle();
     @let info = userInfo();
 
-  <div class="perfil-usuario__stack">
-    @if (esCliente() && cliente) {
-      @if (!editMode()) {
-        <div class="perfil-usuario__panel">
-          <app-card-usuario
-            [usuario]="cliente"
-            [rol]="rolActual()"
-            titulo="Datos personales"
-            [mostrarEditar]="true"
-            (editar)="habilitarEdicion()"
-          ></app-card-usuario>
-        </div>
-      } @else {
-        <form [formGroup]="clienteForm" class="perfil-usuario__form perfil-usuario__panel">
-          <div class="perfil-usuario__field">
-            <label for="nombre">Nombre</label>
-            <input id="nombre" type="text" formControlName="nombre" />
-            @if (controls.nombre.invalid && controls.nombre.touched) {
-              <span class="perfil-usuario__error">El nombre es obligatorio.</span>
-            }
-          </div>
-          <div class="perfil-usuario__field">
-            <label for="apellido">Apellido</label>
-            <input id="apellido" type="text" formControlName="apellido" />
-            @if (controls.apellido.invalid && controls.apellido.touched) {
-              <span class="perfil-usuario__error">El apellido es obligatorio.</span>
-            }
-          </div>
-          <div class="perfil-usuario__field">
-            <label for="dni">DNI</label>
-            <input
-              id="dni"
-              type="text"
-              formControlName="dni"
-              maxlength="8"
-              inputmode="numeric"
-            />
-            @if (controls.dni.touched && controls.dni.hasError('required')) {
-              <span class="perfil-usuario__error">El DNI es obligatorio.</span>
-            }
-            @if (controls.dni.touched && controls.dni.hasError('pattern')) {
-              <span class="perfil-usuario__error">Usa solo numeros (7 u 8 digitos).</span>
-            }
-          </div>
-          <div class="perfil-usuario__field">
-            <label for="telefono">Telefono</label>
-            <input
-              id="telefono"
-              type="text"
-              formControlName="telefono"
-              maxlength="10"
-              inputmode="tel"
-            />
-            @if (controls.telefono.touched && controls.telefono.hasError('required')) {
-              <span class="perfil-usuario__error">El telefono es obligatorio.</span>
-            }
-            @if (controls.telefono.touched && controls.telefono.hasError('pattern')) {
-              <span class="perfil-usuario__error">Debe tener exactamente 10 numeros.</span>
-            }
-          </div>
-          <div class="perfil-usuario__field">
-            <label for="email">Email</label>
-            <input id="email" type="email" formControlName="email" />
-            @if (controls.email.invalid && controls.email.touched) {
-              <span class="perfil-usuario__error">Ingresa un email valido.</span>
-            }
-          </div>
-                    <div class="perfil-usuario__field">
-            <label for="contrasena">Contrasena</label>
-            <input
-              id="contrasena"
-              type="password"
-              formControlName="contrasena"
-              placeholder="Minimo 4 caracteres e incluir al menos un numero"
-            />
-            @if (controls.contrasena.touched && controls.contrasena.hasError('minlength')) {
-              <span class="perfil-usuario__error">Debe tener al menos 4 caracteres.</span>
-            }
-            @if (controls.contrasena.touched && controls.contrasena.hasError('pattern')) {
-              <span class="perfil-usuario__error">Debe incluir al menos un numero.</span>
-            }
-          </div>
+    <div class="space-y-4">
+      <!-- CLIENTE -->
+      @if (esCliente() && cliente) {
+        @if (!editMode()) {
+          <article
+            class="
+    p-0 border-0 bg-transparent shadow-none
+            "
+          >
+            <app-card-usuario
+              [usuario]="cliente"
+              [rol]="rolActual()"
+              titulo="Datos personales"
+              [mostrarEditar]="true"
+              (editar)="habilitarEdicion()"
+            ></app-card-usuario>
 
-          <div class="perfil-usuario__field">
-            <label for="confirmarContrasena">Confirmar contrasena</label>
-            <input
-              id="confirmarContrasena"
-              type="password"
-              formControlName="confirmarContrasena"
-              placeholder="Repite la nueva contrasena"
-            />
-            @if (controls.confirmarContrasena.touched && controls.confirmarContrasena.hasError('minlength')) {
-              <span class="perfil-usuario__error">Debe tener al menos 4 caracteres.</span>
-            }
-            @if (controls.confirmarContrasena.touched && controls.confirmarContrasena.hasError('pattern')) {
-              <span class="perfil-usuario__error">Debe incluir al menos un numero.</span>
-            }
-            @if (controls.confirmarContrasena.touched && controls.confirmarContrasena.hasError('mismatch')) {
-              <span class="perfil-usuario__error">Las contrasenas no coinciden.</span>
-            }
-          </div>
+            <div
+              class="
+                pointer-events-none mt-5 h-[2px] w-full
+                bg-[linear-gradient(90deg,transparent,var(--accent-500),transparent)]
+                opacity-60
+              "
+            ></div>
+          </article>
+        } @else {
+          <article
+            class="
+              rounded-2xl p-5
+              border border-[color:var(--border-2)]
+              bg-[color:var(--card)]
+              shadow-[var(--shadow)]
+            "
+          >
+            <header class="flex items-start justify-between gap-3">
+              <div class="min-w-0">
+                <p class="m-0 text-[10px] font-extrabold uppercase tracking-[0.22em] text-[color:var(--accent-500)]">
+                  Datos personales
+                </p>
+                <h2 class="mt-1 text-lg font-extrabold tracking-tight text-[color:var(--text)]">
+                  Editar perfil
+                </h2>
+              </div>
+            </header>
 
-        </form>
+            <form
+              [formGroup]="clienteForm"
+              class="mt-4 grid grid-cols-2 gap-3 max-sm:grid-cols-1"
+            >
+              <!-- Nombre -->
+              <div class="rounded-xl border border-[color:var(--border)] bg-[color:var(--card)] p-3">
+                <label for="nombre" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[color:var(--accent-500)]">
+                  Nombre
+                </label>
+                <input id="nombre" type="text" formControlName="nombre" class="input mt-2 w-full" />
+                @if (controls.nombre.invalid && controls.nombre.touched) {
+                  <span class="mt-2 block text-xs text-[color:var(--danger)]">El nombre es obligatorio.</span>
+                }
+              </div>
 
-        @if (formError()) {
-          <p class="perfil-usuario__status perfil-usuario__status--error">
-            {{ formError() }}
-          </p>
+              <!-- Apellido -->
+              <div class="rounded-xl border border-[color:var(--border)] bg-[color:var(--card)] p-3">
+                <label for="apellido" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[color:var(--accent-500)]">
+                  Apellido
+                </label>
+                <input id="apellido" type="text" formControlName="apellido" class="input mt-2 w-full" />
+                @if (controls.apellido.invalid && controls.apellido.touched) {
+                  <span class="mt-2 block text-xs text-[color:var(--danger)]">El apellido es obligatorio.</span>
+                }
+              </div>
+
+              <!-- DNI -->
+              <div class="rounded-xl border border-[color:var(--border)] bg-[color:var(--card)] p-3">
+                <label for="dni" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[color:var(--accent-500)]">
+                  DNI
+                </label>
+                <input
+                  id="dni"
+                  type="text"
+                  formControlName="dni"
+                  maxlength="8"
+                  inputmode="numeric"
+                  class="input mt-2 w-full"
+                />
+                @if (controls.dni.touched && controls.dni.hasError('required')) {
+                  <span class="mt-2 block text-xs text-[color:var(--danger)]">El DNI es obligatorio.</span>
+                }
+                @if (controls.dni.touched && controls.dni.hasError('pattern')) {
+                  <span class="mt-2 block text-xs text-[color:var(--danger)]">Usa solo numeros (7 u 8 digitos).</span>
+                }
+              </div>
+
+              <!-- Teléfono -->
+              <div class="rounded-xl border border-[color:var(--border)] bg-[color:var(--card)] p-3">
+                <label for="telefono" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[color:var(--accent-500)]">
+                  Telefono
+                </label>
+                <input
+                  id="telefono"
+                  type="text"
+                  formControlName="telefono"
+                  maxlength="10"
+                  inputmode="tel"
+                  class="input mt-2 w-full"
+                />
+                @if (controls.telefono.touched && controls.telefono.hasError('required')) {
+                  <span class="mt-2 block text-xs text-[color:var(--danger)]">El telefono es obligatorio.</span>
+                }
+                @if (controls.telefono.touched && controls.telefono.hasError('pattern')) {
+                  <span class="mt-2 block text-xs text-[color:var(--danger)]">Debe tener exactamente 10 numeros.</span>
+                }
+              </div>
+
+              <!-- Email -->
+              <div class="rounded-xl border border-[color:var(--border)] bg-[color:var(--card)] p-3 col-span-2 max-sm:col-span-1">
+                <label for="email" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[color:var(--accent-500)]">
+                  Email
+                </label>
+                <input id="email" type="email" formControlName="email" class="input mt-2 w-full" />
+                @if (controls.email.invalid && controls.email.touched) {
+                  <span class="mt-2 block text-xs text-[color:var(--danger)]">Ingresa un email valido.</span>
+                }
+              </div>
+
+              <!-- Contraseña -->
+              <div class="rounded-xl border border-[color:var(--border)] bg-[color:var(--card)] p-3">
+                <label for="contrasena" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[color:var(--accent-500)]">
+                  Contrasena
+                </label>
+                <input
+                  id="contrasena"
+                  type="password"
+                  formControlName="contrasena"
+                  class="input mt-2 w-full"
+                  placeholder="Minimo 4 caracteres e incluir al menos un numero"
+                />
+                @if (controls.contrasena.touched && controls.contrasena.hasError('minlength')) {
+                  <span class="mt-2 block text-xs text-[color:var(--danger)]">Debe tener al menos 4 caracteres.</span>
+                }
+                @if (controls.contrasena.touched && controls.contrasena.hasError('pattern')) {
+                  <span class="mt-2 block text-xs text-[color:var(--danger)]">Debe incluir al menos un numero.</span>
+                }
+                <p class="mt-2 text-xs text-[color:var(--muted)]">
+                  Dejá este campo vacío si no querés cambiar la contraseña.
+                </p>
+              </div>
+
+              <!-- Confirmar contraseña -->
+              <div class="rounded-xl border border-[color:var(--border)] bg-[color:var(--card)] p-3">
+                <label for="confirmarContrasena" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[color:var(--accent-500)]">
+                  Confirmar contrasena
+                </label>
+                <input
+                  id="confirmarContrasena"
+                  type="password"
+                  formControlName="confirmarContrasena"
+                  class="input mt-2 w-full"
+                  placeholder="Repite la nueva contrasena"
+                />
+                @if (controls.confirmarContrasena.touched && controls.confirmarContrasena.hasError('minlength')) {
+                  <span class="mt-2 block text-xs text-[color:var(--danger)]">Debe tener al menos 4 caracteres.</span>
+                }
+                @if (controls.confirmarContrasena.touched && controls.confirmarContrasena.hasError('pattern')) {
+                  <span class="mt-2 block text-xs text-[color:var(--danger)]">Debe incluir al menos un numero.</span>
+                }
+                @if (controls.confirmarContrasena.touched && controls.confirmarContrasena.hasError('mismatch')) {
+                  <span class="mt-2 block text-xs text-[color:var(--danger)]">Las contrasenas no coinciden.</span>
+                }
+              </div>
+            </form>
+
+            @if (formError()) {
+              <p class="mt-3 text-sm text-[color:var(--danger)]">{{ formError() }}</p>
+            }
+
+            <footer class="mt-5 flex items-center justify-end gap-2">
+              <button
+                type="button"
+                class="
+                  inline-flex items-center gap-2 h-9 rounded-xl px-3
+                  border border-[color:var(--border-2)] bg-[color:var(--card)] text-[color:var(--text)]
+                  transition hover:bg-[color:var(--card-2)]
+                  focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--accent-400)]
+                "
+                (click)="cancelarEdicion()"
+                [disabled]="isSaving()"
+              >
+                <span class="icon-[tabler--x] size-5" aria-hidden="true"></span>
+                Cancelar
+              </button>
+
+              <button
+                type="button"
+                class="
+                  inline-flex items-center gap-2 h-9 rounded-xl px-3
+                  border border-[color:var(--success)]
+                  bg-[color:var(--card)] text-[color:var(--success)]
+                  transition hover:bg-[color:var(--card-2)]
+                  focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--success)]
+                "
+                (click)="guardarCambios()"
+                [disabled]="isSaving()"
+              >
+                <span class="icon-[tabler--device-floppy] size-5" aria-hidden="true"></span>
+                {{ isSaving() ? 'Guardando...' : 'Guardar cambios' }}
+              </button>
+            </footer>
+
+            <div
+              class="
+                pointer-events-none mt-5 h-[2px] w-full
+                bg-[linear-gradient(90deg,transparent,var(--accent-500),transparent)]
+                opacity-60
+              "
+            ></div>
+          </article>
         }
-
-        <footer class="perfil-usuario__actions">
-          <button type="button" class="perfil-usuario__cancel" (click)="cancelarEdicion()" [disabled]="isSaving()">
-            Cancelar
-          </button>
-          <button type="button" class="perfil-usuario__save" (click)="guardarCambios()" [disabled]="isSaving()">
-            {{ isSaving() ? 'Guardando...' : 'Guardar cambios' }}
-          </button>
-        </footer>
       }
-    } @else if (empleado) {
-      <div class="perfil-usuario__panel">
-        <app-card-usuario
-          [usuario]="empleado"
-          [rol]="rolActual()"
-          titulo="Datos del empleado"
-        ></app-card-usuario>
-      </div>
-    } @else if (info) {
-      <div class="perfil-usuario__panel">
-        <app-card-usuario
-          [usuario]="info"
-          [rol]="rolActual()"
-          titulo="Informacion del usuario"
-        ></app-card-usuario>
-      </div>
-    } @else {
-      <p class="perfil-usuario__status">No se encontro informacion del usuario.</p>
-    }
-  </div>
+      <!-- EMPLEADO -->
+      @else if (empleado) {
+        <article
+          class="
+            rounded-2xl p-5
+            border border-[color:var(--border-2)]
+            bg-[color:var(--card)]
+            shadow-[var(--shadow)]
+            transition hover:-translate-y-0.5
+            hover:border-[color:rgba(124,92,255,0.45)]
+            hover:shadow-[var(--shadow-accent)]
+          "
+        >
+          <app-card-usuario
+            [usuario]="empleado"
+            [rol]="rolActual()"
+            titulo="Datos del empleado"
+          ></app-card-usuario>
+
+          <div
+            class="
+              pointer-events-none mt-5 h-[2px] w-full
+              bg-[linear-gradient(90deg,transparent,var(--accent-500),transparent)]
+              opacity-60
+            "
+          ></div>
+        </article>
+      }
+      <!-- FALLBACK -->
+      @else if (info) {
+        <article
+          class="
+            rounded-2xl p-5
+            border border-[color:var(--border-2)]
+            bg-[color:var(--card)]
+            shadow-[var(--shadow)]
+          "
+        >
+          <app-card-usuario
+            [usuario]="info"
+            [rol]="rolActual()"
+            titulo="Informacion del usuario"
+          ></app-card-usuario>
+        </article>
+      } @else {
+        <p class="text-sm text-[color:var(--muted)]">No se encontro informacion del usuario.</p>
+      }
+    </div>
   }
 </section>
-

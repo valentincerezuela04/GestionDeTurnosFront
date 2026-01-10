@@ -1,29 +1,60 @@
-<section class="details-cliente">
-  <header class="details-cliente__header">
+<section class="max-w-4xl mx-auto px-4 py-6">
+  <header class="flex items-center justify-between gap-3 mb-5">
     <div>
-      <p class="details-cliente__eyebrow">Detalle de cliente</p>
+      <p class="m-0 text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
+        Detalle de cliente
+      </p>
+
       @if (cliente(); as data) {
-        <h1>
+        <h1 class="mt-1 text-xl font-extrabold tracking-tight text-[var(--text)]">
           {{ data?.nombre || 'Sin nombre' }} {{ data?.apellido || '' }}
         </h1>
-        <p class="details-cliente__lead">
+
+        <p class="mt-1 text-sm text-[var(--muted)]">
           ID {{ data?.id }} / DNI {{ data?.dni || 'No informado' }}
         </p>
       } @else {
-        <h1>Cliente no disponible</h1>
+        <h1 class="mt-1 text-xl font-extrabold tracking-tight text-[var(--text)]">
+          Cliente no disponible
+        </h1>
       }
     </div>
-    <div class="details-cliente__actions">
-      <button type="button" class="details-cliente__back" (click)="onVolver()">
-        Volver
+
+    <div class="flex items-center gap-2">
+      <button
+        type="button"
+        class="
+          inline-flex items-center gap-2
+          h-9 rounded-xl px-3
+          border border-[var(--border-2)]
+          bg-[var(--card)]
+          text-[var(--accent-500)]
+          transition
+          hover:bg-[var(--card-2)]
+          hover:border-[color:rgba(124,92,255,0.55)]
+          focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-400)]
+        "
+        (click)="onVolver()"
+      >
+        <span class="icon-[tabler--arrow-left] size-5" aria-hidden="true"></span>
+        <span class="text-sm font-semibold">Volver</span>
       </button>
+
       @if (esAdmin && cliente()) {
         <button
           type="button"
-          class="details-cliente__delete"
+          class="
+            inline-flex items-center gap-2 h-9 rounded-xl px-3
+            border border-[color:rgba(225,29,72,0.30)]
+            bg-[var(--card)] text-[var(--danger)]
+            transition hover:bg-[color:rgba(225,29,72,0.12)] hover:border-[color:rgba(225,29,72,0.55)]
+            focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:rgba(225,29,72,0.35)]
+            disabled:opacity-60 disabled:cursor-not-allowed
+          "
           [disabled]="eliminando"
           (click)="eliminarCliente()"
         >
+          <span class="icon-[tabler--trash] size-5" aria-hidden="true"></span>
           {{ eliminando ? 'Eliminando...' : 'Eliminar' }}
         </button>
       }
@@ -31,38 +62,90 @@
   </header>
 
   @if (cliente(); as data) {
-    <dl class="details-cliente__grid">
-      <div>
-        <dt>Nombre</dt>
-        <dd>{{ data?.nombre || '-' }}</dd>
-      </div>
-      <div>
-        <dt>Apellido</dt>
-        <dd>{{ data?.apellido || '-' }}</dd>
-      </div>
-      <div>
-        <dt>DNI</dt>
-        <dd>{{ data?.dni || '-' }}</dd>
-      </div>
-      <div>
-        <dt>Telefono</dt>
-        <dd>{{ data?.telefono || '-' }}</dd>
-      </div>
-      <div>
-        <dt>Email</dt>
-        <dd>{{ data?.email || '-' }}</dd>
-      </div>
-    </dl>
+    <article
+      class="
+        relative overflow-hidden rounded-2xl p-5
+        border border-[var(--border-2)]
+        bg-[var(--card)]
+        shadow-[var(--shadow)]
+        transition hover:-translate-y-0.5
+        hover:border-[color:rgba(124,92,255,0.45)]
+        hover:shadow-[var(--shadow-accent)]
+      "
+    >
+      <div
+        class="
+          pointer-events-none absolute inset-0
+          bg-[radial-gradient(circle_at_12%_8%,rgba(124,92,255,0.16),transparent_55%)]
+        "
+      ></div>
 
-    @if (error) {
-      <p class="details-cliente__empty details-cliente__empty--error">
-        {{ error }}
-      </p>
-    }
+      <div class="relative">
+        <dl class="grid grid-cols-2 gap-3 max-sm:grid-cols-1">
+          <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3">
+            <dt class="text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
+              Nombre
+            </dt>
+            <dd class="mt-1 text-sm font-semibold text-[var(--text)]">
+              {{ data?.nombre || '-' }}
+            </dd>
+          </div>
+
+          <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3">
+            <dt class="text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
+              Apellido
+            </dt>
+            <dd class="mt-1 text-sm font-semibold text-[var(--text)]">
+              {{ data?.apellido || '-' }}
+            </dd>
+          </div>
+
+          <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3">
+            <dt class="text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
+              DNI
+            </dt>
+            <dd class="mt-1 text-sm font-semibold text-[var(--text)]">
+              {{ data?.dni || '-' }}
+            </dd>
+          </div>
+
+          <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3">
+            <dt class="text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
+              Teléfono
+            </dt>
+            <dd class="mt-1 text-sm font-semibold text-[var(--text)]">
+              {{ data?.telefono || '-' }}
+            </dd>
+          </div>
+
+          <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3 col-span-2 max-sm:col-span-1">
+            <dt class="text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
+              Email
+            </dt>
+            <dd class="mt-1 text-sm font-semibold text-[var(--text)] break-all">
+              {{ data?.email || '-' }}
+            </dd>
+          </div>
+        </dl>
+
+        @if (error) {
+          <p class="mt-4 text-sm text-[var(--danger)]">
+            {{ error }}
+          </p>
+        }
+      </div>
+
+      <div
+        class="
+          pointer-events-none absolute bottom-0 left-0 h-[2px] w-full
+          bg-[linear-gradient(90deg,transparent,var(--accent-500),transparent)]
+          opacity-60
+        "
+      ></div>
+    </article>
   } @else {
-    <p class="details-cliente__empty">
+    <p class="text-sm text-[var(--muted)]">
       Selecciona un cliente desde el listado para ver su informacion completa.
     </p>
   }
 </section>
-

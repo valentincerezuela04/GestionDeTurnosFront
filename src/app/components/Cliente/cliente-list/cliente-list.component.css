@@ -15,7 +15,7 @@
   background: linear-gradient(120deg, rgba(93,70,210,.12), rgba(15,20,28,0));
   border-radius:16px;
   border:1px solid rgba(93,70,210,.04);
-  backdrop-filter: blur(6px);
+  
 }
 
 .clientes-list__header h1{
@@ -68,7 +68,6 @@
 }
 
 .clientes-list__refresh:disabled{
-  opacity:.45;
   cursor:not-allowed;
 }
 
@@ -200,7 +199,7 @@
 }
 
 .cliente-card__delete:disabled{
-  opacity:.55;
+  
   cursor:not-allowed;
   box-shadow:none;
 }
