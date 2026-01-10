@@ -154,78 +154,135 @@
           }
         </div>
 
-        <div class="input-floating w-96 relative">
-          <input
-            id="contrasena"
-            [type]="showPassword ? 'text' : 'password'"
-            placeholder=""
-            formControlName="contrasena"
-            class="pr-12"
-            [class.is-invalid]="isInvalid('contrasena')"
-            [class.is-valid]="isValid('contrasena')"
-            [ngClass]="[inputBase, isInvalid('contrasena') ? hoverBad : hoverOk]"
-            [attr.aria-invalid]="isInvalid('contrasena') ? 'true' : null"
-          />
-          <label class="input-floating-label" for="contrasena">Contraseña</label>
+<div class="w-96">
+  <div class="input" [class.is-invalid]="isInvalid('contrasena')" [class.is-valid]="isValid('contrasena')">
+    <div class="input-floating grow">
+      <input
+        id="contrasena"
+        [type]="showPassword ? 'text' : 'password'"
+        placeholder=" "
+        class="pr-12"
+        formControlName="contrasena"
+        [class.is-invalid]="isInvalid('contrasena')"
+        [class.is-valid]="isValid('contrasena')"
+        [attr.aria-invalid]="isInvalid('contrasena') ? 'true' : null"
+      />
 
-          <button
-            type="button"
-            class="btn btn-text btn-sm absolute right-2 top-1/2 -translate-y-1/2"
-            (click)="showPassword = !showPassword"
-            [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
-            tabindex="-1"
-          >
-            {{ showPassword ? '🙈' : '👁️' }}
-          </button>
+      <label class="input-floating-label ms-0" for="contrasena">Contraseña</label>
+    </div>
 
-          @if (isInvalid('contrasena')) {
-            <span class="helper-text ps-3 text-[var(--danger)]">
-              @if (hasError('contrasena','required')) { La contraseña es obligatoria. }
-              @else if (hasError('contrasena','minlength')) { Mínimo 6 caracteres. }
-              @else if (hasError('contrasena','pattern')) { Debe incluir al menos una letra y un número. }
-              @else { Campo inválido. }
-            </span>
-          } @else if (isValid('contrasena')) {
-            <span class="helper-text ps-3 text-base-content/70">Se ve bien.</span>
-          }
-        </div>
+    <button
+      type="button"
+      class="
+        group block cursor-pointer rounded-md p-2
+        transition
+        focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-400)]
+      "
+      (click)="showPassword = !showPassword"
+      [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+      tabindex="-1"
+    >
+      <span
+        class="
+          icon-[tabler--eye] size-5 shrink-0
+          text-base-content/70 transition
+          group-hover:text-[var(--accent-400)]
+          group-hover:scale-110
+          group-active:scale-95
+        "
+        [class.hidden]="!showPassword"
+      ></span>
 
-        <div class="input-floating w-96 relative">
-          <input
-            id="confirmarContrasena"
-            [type]="showPassword ? 'text' : 'password'"
-            placeholder=""
-            formControlName="confirmarContrasena"
-            class="pr-12"
-            [class.is-invalid]="isInvalid('confirmarContrasena')"
-            [class.is-valid]="isValid('confirmarContrasena')"
-            [ngClass]="[inputBase, isInvalid('confirmarContrasena') ? hoverBad : hoverOk]"
-            [attr.aria-invalid]="isInvalid('confirmarContrasena') ? 'true' : null"
-          />
-          <label class="input-floating-label" for="confirmarContrasena">Confirmar contraseña</label>
+      <span
+        class="
+          icon-[tabler--eye-off] size-5 shrink-0
+          text-base-content/70 transition
+          group-hover:text-[var(--accent-400)]
+          group-hover:scale-110
+          group-active:scale-95
+        "
+        [class.hidden]="showPassword"
+      ></span>
+    </button>
+  </div>
 
-          <button
-            type="button"
-            class="btn btn-text btn-sm absolute right-2 top-1/2 -translate-y-1/2"
-            (click)="showPassword = !showPassword"
-            [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
-            tabindex="-1"
-          >
-            {{ showPassword ? '🙈' : '👁️' }}
-          </button>
+  @if (isInvalid('contrasena')) {
+    <span class="helper-text ps-3 text-[var(--danger)]">
+      @if (hasError('contrasena','required')) { La contraseña es obligatoria. }
+      @else if (hasError('contrasena','minlength')) { Mínimo 6 caracteres. }
+      @else if (hasError('contrasena','pattern')) { Debe incluir al menos una letra y un número. }
+      @else { Campo inválido. }
+    </span>
+  } @else if (isValid('contrasena')) {
+    <span class="helper-text ps-3">Se ve bien.</span>
+  }
+</div>
 
-          @if (isInvalid('confirmarContrasena')) {
-            <span class="helper-text ps-3 text-[var(--danger)]">
-              @if (hasError('confirmarContrasena','required')) { La confirmación es obligatoria. }
-              @else if (hasError('confirmarContrasena','minlength')) { Mínimo 6 caracteres. }
-              @else if (hasError('confirmarContrasena','pattern')) { Debe incluir al menos una letra y un número. }
-              @else if (hasError('confirmarContrasena','mismatch')) { Las contraseñas no coinciden. }
-              @else { Campo inválido. }
-            </span>
-          } @else if (isValid('confirmarContrasena')) {
-            <span class="helper-text ps-3 text-base-content/70">Se ve bien.</span>
-          }
-        </div>
+<div class="w-96">
+  <div class="input" [class.is-invalid]="isInvalid('confirmarContrasena')" [class.is-valid]="isValid('confirmarContrasena')">
+    <div class="input-floating grow">
+      <input
+        id="confirmarContrasena"
+        [type]="showPassword ? 'text' : 'password'"
+        placeholder=" "
+        class="pr-12"
+        formControlName="confirmarContrasena"
+        [class.is-invalid]="isInvalid('confirmarContrasena')"
+        [class.is-valid]="isValid('confirmarContrasena')"
+        [attr.aria-invalid]="isInvalid('confirmarContrasena') ? 'true' : null"
+      />
+
+      <label class="input-floating-label ms-0" for="confirmarContrasena">Confirmar contraseña</label>
+    </div>
+
+    <button
+      type="button"
+      class="
+        group block cursor-pointer rounded-md p-2
+        transition
+        focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-400)]
+      "
+      (click)="showPassword = !showPassword"
+      [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+      tabindex="-1"
+    >
+      <span
+        class="
+          icon-[tabler--eye] size-5 shrink-0
+          text-base-content/70 transition
+          group-hover:text-[var(--accent-400)]
+          group-hover:scale-110
+          group-active:scale-95
+        "
+        [class.hidden]="!showPassword"
+      ></span>
+
+      <span
+        class="
+          icon-[tabler--eye-off] size-5 shrink-0
+          text-base-content/70 transition
+          group-hover:text-[var(--accent-400)]
+          group-hover:scale-110
+          group-active:scale-95
+        "
+        [class.hidden]="showPassword"
+      ></span>
+    </button>
+  </div>
+
+  @if (isInvalid('confirmarContrasena')) {
+    <span class="helper-text ps-3 text-[var(--danger)]">
+      @if (hasError('confirmarContrasena','required')) { La confirmación es obligatoria. }
+      @else if (hasError('confirmarContrasena','minlength')) { Mínimo 6 caracteres. }
+      @else if (hasError('confirmarContrasena','pattern')) { Debe incluir al menos una letra y un número. }
+      @else if (hasError('confirmarContrasena','mismatch')) { Las contraseñas no coinciden. }
+      @else { Campo inválido. }
+    </span>
+  } @else if (isValid('confirmarContrasena')) {
+    <span class="helper-text ps-3">Se ve bien.</span>
+  }
+</div>
+
 
         <div class="input-floating w-96">
           <input

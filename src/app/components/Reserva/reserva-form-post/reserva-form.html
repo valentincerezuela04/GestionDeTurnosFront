@@ -1,15 +1,46 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()" class="reserva-form">
-  <h2>{{ editMode ? "Editar" : "Nueva" }} Reserva</h2>
+<form
+  [formGroup]="form"
+  (ngSubmit)="onSubmit()"
+  class="
+    w-full max-w-5xl
+    rounded-2xl
+    border border-[color:var(--border)]
+    bg-[color:var(--card)]
+    shadow-[0_20px_60px_-40px_var(--accent-glow)]
+    p-6 md:p-8
+  "
+>
+  <h2
+    class="
+      text-2xl md:text-3xl font-extrabold tracking-tight
+      text-[color:var(--text)]
+      mb-6
+    "
+  >
+    {{ editMode ? "Editar" : "Nueva" }} Reserva
+  </h2>
 
-  <div class="reserva-form__grid">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
     <!-- Sala (select) -->
-    <div class="form-group">
-      <label for="salaId">Sala *</label>
+    <div class="grid gap-2">
+      <label for="salaId" class="text-sm font-semibold text-[color:var(--text)]">Sala
+
+      </label>
+
       <select
         id="salaId"
         formControlName="salaId"
-        class="form-control"
-        [class.is-invalid]="form.get('salaId')?.invalid && form.get('salaId')?.touched">
+        class="
+          w-full rounded-xl px-4 py-3
+          bg-[color:var(--bg-2)]
+          text-[color:var(--text)]
+          border border-[color:var(--border)]
+          outline-none transition
+          focus:border-[color:var(--accent-400)]
+          focus:ring-2 focus:ring-[color:var(--accent-400)]/30
+        "
+        [class.border-[color:var(--danger)]]="form.get('salaId')?.invalid && form.get('salaId')?.touched"
+      >
         <option [ngValue]="null" disabled>Selecciona una sala</option>
         @for (s of salas; track s.id) {
           <option [value]="s.id">
@@ -17,90 +48,149 @@
           </option>
         }
       </select>
+
       @if (form.get('salaId')?.invalid && form.get('salaId')?.touched) {
-        <div class="invalid-feedback">La sala es requerida</div>
+        <div class="text-sm ps-1 text-[color:var(--danger)]">La sala es requerida</div>
       }
     </div>
 
     <!-- Fecha y Hora de Inicio -->
-    <div class="form-group ">
-      <label for="fechaInicio">Fecha y hora de inicio *</label>
+    <div class="grid gap-2">
+      <label for="fechaInicio" class="text-sm font-semibold text-[color:var(--text)]"
+        >Fecha y hora de inicio</label
+      >
+
       <input
         #fechaInicioInput
         type="datetime-local"
         id="fechaInicio"
         formControlName="fechaInicio"
-        class="form-control "
         [min]="minFechaInicio"
         autocomplete="off"
         (click)="abrirPicker(fechaInicioInput)"
         (focus)="abrirPicker(fechaInicioInput)"
-        [class.is-invalid]="form.get('fechaInicio')?.invalid && form.get('fechaInicio')?.touched" />
+        class="
+          w-full rounded-xl px-4 py-3
+          bg-(--bg-2)
+          text-[color:var(--text)]
+          border border-[color:var(--border)]
+          outline-none transition
+          focus:border-[color:var(--accent-400)]
+          focus:ring-2 focus:ring-[color:var(--accent-400)]/30
+        "
+        [class.border-[color:var(--danger)]]="form.get('fechaInicio')?.invalid && form.get('fechaInicio')?.touched"
+      />
+
       @if (form.get('fechaInicio')?.invalid && form.get('fechaInicio')?.touched) {
-        <div class="invalid-feedback">La fecha y hora de inicio son requeridas</div>
+        <div class="text-sm ps-1 text-[color:var(--danger)]">La fecha y hora de inicio son requeridas</div>
       }
     </div>
 
     <!-- Fecha y Hora de Fin -->
-    <div class="form-group ">
-      <label for="fechaFinal">Fecha y hora de fin *</label>
+    <div class="grid gap-2">
+      <label for="fechaFinal" class="text-sm font-semibold text-[color:var(--text)]"
+        >Fecha y hora de fin </label
+      >
+
       <input
-         #fechaFinalInput
-          type="datetime-local"
-          id="fechaFinal"
-          formControlName="fechaFinal"
-          class="form-control "
-          [min]="minFechaInicio"
-          autocomplete="off"
-          (click)="abrirPicker(fechaFinalInput)"
-          (focus)="abrirPicker(fechaFinalInput)"
-        [class.is-invalid]="(form.get('fechaFinal')?.invalid && form.get('fechaFinal')?.touched) || form.hasError('dateRange')" />
+        #fechaFinalInput
+        type="datetime-local"
+        id="fechaFinal"
+        formControlName="fechaFinal"
+        [min]="minFechaInicio"
+        autocomplete="off"
+        (click)="abrirPicker(fechaFinalInput)"
+        (focus)="abrirPicker(fechaFinalInput)"
+        class="
+          w-full rounded-xl px-4 py-3
+          bg-[color:var(--bg-2)]
+          text-[color:var(--text)]
+          border border-[color:var(--border)]
+          outline-none transition
+          focus:border-[color:var(--accent-400)]
+          focus:ring-2 focus:ring-[color:var(--accent-400)]/30
+        "
+        [class.border-[color:var(--danger)]]="(form.get('fechaFinal')?.invalid && form.get('fechaFinal')?.touched) || form.hasError('dateRange')"
+      />
+
       @if (form.get('fechaFinal')?.invalid && form.get('fechaFinal')?.touched) {
-        <div class="invalid-feedback">La fecha y hora de fin son requeridas</div>
+        <div class="text-sm ps-1 text-[color:var(--danger)]">La fecha y hora de fin son requeridas</div>
       }
       @if (form.hasError('dateRange') && (form.get('fechaFinal')?.touched || form.get('fechaInicio')?.touched)) {
-        <div class="invalid-feedback">La fecha final debe ser posterior a la inicial</div>
+        <div class="text-sm ps-1 text-[color:var(--danger)]">La fecha final debe ser posterior a la inicial</div>
       }
     </div>
 
     <!-- Tipo de Pago -->
-    <div class="form-group">
-      <label for="tipoPago">Tipo de pago *</label>
+    <div class="grid gap-2">
+      <label for="tipoPago" class="text-sm font-semibold text-[color:var(--text)]">Tipo de pago</label>
+
       <select
         id="tipoPago"
         formControlName="tipoPago"
-        class="form-control"
-        [class.is-invalid]="form.get('tipoPago')?.invalid && form.get('tipoPago')?.touched">
+        class="
+          w-full rounded-xl px-4 py-3
+          bg-[color:var(--bg-2)]
+          text-[color:var(--text)]
+          border border-[color:var(--border)]
+          outline-none transition
+          focus:border-[color:var(--accent-400)]
+          focus:ring-2 focus:ring-[color:var(--accent-400)]/30
+        "
+        [class.border-[color:var(--danger)]]="form.get('tipoPago')?.invalid && form.get('tipoPago')?.touched"
+      >
         <option [ngValue]="null" disabled>Selecciona un metodo</option>
         @for (p of tipoPagos; track p) {
           <option [value]="p">{{ p.replace('_', ' ') }}</option>
         }
       </select>
+
       @if (form.get('tipoPago')?.invalid && form.get('tipoPago')?.touched) {
-        <div class="invalid-feedback">El tipo de pago es requerido</div>
+        <div class="text-sm ps-1 text-[color:var(--danger)]">El tipo de pago es requerido</div>
       }
     </div>
 
     <!-- Descripcion -->
-    <div class="form-group form-group--wide">
-      <label for="descripcion">Descripcion (opcional)</label>
+    <div class="md:col-span-2 grid gap-2">
+      <label for="descripcion" class="text-sm font-semibold text-[color:var(--text)]">Descripcion (opcional)</label>
+
       <textarea
         id="descripcion"
         formControlName="descripcion"
-        class="form-control"
         rows="3"
-        placeholder="Agrega notas o detalles adicionales"></textarea>
+        placeholder="Agrega notas o detalles adicionales"
+        class="
+          w-full rounded-xl px-4 py-3
+          bg-[color:var(--bg-2)]
+          text-[color:var(--text)]
+          border border-[color:var(--border)]
+          outline-none transition
+          focus:border-[color:var(--accent-400)]
+          focus:ring-2 focus:ring-[color:var(--accent-400)]/30
+          resize-none
+        "
+      ></textarea>
     </div>
 
     <!-- clienteId (solo visible para empleados) -->
     @if (isEmpleado()) {
-      <div class="form-group form-group--wide">
-        <label for="clienteId">Cliente *</label>
+      <div class="md:col-span-2 grid gap-2">
+        <label for="clienteId" class="text-sm font-semibold text-[color:var(--text)]">Cliente</label>
+
         <select
           id="clienteId"
           formControlName="clienteId"
-          class="form-control"
-          [class.is-invalid]="form.get('clienteId')?.invalid && form.get('clienteId')?.touched">
+          class="
+            w-full rounded-xl px-4 py-3
+            bg-[color:var(--bg-2)]
+            text-[color:var(--text)]
+            border border-[color:var(--border)]
+            outline-none transition
+            focus:border-[color:var(--accent-400)]
+            focus:ring-2 focus:ring-[color:var(--accent-400)]/30
+          "
+          [class.border-[color:var(--danger)]]="form.get('clienteId')?.invalid && form.get('clienteId')?.touched"
+        >
           <option [ngValue]="null" disabled>Selecciona un cliente</option>
           @for (c of clientes; track c.id) {
             <option [value]="c.id">
@@ -108,33 +198,76 @@
             </option>
           }
         </select>
-        <small class="text-muted">Mostrando ID y correo registrado del cliente.</small>
+
+        <small class="text-sm text-[color:var(--text-2)] ps-1">Mostrando ID y correo registrado del cliente.</small>
+
         @if (form.get('clienteId')?.invalid && form.get('clienteId')?.touched) {
-          <div class="invalid-feedback">El cliente es requerido</div>
+          <div class="text-sm ps-1 text-[color:var(--danger)]">El cliente es requerido</div>
         }
       </div>
     }
 
-    <div class="form-group">
-      <label for="monto">Monto a pagar (ARS)</label>
+    <!-- Monto -->
+    <div class="grid gap-2">
+      <label for="monto" class="text-sm font-semibold text-[color:var(--text)]">Monto a pagar (ARS)</label>
+
       <input
         id="monto"
         type="number"
-        class="form-control"
+        class="
+          w-full rounded-xl px-4 py-3
+          bg-[color:var(--bg-2)]
+          text-[color:var(--text)]
+          border border-[color:var(--border)]
+          outline-none
+          opacity-80
+        "
         formControlName="monto"
         readonly
       />
-      <small class="text-muted">
+
+      <small class="text-sm text-[color:var(--text-2)] ps-1">
         Se calcula automaticamente segun la sala, la duracion y si es fin de semana (+20%).
       </small>
     </div>
   </div>
 
   <!-- Acciones -->
-  <div class="form-actions">
-    <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+  <div class="mt-7 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-end">
+    <button
+      type="submit"
+      class="
+        inline-flex items-center justify-center
+        rounded-xl px-5 py-3 font-semibold
+        bg-[color:var(--accent-500)]
+        text-white
+        shadow-[0_16px_40px_-24px_var(--accent-glow)]
+        transition
+        hover:bg-[color:var(--accent-600)]
+        active:scale-[0.98]
+        disabled:opacity-50 disabled:cursor-not-allowed
+      "
+      [disabled]="form.invalid"
+    >
       {{ editMode ? "Actualizar" : "Crear" }} Reserva
     </button>
-    <button type="button" class="btn btn-secondary" (click)="router.navigate(['/reservas'])">Cancelar</button>
+
+    <button
+      type="button"
+      class="
+        inline-flex items-center justify-center
+        rounded-xl px-5 py-3 font-semibold
+        bg-[color:var(--card-2)]
+        text-[color:var(--text)]
+        border border-[color:var(--border)]
+        transition
+        hover:border-[color:var(--accent-400)]
+        hover:shadow-[0_14px_35px_-28px_var(--accent-glow)]
+        active:scale-[0.98]
+      "
+      (click)="router.navigate(['/reservas'])"
+    >
+      Cancelar
+    </button>
   </div>
 </form>

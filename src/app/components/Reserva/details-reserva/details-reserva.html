@@ -1,46 +1,79 @@
 @if (reserva(); as reservaData) {
-  <div class="details-container">
+  <div
+    class="details-container
+      bg-[color:var(--card)]
+      border border-[color:var(--border)]
+      shadow-[0_20px_60px_-40px_var(--accent-glow)]
+      text-[color:var(--text)]
+    "
+  >
     <div class="details-header">
       <div class="header-text">
-        <p class="eyebrow">Reserva</p>
-        <h2>Reserva #{{reservaData.id}}</h2>
+        <p class="eyebrow text-[color:var(--text-2)]">Reserva</p>
+        <h2 class="text-[color:var(--text)]">Reserva #{{reservaData.id}}</h2>
         <div class="header-chips">
-          <span class="estado-chip" [ngClass]="estadoClase(reservaData.estado)">
+          <span
+            class="estado-chip bg-[color:var(--card-2)] border border-[color:var(--border-2)] text-[color:var(--text)]"
+            [ngClass]="estadoClase(reservaData.estado)"
+          >
             {{ reservaData.estado }}
           </span>
-          <span class="pago-chip">
+          <span
+            class="pago-chip bg-[color:var(--bg-2)] border border-[color:var(--border)] text-[color:var(--text-2)]"
+          >
             {{ formatTipoPago(reservaData.tipoPago) }}
           </span>
         </div>
       </div>
-      <button class="btn btn-secondary" (click)="volver()">Volver</button>
+      <button
+        class="btn btn-secondary
+          bg-[color:var(--card-2)]
+          border border-[color:var(--border)]
+          text-[color:var(--text)]
+          hover:border-[color:var(--accent-400)]
+          hover:shadow-[0_14px_35px_-28px_var(--accent-glow)]
+        "
+        (click)="volver()"
+      >
+        Volver
+      </button>
     </div>
 
     <div class="details-content">
-      <div class="info-section">
-        <h3>Sala y cliente</h3>
+      <div
+        class="info-section
+          bg-[color:var(--card)]
+          border border-[color:var(--border)]
+        "
+      >
+        <h3 class="text-[color:var(--text)]">Sala y cliente</h3>
         @if (!isEditing()) {
           <div class="detail-rows">
             <div class="detail-row">
-              <span class="detail-label">Sala</span>
-              <span class="detail-value">
+              <span class="detail-label text-[color:var(--text-2)]">Sala</span>
+              <span class="detail-value text-[color:var(--text)]">
                 #{{reservaData.salaNumero}} - {{reservaData.salaCapacidad}} personas
               </span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">Cliente</span>
-              <span class="detail-value">{{reservaData.clienteEmail}}</span>
+              <span class="detail-label text-[color:var(--text-2)]">Cliente</span>
+              <span class="detail-value text-[color:var(--text)]">{{reservaData.clienteEmail}}</span>
             </div>
           </div>
         } @else {
           <div class="edit-form">
             <div class="form-group">
-              <label for="salaId">Sala</label>
+              <label for="salaId" class="text-(--text)">Sala</label>
               <select
                 id="salaId"
                 [ngModel]="editForm().salaId"
                 (ngModelChange)="updateSalaId($event)"
-                class="form-control">
+                class="form-control
+                  bg-(--card)
+                  border border-(--border)
+                  text-(--text)
+                "
+              >
                 <option [ngValue]="null" disabled>
                   Selecciona una sala
                 </option>
@@ -52,31 +85,47 @@
               </select>
             </div>
             <div class="form-group form-group--readonly">
-              <label>Cliente</label>
-              <div class="readonly-value">{{reservaData.clienteEmail}}</div>
+              <label class="text-[color:var(--text)]">Cliente</label>
+              <div
+                class="readonly-value
+                  bg-[color:var(--card)]
+                  border border-[color:var(--border)]
+                  text-[color:var(--text)]
+                "
+              >
+                {{reservaData.clienteEmail}}
+              </div>
             </div>
           </div>
         }
       </div>
 
-      <div class="info-section">
-        <h3>Pago y estado</h3>
+      <div
+        class="info-section
+          bg-[color:var(--card)]
+          border border-[color:var(--border)]
+        "
+      >
+        <h3 class="text-[color:var(--text)]">Pago y estado</h3>
         @if (!isEditing()) {
           <div class="detail-rows">
             <div class="detail-row">
-              <span class="detail-label">Monto</span>
-              <span class="detail-value detail-value--strong">
+              <span class="detail-label text-[color:var(--text-2)]">Monto</span>
+              <span class="detail-value detail-value--strong text-[color:var(--text)]">
                 {{reservaData.monto | currency:'ARS':'symbol':'1.0-0'}}
               </span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">Tipo de pago</span>
-              <span class="detail-value">{{formatTipoPago(reservaData.tipoPago)}}</span>
+              <span class="detail-label text-[color:var(--text-2)]">Tipo de pago</span>
+              <span class="detail-value text-[color:var(--text)]">{{formatTipoPago(reservaData.tipoPago)}}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">Estado</span>
+              <span class="detail-label text-[color:var(--text-2)]">Estado</span>
               <span class="detail-value">
-                <span class="estado-chip" [ngClass]="estadoClase(reservaData.estado)">
+                <span
+                  class="estado-chip bg-[color:var(--card-2)] border border-[color:var(--border-2)] text-[color:var(--text)]"
+                  [ngClass]="estadoClase(reservaData.estado)"
+                >
                   {{reservaData.estado}}
                 </span>
               </span>
@@ -85,26 +134,43 @@
         } @else {
           <div class="edit-form">
             <div class="form-group">
-              <label for="tipoPago">Tipo de Pago</label>
+              <label for="tipoPago" class="text-[color:var(--text)]">Tipo de Pago</label>
               <select
                 id="tipoPago"
                 [ngModel]="editForm().tipoPago"
                 (ngModelChange)="updateTipoPago($event)"
-                class="form-control">
+                class="form-control
+                  bg-[color:var(--card)]
+                  border border-[color:var(--border)]
+                  text-[color:var(--text)]
+                "
+              >
                 @for (tipo of tipoPagoOptions(); track tipo) {
                   <option [value]="tipo">{{tipo}}</option>
                 }
               </select>
             </div>
             <div class="form-group form-group--readonly">
-              <label>Monto</label>
-              <div class="readonly-value">
+              <label class="text-[color:var(--text)]">Monto</label>
+              <div
+                class="readonly-value
+                  bg-[color:var(--card)]
+                  border border-[color:var(--border)]
+                  text-[color:var(--text)]
+                "
+              >
                 {{reservaData.monto | currency:'ARS':'symbol':'1.0-0'}}
               </div>
             </div>
             <div class="form-group form-group--readonly">
-              <label>Estado</label>
-              <div class="readonly-value readonly-value--chip">
+              <label class="text-[color:var(--text)]">Estado</label>
+              <div
+                class="readonly-value readonly-value--chip
+                  bg-[color:var(--card)]
+                  border border-[color:var(--border)]
+                  text-[color:var(--text)]
+                "
+              >
                 <span class="estado-chip" [ngClass]="estadoClase(reservaData.estado)">
                   {{reservaData.estado}}
                 </span>
@@ -114,19 +180,24 @@
         }
       </div>
 
-      <div class="info-section">
-        <h3>Agenda</h3>
+      <div
+        class="info-section
+          bg-[color:var(--card)]
+          border border-[color:var(--border)]
+        "
+      >
+        <h3 class="text-[color:var(--text)]">Agenda</h3>
         @if (!isEditing()) {
           <div class="detail-rows">
             <div class="detail-row">
-              <span class="detail-label">Fecha de inicio</span>
-              <span class="detail-value">
+              <span class="detail-label text-[color:var(--text-2)]">Fecha de inicio</span>
+              <span class="detail-value text-[color:var(--text)]">
                 {{reservaData.fechaInicio | date:'dd/MM/yyyy HH:mm'}}
               </span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">Fecha de fin</span>
-              <span class="detail-value">
+              <span class="detail-label text-[color:var(--text-2)]">Fecha de fin</span>
+              <span class="detail-value text-[color:var(--text)]">
                 {{reservaData.fechaFinal | date:'dd/MM/yyyy HH:mm'}}
               </span>
             </div>
@@ -134,46 +205,95 @@
         } @else {
           <div class="edit-form edit-form--two-cols">
             <div class="form-group">
-              <label for="fechaInicio">Fecha de Inicio</label>
+              <label for="fechaInicio" class="text-[color:var(--text)]">Fecha de Inicio</label>
               <input
                 type="datetime-local"
                 id="fechaInicio"
                 [ngModel]="editForm().fechaInicio"
                 (ngModelChange)="updateFechaInicio($event)"
-                class="form-control">
+                class="form-control
+                  bg-[color:var(--card)]
+                  border border-[color:var(--border)]
+                  text-[color:var(--text)]
+                "
+              >
             </div>
             <div class="form-group">
-              <label for="fechaFinal">Fecha de Fin</label>
+              <label for="fechaFinal" class="text-[color:var(--text)]">Fecha de Fin</label>
               <input
                 type="datetime-local"
                 id="fechaFinal"
                 [ngModel]="editForm().fechaFinal"
                 (ngModelChange)="updateFechaFinal($event)"
-                class="form-control">
+                class="form-control
+                  bg-[color:var(--card)]
+                  border border-[color:var(--border)]
+                  text-[color:var(--text)]
+                "
+              >
             </div>
           </div>
         }
       </div>
 
       @if (accionesHabilitadas()) {
-        <div class="actions-section">
+        <div
+          class="actions-section
+            bg-[color:var(--card)]
+            border border-[color:var(--border)]
+          "
+        >
           @if (!isEditing()) {
             <div>
               @if (puedeEditar()) {
-                <button class="btn btn-primary" (click)="startEditing()">
+                <button
+                  class="btn btn-primary
+                    bg-[color:var(--accent-500)]
+                    text-white
+                    hover:bg-[color:var(--accent-600)]
+                    shadow-[0_16px_40px_-24px_var(--accent-glow)]
+                  "
+                  (click)="startEditing()"
+                >
                   Editar
                 </button>
               }
-              <button class="btn btn-warning" (click)="cancelarReserva()">
-               Cancelar Reserva
+              <button
+                class="btn btn-warning
+                  bg-[color:var(--card-2)]
+                  border border-[color:var(--border)]
+                  text-[color:var(--text)]
+                  hover:border-[color:var(--accent-400)]
+                  hover:shadow-[0_14px_35px_-28px_var(--accent-glow)]
+                "
+                (click)="cancelarReserva()"
+              >
+                Cancelar Reserva
               </button>
             </div>
           } @else {
             <div>
-              <button class="btn btn-success" (click)="guardarCambios()">
+              <button
+                class="btn btn-success
+                  bg-[color:var(--accent-500)]
+                  text-white
+                  hover:bg-[color:var(--accent-600)]
+                  shadow-[0_16px_40px_-24px_var(--accent-glow)]
+                "
+                (click)="guardarCambios()"
+              >
                 Guardar
               </button>
-              <button class="btn btn-secondary" (click)="cancelEditing()">
+              <button
+                class="btn btn-secondary
+                  bg-[color:var(--card-2)]
+                  border border-[color:var(--border)]
+                  text-[color:var(--text)]
+                  hover:border-[color:var(--accent-400)]
+                  hover:shadow-[0_14px_35px_-28px_var(--accent-glow)]
+                "
+                (click)="cancelEditing()"
+              >
                 Cancelar Edición
               </button>
             </div>
@@ -183,7 +303,7 @@
     </div>
   </div>
 } @else {
-  <div class="loading">
+  <div class="loading text-[color:var(--text-2)]">
     <p>Cargando detalles de la reserva...</p>
   </div>
 }
