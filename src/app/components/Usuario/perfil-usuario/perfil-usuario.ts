@@ -11,12 +11,13 @@ import { CardUsuario } from '../card-usuario/card-usuario';
 import { EmpleadoResponseDTO } from '../../../dto/Empleado/empleado-response-dto';
 import { Cliente } from '../../../models/usuarios/cliente';
 import { Rol } from '../../../models/usuarios/rol';
+import { UiAlertService } from '../../../services/Ui-alert/ui-alert';
 
 function optionalMinLength(min: number) {
   return (control: any) => {
     const value = (control?.value ?? '') as string;
     if (!value) {
-      return null; // si está vacío, no marca error (campo opcional)
+      return null;
     }
     return value.length >= min
       ? null
@@ -28,14 +29,13 @@ function optionalPattern(regex: RegExp) {
   return (control: any) => {
     const value = (control?.value ?? '') as string;
     if (!value) {
-      return null; // si está vacío, no marca error
+      return null;
     }
     return regex.test(value)
       ? null
       : { pattern: { requiredPattern: regex.toString(), actualValue: value } };
   };
 }
-
 
 @Component({
   selector: 'app-perfil-usuario',
@@ -50,6 +50,7 @@ export class PerfilUsuario implements OnInit {
   private clientesService = inject(ClientesService);
   private fb = inject(FormBuilder);
   private destroyRef = inject(DestroyRef);
+  private uiAlert = inject(UiAlertService);
 
   readonly isLoading = signal(true);
   readonly errorMessage = signal<string | null>(null);
@@ -60,19 +61,15 @@ export class PerfilUsuario implements OnInit {
   readonly isSaving = signal(false);
   readonly formError = signal<string | null>(null);
 
-    readonly clienteForm = this.fb.nonNullable.group({
+  readonly clienteForm = this.fb.nonNullable.group({
     nombre: ['', Validators.required],
     apellido: ['', Validators.required],
     dni: ['', [Validators.required, Validators.maxLength(8), Validators.pattern(/^[0-9]{7,8}$/)]],
     telefono: ['', [Validators.required, Validators.maxLength(10), Validators.pattern(/^[0-9]{10}$/)]],
     email: ['', [Validators.required, Validators.email]],
-    // Contraseña opcional, pero con mismas reglas que en registro cuando se usa
     contrasena: ['', [optionalMinLength(4), optionalPattern(/\d/)]],
     confirmarContrasena: ['', [optionalMinLength(4), optionalPattern(/\d/)]],
   });
-
-
-
 
   readonly controls = this.clienteForm.controls;
 
@@ -107,10 +104,17 @@ export class PerfilUsuario implements OnInit {
           this.isLoading.set(false);
           this.cargarDetalle(info);
         },
-        error: (error) => {
-          console.error('Error al obtener la informacion del usuario autenticado:', error);
+        error: (error: unknown) => {
+          console.error('Error al obtener la informacion del usuario autenticado:', error as any);
           this.errorMessage.set('No se pudo cargar la informacion del usuario.');
           this.isLoading.set(false);
+          this.uiAlert.show({
+            variant: 'error',
+            tone: 'soft',
+            title: 'Error',
+            message: 'No se pudo cargar la información del usuario.',
+            timeoutMs: 5000,
+          });
         },
       });
   }
@@ -137,10 +141,17 @@ export class PerfilUsuario implements OnInit {
             this.patchClienteForm(cliente);
             this.isLoading.set(false);
           },
-          error: (error) => {
-            console.error('Error al obtener los datos del cliente:', error);
+          error: (error: unknown) => {
+            console.error('Error al obtener los datos del cliente:', error as any);
             this.errorMessage.set('No se pudieron cargar los datos del cliente.');
             this.isLoading.set(false);
+            this.uiAlert.show({
+              variant: 'error',
+              tone: 'soft',
+              title: 'Error',
+              message: 'No se pudieron cargar los datos del cliente.',
+              timeoutMs: 5000,
+            });
           },
         });
     } else {
@@ -152,16 +163,23 @@ export class PerfilUsuario implements OnInit {
             this.empleadoDetalle.set(empleado);
             this.isLoading.set(false);
           },
-          error: (error) => {
-            console.error('Error al obtener los datos del empleado:', error);
+          error: (error: unknown) => {
+            console.error('Error al obtener los datos del empleado:', error as any);
             this.errorMessage.set('No se pudieron cargar los datos del empleado.');
             this.isLoading.set(false);
+            this.uiAlert.show({
+              variant: 'error',
+              tone: 'soft',
+              title: 'Error',
+              message: 'No se pudieron cargar los datos del empleado.',
+              timeoutMs: 5000,
+            });
           },
         });
     }
   }
 
-    private patchClienteForm(cliente: Cliente): void {
+  private patchClienteForm(cliente: Cliente): void {
     this.clienteForm.patchValue({
       nombre: cliente.nombre ?? '',
       apellido: cliente.apellido?.toString() ?? '',
@@ -174,7 +192,6 @@ export class PerfilUsuario implements OnInit {
     this.clienteForm.markAsPristine();
     this.formError.set(null);
   }
-
 
   habilitarEdicion(): void {
     this.editMode.set(true);
@@ -191,35 +208,37 @@ export class PerfilUsuario implements OnInit {
     this.formError.set(null);
   }
 
-    guardarCambios(): void {
+  guardarCambios(): void {
     if (!this.esCliente() || !this.clienteDetalle()) {
       return;
     }
 
     const formValue = this.clienteForm.getRawValue();
 
-    // --- Validación de nueva contraseña + confirmación ---
     const nuevaContrasena = (formValue.contrasena ?? '').trim();
     const confirmarContrasena = (formValue.confirmarContrasena ?? '').trim();
 
-    // Limpiar error de 'mismatch' previo (si lo hubiera)
     const confirmarCtrl = this.clienteForm.get('confirmarContrasena');
     if (confirmarCtrl?.errors?.['mismatch']) {
       const { mismatch, ...rest } = confirmarCtrl.errors;
       confirmarCtrl.setErrors(Object.keys(rest).length ? rest : null);
     }
 
-    // Si el usuario quiso cambiar la contraseña (al menos uno de los dos campos tiene valor)
     if (nuevaContrasena || confirmarContrasena) {
-      // Ambos campos deben estar completos
       if (!nuevaContrasena || !confirmarContrasena) {
         this.formError.set('Debes completar ambos campos de contrasena.');
         this.clienteForm.get('contrasena')?.markAsTouched();
         this.clienteForm.get('confirmarContrasena')?.markAsTouched();
+        this.uiAlert.show({
+          variant: 'warning',
+          tone: 'soft',
+          title: 'Warning alert',
+          message: 'Debes completar ambos campos de contraseña.',
+          timeoutMs: 4500,
+        });
         return;
       }
 
-      // Reglas de mínimo 4 caracteres + al menos un número
       if (
         this.clienteForm.get('contrasena')?.invalid ||
         this.clienteForm.get('confirmarContrasena')?.invalid
@@ -227,28 +246,54 @@ export class PerfilUsuario implements OnInit {
         this.formError.set('La contrasena debe tener al menos 4 caracteres e incluir un numero.');
         this.clienteForm.get('contrasena')?.markAsTouched();
         this.clienteForm.get('confirmarContrasena')?.markAsTouched();
+        this.uiAlert.show({
+          variant: 'warning',
+          tone: 'soft',
+          title: 'Warning alert',
+          message: 'La contraseña debe tener al menos 4 caracteres e incluir un número.',
+          timeoutMs: 5000,
+        });
         return;
       }
 
-      // Coincidencia entre ambas contraseñas
       if (nuevaContrasena !== confirmarContrasena) {
         this.formError.set('Las contrasenas no coinciden.');
         confirmarCtrl?.setErrors({ ...(confirmarCtrl.errors ?? {}), mismatch: true });
         confirmarCtrl?.markAsTouched();
+        this.uiAlert.show({
+          variant: 'error',
+          tone: 'outline',
+          title: 'Error',
+          message: 'Las contraseñas no coinciden.',
+          timeoutMs: 5000,
+        });
         return;
       }
     }
 
-    // Validaciones generales del formulario (nombre, apellido, dni, etc.)
     if (this.clienteForm.invalid) {
       this.clienteForm.markAllAsTouched();
       this.formError.set('Completa los campos obligatorios para continuar.');
+      this.uiAlert.show({
+        variant: 'warning',
+        tone: 'soft',
+        title: 'Warning alert',
+        message: 'Revisá los campos obligatorios para continuar.',
+        timeoutMs: 4500,
+      });
       return;
     }
 
     const current = this.clienteDetalle();
     if (!current) {
       this.formError.set('No se encontraron los datos actuales del cliente.');
+      this.uiAlert.show({
+        variant: 'error',
+        tone: 'soft',
+        title: 'Error',
+        message: 'No se encontraron los datos actuales del cliente.',
+        timeoutMs: 5000,
+      });
       return;
     }
 
@@ -257,11 +302,25 @@ export class PerfilUsuario implements OnInit {
 
     if (!/^\d{7,8}$/.test(dniStr)) {
       this.formError.set('El DNI debe tener solo numeros y un maximo de 8 digitos.');
+      this.uiAlert.show({
+        variant: 'warning',
+        tone: 'soft',
+        title: 'Warning alert',
+        message: 'El DNI debe tener solo números y un máximo de 8 dígitos.',
+        timeoutMs: 5000,
+      });
       return;
     }
 
     if (!/^\d{10}$/.test(telefonoStr)) {
       this.formError.set('El telefono debe tener exactamente 10 digitos sin espacios.');
+      this.uiAlert.show({
+        variant: 'warning',
+        tone: 'soft',
+        title: 'Warning alert',
+        message: 'El teléfono debe tener exactamente 10 dígitos sin espacios.',
+        timeoutMs: 5000,
+      });
       return;
     }
 
@@ -275,7 +334,6 @@ export class PerfilUsuario implements OnInit {
       dni,
       telefono,
       email: formValue.email,
-      // Si no se ingresó nueva contraseña, se mantiene la actual
       contrasena: nuevaContrasena || current.contrasena,
       rol: current.rol ?? Rol.CLIENTE,
     };
@@ -292,16 +350,28 @@ export class PerfilUsuario implements OnInit {
           this.patchClienteForm(clienteActualizado);
           this.isSaving.set(false);
           this.editMode.set(false);
-          alert('Perfil actualizado correctamente.');
+          this.uiAlert.show({
+            variant: 'success',
+            tone: 'soft',
+            title: 'Success alert',
+            message: 'Perfil actualizado correctamente.',
+            timeoutMs: 3000,
+          });
         },
-        error: (error) => {
-          console.error('Error al actualizar el perfil del cliente:', error);
+        error: (error: unknown) => {
+          console.error('Error al actualizar el perfil del cliente:', error as any);
           this.formError.set('No se pudo actualizar el perfil. Intenta nuevamente.');
           this.isSaving.set(false);
+          this.uiAlert.show({
+            variant: 'error',
+            tone: 'soft',
+            title: 'Error',
+            message: 'No se pudo actualizar el perfil. Intenta nuevamente.',
+            timeoutMs: 5000,
+          });
         },
       });
   }
-
 
   private normalizarRol(role: UserInfoResponseDTO['role'] | null): Rol | null {
     if (!role) {

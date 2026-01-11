@@ -3,6 +3,7 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { SalasService } from '../../../services/Salas/salas-service';
 import { SalaDTO } from '../../../models/sala';
+import { UiAlertService } from '../../../services/Ui-alert/ui-alert';
 
 @Component({
   selector: 'app-edit-description',
@@ -17,6 +18,7 @@ export class EditDescription {
   private salasService = inject(SalasService);
 
   private currentSala!: SalaDTO;
+  private uiAlert = inject(UiAlertService)
 
   form = this.fb.group({
     descripcion: ['', [Validators.required, Validators.minLength(6)]],
@@ -50,11 +52,27 @@ export class EditDescription {
 
     
 
-    this.salasService.updateDescription(this.salaId,nuevaDesc).subscribe({
+    this.salasService.updateDescription(this.salaId, nuevaDesc).subscribe({
       next: () => {
-        alert('Descripción actualizada con éxito');
-        this.router.navigateByUrl('/hall')},
-      error: (err) => console.error(err),
+        this.uiAlert.show({
+          variant: 'success',
+          tone: 'soft',
+          title: 'Success alert',
+          message: 'Descripción actualizada con éxito.',
+          timeoutMs: 3000,
+        });
+        this.router.navigateByUrl('/hall');
+      },
+      error: (err: unknown) => {
+        console.error(err as any);
+        this.uiAlert.show({
+          variant: 'error',
+          tone: 'soft',
+          title: 'Error',
+          message: 'No se pudo actualizar la descripción. Intentá nuevamente.',
+          timeoutMs: 5000,
+        });
+      },
     });
   }
 

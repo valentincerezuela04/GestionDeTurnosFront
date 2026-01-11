@@ -2,6 +2,7 @@
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/Auth/auth-service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { UiAlertService } from '../../../services/Ui-alert/ui-alert';
 
 @Component({
   selector: 'app-register-page-component',
@@ -14,6 +15,8 @@ export class RegisterPageComponent {
   private auth = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private uiAlert = inject(UiAlertService);
+
 
   showPassword = false
   loading = false;
@@ -37,25 +40,50 @@ export class RegisterPageComponent {
 
 
   onSubmit() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
+if (this.form.invalid) {
+  this.form.markAllAsTouched();
+  this.uiAlert.show({
+    variant: 'warning',
+    tone: 'soft',
+    title: 'Warning alert',
+    message: 'Revisá los campos marcados: hay datos inválidos.',
+    timeoutMs: 4500,
+  });
+  return;
+}
+
 
     this.loading = true;
     this.error = '';
 
     this.auth.register(this.form.getRawValue()).subscribe({
-      next: () => {
-        this.loading = false;
-        alert('Te registraste correctamente. Por favor, inicia sesion.');
-        this.router.navigate(['/login']);
-      },
-      error: (err) => {
-        this.loading = false;
-        this.error = err?.error ?? 'No se pudo registrar';
-        console.error('Registration failed', err);
-      },
+ next: () => {
+  this.loading = false;
+  this.uiAlert.show({
+    variant: 'success',
+    tone: 'soft',
+    title: 'Success alert',
+    message: 'Te registraste correctamente. Por favor, iniciá sesión.',
+    timeoutMs: 3500,
+  });
+  this.router.navigate(['/login']);
+},
+
+    error: (err: unknown) => {
+  this.loading = false;
+  console.error('Registration failed', err as any);
+
+  this.error = (err as any)?.error ?? 'No se pudo registrar';
+
+  this.uiAlert.show({
+    variant: 'error',
+    tone: 'soft',
+    title: 'Error',
+    message: this.error,
+    timeoutMs: 6000,
+  });
+},
+
     });
   }
 

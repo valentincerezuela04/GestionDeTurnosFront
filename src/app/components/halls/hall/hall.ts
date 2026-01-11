@@ -5,6 +5,7 @@ import { SalasService } from '../../../services/Salas/salas-service';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/Auth/auth-service';
 import { AppRole } from '../../../models/auth.model';
+import { UiAlertService } from '../../../services/Ui-alert/ui-alert';
 
 
 @Component({
@@ -17,6 +18,8 @@ export class Hall {
   serv = inject(SalasService)
   router = inject(Router)
   private auth = inject(AuthService);
+  private uiAlert = inject(UiAlertService);
+
 
   hallList = toSignal(this.serv.getAll(),{initialValue: []})
   private readonly role = computed(() => this.auth.user()?.rol as AppRole | null);
@@ -32,7 +35,14 @@ export class Hall {
    this.serv.canDelete(id).subscribe({
       next: (canDelete) => {
         if (!canDelete) {
-          alert('No se puede eliminar la sala porque tiene turnos asociados.');
+          this.uiAlert.show({
+  variant: 'warning',
+  tone: 'soft',
+  title: 'Warning alert',
+  message: 'No se puede eliminar la sala porque tiene turnos asociados.',
+  timeoutMs: 4500,
+});
+
           return;
         }
 
@@ -42,18 +52,39 @@ export class Hall {
 
             
                this.router.navigateByUrl('/hall').then(() => {
-              alert('Sala eliminada con éxito');
+              this.uiAlert.show({
+  variant: 'success',
+  tone: 'soft',
+  title: 'Success alert',
+  message: 'Sala eliminada con éxito',
+  timeoutMs: 3000,
+});
+
             });
           },
           error: (err) => {
             console.error(err);
-            alert('Error al eliminar la sala');
+            this.uiAlert.show({
+  variant: 'error',
+  tone: 'soft',
+  title: 'Error',
+  message: 'Error al eliminar la sala',
+  timeoutMs: 5000,
+});
+
           },
         });
       },
       error: (err) => {
         console.error(err);
-        alert('No se pudo verificar si se puede eliminar.');
+        this.uiAlert.show({
+  variant: 'error',
+  tone: 'outline',
+  title: 'Error',
+  message: 'No se pudo verificar si se puede eliminar.',
+  timeoutMs: 5000,
+});
+
       },
     });
   }
