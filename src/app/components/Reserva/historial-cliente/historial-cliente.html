@@ -1,57 +1,244 @@
-<div class="mis-reservas">
-  <div class="mis-reservas-header">
-    <h2>Historial de reservas</h2>
+<div class="mis-reservas mx-auto max-w-6xl px-4 py-6 grid gap-4">
+  <!-- Header + botón filtros -->
+  <div
+    class="
+      mis-reservas-header
+      rounded-2xl p-5
+      border border-[var(--border-2)]
+      bg-[var(--card)]
+      shadow-[var(--shadow)]
+      flex items-center justify-between gap-3
+    "
+  >
+    <h2 class="m-0 text-2xl font-extrabold tracking-tight text-[var(--text)]">
+      Historial de reservas
+    </h2>
+
+    <!-- FlyonUI Dropdown -->
+    <div class="dropdown relative inline-flex">
+      <button
+        id="filtros-dropdown"
+        type="button"
+        class="
+          dropdown-toggle btn
+          h-11
+          rounded-xl px-4 font-extrabold
+          border border-[var(--border-2)]
+          bg-[var(--card)]
+          text-[var(--text)]
+          transition
+          hover:bg-[var(--card-2)]
+          hover:border-[rgba(124,92,255,0.55)]
+          focus:outline-none
+          focus-visible:ring-2 focus-visible:ring-[rgba(124,92,255,0.22)]
+          flex items-center gap-2
+        "
+        aria-haspopup="menu"
+        aria-expanded="false"
+        aria-label="Filtros"
+      >
+        <span class="icon-[tabler--filter] size-4"></span>
+        Filtros
+        <span class="icon-[tabler--chevron-down] dropdown-open:rotate-180 size-4"></span>
+      </button>
+
+      <!-- Panel desplegable -->
+      <div
+        class="
+          dropdown-menu dropdown-open:opacity-100 hidden
+          right-0 mt-2
+          w-[min(92vw,64rem)]
+          rounded-2xl
+          border border-[var(--border-2)]
+          bg-[var(--card)]
+          shadow-[var(--shadow)]
+          p-4
+        "
+        role="menu"
+        aria-orientation="vertical"
+        aria-labelledby="filtros-dropdown"
+      >
+        <div class="flex items-center justify-between gap-3 pb-3">
+          <div class="text-sm font-extrabold tracking-[0.22em] uppercase text-[var(--accent-500)]">
+            Filtros
+          </div>
+
+          <button type="button" class="btn btn-sm btn-ghost dropdown-close" aria-label="Cerrar">
+            <span class="icon-[tabler--x] size-4"></span>
+          </button>
+        </div>
+
+        <form class="grid gap-4 sm:grid-cols-2 lg:grid-cols-5 items-end" [formGroup]="filtrosForm">
+          <div class="grid gap-2">
+            <label
+              for="fechaDesde"
+              class="text-xs font-extrabold tracking-[0.22em] uppercase text-[var(--accent-500)]"
+            >
+              Fecha desde
+            </label>
+            <input
+              id="fechaDesde"
+              type="date"
+              formControlName="fechaDesde"
+              class="
+                input
+                h-11 w-full rounded-xl px-3
+                border border-[var(--border-2)]
+                bg-[var(--card)]
+                text-[var(--text)]
+                outline-none transition
+                hover:border-[rgba(124,92,255,0.55)]
+                focus:border-[rgba(124,92,255,0.75)]
+                focus:ring-2 focus:ring-[rgba(124,92,255,0.22)]
+              "
+            />
+          </div>
+
+          <div class="grid gap-2">
+            <label
+              for="fechaHasta"
+              class="text-xs font-extrabold tracking-[0.22em] uppercase text-[var(--accent-500)]"
+            >
+              Fecha hasta
+            </label>
+            <input
+              id="fechaHasta"
+              type="date"
+              formControlName="fechaHasta"
+              class="
+                input
+                h-11 w-full rounded-xl px-3
+                border border-[var(--border-2)]
+                bg-[var(--card)]
+                text-[var(--text)]
+                outline-none transition
+                hover:border-[rgba(124,92,255,0.55)]
+                focus:border-[rgba(124,92,255,0.75)]
+                focus:ring-2 focus:ring-[rgba(124,92,255,0.22)]
+              "
+            />
+          </div>
+
+          <div class="grid gap-2">
+            <label
+              for="estado"
+              class="text-xs font-extrabold tracking-[0.22em] uppercase text-[var(--accent-500)]"
+            >
+              Estado
+            </label>
+            <select
+              id="estado"
+              formControlName="estado"
+              class="
+                select
+                h-11 w-full rounded-xl px-3
+                border border-[var(--border-2)]
+                bg-[var(--card)]
+                text-[var(--text)]
+                outline-none transition
+                hover:border-[rgba(124,92,255,0.55)]
+                focus:border-[rgba(124,92,255,0.75)]
+                focus:ring-2 focus:ring-[rgba(124,92,255,0.22)]
+              "
+            >
+              <option *ngFor="let e of estadosDisponibles" [value]="e">
+                {{ e === 'TODOS' ? 'Todos' : e }}
+              </option>
+            </select>
+          </div>
+
+          <div class="grid gap-2">
+            <label
+              for="salaNumero"
+              class="text-xs font-extrabold tracking-[0.22em] uppercase text-[var(--accent-500)]"
+            >
+              Sala
+            </label>
+            <select
+              id="salaNumero"
+              formControlName="salaNumero"
+              class="
+                select
+                h-11 w-full rounded-xl px-3
+                border border-[var(--border-2)]
+                bg-[var(--card)]
+                text-[var(--text)]
+                outline-none transition
+                hover:border-[rgba(124,92,255,0.55)]
+                focus:border-[rgba(124,92,255,0.75)]
+                focus:ring-2 focus:ring-[rgba(124,92,255,0.22)]
+              "
+            >
+              <option value="TODAS">Todas</option>
+              <option *ngFor="let sala of salasDisponibles" [value]="sala">
+                Sala {{ sala }}
+              </option>
+            </select>
+          </div>
+
+          <div class="grid gap-2">
+            <label
+              for="ordenFecha"
+              class="text-xs font-extrabold tracking-[0.22em] uppercase text-[var(--accent-500)]"
+            >
+              Orden fecha
+            </label>
+            <select
+              id="ordenFecha"
+              formControlName="ordenFecha"
+              class="
+                select
+                h-11 w-full rounded-xl px-3
+                border border-[var(--border-2)]
+                bg-[var(--card)]
+                text-[var(--text)]
+                outline-none transition
+                hover:border-[rgba(124,92,255,0.55)]
+                focus:border-[rgba(124,92,255,0.75)]
+                focus:ring-2 focus:ring-[rgba(124,92,255,0.22)]
+              "
+            >
+              <option value="DESC">Mas nuevas primero</option>
+              <option value="ASC">Mas viejas primero</option>
+            </select>
+          </div>
+
+          <!-- Acciones -->
+          <div class="lg:col-span-5 sm:col-span-2 flex flex-col sm:flex-row gap-2 sm:justify-end pt-2">
+            <button
+              type="button"
+              class="
+                btn
+                h-11 rounded-xl px-4 font-extrabold
+                border border-[var(--border-2)]
+                bg-[var(--card)]
+                text-[var(--text)]
+                transition
+                hover:bg-[var(--card-2)]
+                hover:border-[rgba(124,92,255,0.55)]
+              "
+              (click)="resetFiltros()"
+            >
+              Limpiar
+            </button>
+
+            <!-- Cierra el dropdown (tus filtros ya pueden ser reactivos) -->
+            <button type="button" class="btn btn-primary h-11 rounded-xl px-4 font-extrabold dropdown-close">
+              Listo
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 
-  <form class="historial-filtros" [formGroup]="filtrosForm">
-    <div class="filtro-group">
-      <label for="fechaDesde">Fecha desde</label>
-      <input id="fechaDesde" type="date" formControlName="fechaDesde" />
-    </div>
-
-    <div class="filtro-group">
-      <label for="fechaHasta">Fecha hasta</label>
-      <input id="fechaHasta" type="date" formControlName="fechaHasta" />
-    </div>
-
-    <div class="filtro-group">
-      <label for="estado">Estado</label>
-      <select id="estado" formControlName="estado">
-        <option *ngFor="let e of estadosDisponibles" [value]="e">
-          {{ e === 'TODOS' ? 'Todos' : e }}
-        </option>
-      </select>
-    </div>
-
-    <div class="filtro-group">
-      <label for="salaNumero">Sala</label>
-      <select id="salaNumero" formControlName="salaNumero">
-        <option value="TODAS">Todas</option>
-        <option *ngFor="let sala of salasDisponibles" [value]="sala">
-          Sala {{ sala }}
-        </option>
-      </select>
-    </div>
-
-    <div class="filtro-group">
-      <label for="ordenFecha">Orden fecha</label>
-      <select id="ordenFecha" formControlName="ordenFecha">
-        <option value="DESC">Mas nuevas primero</option>
-        <option value="ASC">Mas viejas primero</option>
-      </select>
-    </div>
-
-    <button type="button" class="limpiar-btn" (click)="resetFiltros()">
-      Limpiar filtros
-    </button>
-  </form>
-
+  <!-- Estados -->
   @if (loading) {
-    <p class="no-reservas">Cargando historial...</p>
+    <p class="no-reservas text-sm font-semibold text-[var(--text-2)]">Cargando historial...</p>
   } @else if (error) {
-    <p class="no-reservas error">{{ error }}</p>
+    <p class="no-reservas error text-sm font-semibold text-[var(--danger)]">{{ error }}</p>
   } @else if (historialFiltrado && historialFiltrado.length > 0) {
-    <div class="reservas-grid">
+    <div class="reservas-grid grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       @for (reserva of historialFiltrado; track reserva.id) {
         <app-card-reserva
           [reserva]="reserva"
@@ -60,7 +247,7 @@
       }
     </div>
   } @else {
-    <p class="no-reservas">
+    <p class="no-reservas text-sm font-semibold text-[var(--text-2)]">
       Todavia no tenes reservas en tu historial.
     </p>
   }

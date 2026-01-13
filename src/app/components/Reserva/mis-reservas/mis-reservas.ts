@@ -10,6 +10,7 @@ import { ReservaResponseDTO } from '../../../dto/Reserva';
 import { AuthService } from '../../../services/Auth/auth-service';
 import { UserInfoResponseDTO } from '../../../dto/user-info-response-dto';
 import { CardReserva } from '../card-reserva/card-reserva';
+import { UiAlertService } from '../../../services/Ui-alert/ui-alert';
 
 @Component({
   selector: 'app-mis-reservas',
@@ -22,6 +23,8 @@ export class MisReservas {
   private router = inject(Router);
   private reservaSrv = inject(ReservaService);
   private authService = inject(AuthService);
+  private uiAlert = inject(UiAlertService);
+
 
   reservas: ReservaResponseDTO[] = [];
   usuario: UserInfoResponseDTO | null = null;
@@ -38,9 +41,15 @@ export class MisReservas {
 
   onNuevaReserva(): void {
     if (this.esAdmin()) {
-      alert(
-        'Los administradores pueden ver las reservas pero no crear nuevas. Usa una cuenta de cliente o empleado para generar una reserva.'
-      );
+    this.uiAlert.show({
+  variant: 'warning',
+  tone: 'soft',
+  title: 'Warning alert',
+  message:
+    'Los administradores pueden ver las reservas pero no crear nuevas. Usa una cuenta de cliente o empleado para generar una reserva.',
+  timeoutMs: 6000,
+});
+
       return;
     }
     this.router.navigate(['/reservas', 'new']);
@@ -57,17 +66,33 @@ export class MisReservas {
   private cargarDatos(): void {
     combineLatest<[ReservaResponseDTO[], UserInfoResponseDTO | null]>([
       this.reservaSrv.getReservasActivas().pipe(
-        catchError((error) => {
-          console.error('Error al obtener las reservas:', error);
-          return of([] as ReservaResponseDTO[]);
-        })
+      catchError((error) => {
+  console.error('Error al obtener las reservas:', error as any);
+  this.uiAlert.show({
+    variant: 'error',
+    tone: 'soft',
+    title: 'Error',
+    message: 'Error al obtener las reservas.',
+    timeoutMs: 5000,
+  });
+  return of([] as ReservaResponseDTO[]);
+})
+
       ),
       this.authService.getUserInfo().pipe(
         map((user) => (user as UserInfoResponseDTO | null)),
-        catchError((error) => {
-          console.error('Error al obtener la informacion del usuario:', error);
-          return of(null as UserInfoResponseDTO | null);
-        })
+      catchError((error) => {
+  console.error('Error al obtener la informacion del usuario:', error as any);
+  this.uiAlert.show({
+    variant: 'error',
+    tone: 'soft',
+    title: 'Error',
+    message: 'Error al obtener la información del usuario.',
+    timeoutMs: 5000,
+  });
+  return of(null as UserInfoResponseDTO | null);
+})
+
       ),
     ]).subscribe(([reservas, usuario]) => {
       this.usuario = usuario;

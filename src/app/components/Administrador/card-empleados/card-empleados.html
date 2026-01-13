@@ -1,27 +1,42 @@
 <article class="card-empleado" (click)="onCardClick()">
   <header class="card-empleado__header">
-    <h2>{{ empleado.nombre }} {{ empleado.apellido }}</h2>
-    <span class="card-empleado__rol">{{ empleado.rol }}</span>
+    <h2 class="card-empleado__title">
+      {{ empleado.nombre }} {{ empleado.apellido }}
+    </h2>
+    <span class="card-empleado__rol">
+      {{ empleado.rol }}
+    </span>
   </header>
+
   <dl class="card-empleado__info">
     <div>
       <dt>DNI</dt>
       <dd>{{ empleado.dni }}</dd>
     </div>
+
     <div>
-      <dt>Telefono</dt>
+      <dt>Teléfono</dt>
       <dd>{{ empleado.telefono }}</dd>
     </div>
+
     <div>
       <dt>Email</dt>
       <dd>{{ empleado.email }}</dd>
     </div>
+
     <div>
       <dt>Legajo</dt>
       <dd>{{ empleado.legajo || 'N/A' }}</dd>
     </div>
   </dl>
+
   <footer class="card-empleado__footer">
-    <button type="button" (click)="handleViewDetails($event)">Ver detalles</button>
+    <button
+      type="button"
+      class="card-empleado__btn-detalles"
+      (click)="handleViewDetails($event)"
+    >
+      Ver detalles
+    </button>
   </footer>
 </article>

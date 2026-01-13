@@ -1,0 +1,257 @@
+
+
+/* =========================
+   LIGHT THEME
+   ========================= */
+:root[data-theme="light"] {
+  /* Brand (violeta) */
+  --accent-300: #A89CFF;
+  --accent-400: #8B76FF;
+  --accent-500: #7C5CFF; 
+  --accent-600: #5A3DFF;
+  --accent-glow: rgba(124, 92, 255, 0.30);
+
+  /* Backgrounds */
+  --bg: #F7F7FF;
+  --bg-2: #FFFFFF;
+  --card: #FFFFFF;
+  --card-2: #F1F0FF;
+
+  /* Borders */
+  --border: rgba(10, 10, 20, 0.10);
+  --border-2: rgba(124, 92, 255, 0.22);
+
+  /* Text */
+  --text: #111129;
+  --text-2: rgba(17, 17, 41, 0.78);
+  --muted: rgba(17, 17, 41, 0.55);
+
+  /* States */
+  --success: #0FB981;
+  --warning: #B67A00;
+  --danger: #E11D48;
+
+  /* Shadows */
+  --shadow: 0 10px 30px rgba(17, 17, 41, 0.10);
+  --shadow-accent: 0 0 0 1px rgba(124, 92, 255, 0.20),
+                   0 10px 25px rgba(124, 92, 255, 0.10);
+}
+
+/* =========================
+   DARK THEME
+   ========================= */
+:root[data-theme="dark"] {
+  /* Brand (violeta) */
+  --accent-300: #B9ADFF;
+  --accent-400: #9B87FF;
+  --accent-500: #7C5CFF; 
+  --accent-600: #5A3DFF;
+  --accent-glow: rgba(124, 92, 255, 0.45); 
+
+  /* Backgrounds */
+  --bg: #0B0B12;
+  --bg-2: #101022;
+  --card: #14142A;
+  --card-2: #191936;
+
+  /* Borders */
+  --border: rgba(255, 255, 255, 0.08);
+  --border-2: rgba(124, 92, 255, 0.28);
+
+  /* Text */
+  --text: #EAEAF5;
+  --text-2: rgba(234, 234, 245, 0.78);
+  --muted: rgba(234, 234, 245, 0.55);
+
+  /* States */
+  --success: #2EE59D;
+  --warning: #FFCC66;
+  --danger: #FF4D6D;
+
+  /* Shadows */
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --shadow-accent: 0 0 0 1px rgba(124, 92, 255, 0.25),
+                   0 8px 30px rgba(124, 92, 255, 0.15);
+}
+
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-2: var(--bg-2);
+  --color-card: var(--card);
+  --color-card-2: var(--card-2);
+
+  --color-text: var(--text);
+  --color-text-2: var(--text-2);
+  --color-muted: var(--muted);
+
+  --color-accent-300: var(--accent-300);
+  --color-accent-400: var(--accent-400);
+  --color-accent-500: var(--accent-500);
+  --color-accent-600: var(--accent-600);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+
+ 
+  /* Core colors */
+  --color-bg: var(--bg);
+  --color-bg-2: var(--bg-2);
+  --color-card: var(--card);
+  --color-card-2: var(--card-2);
+
+  --color-text: var(--text);
+  --color-text-2: var(--text-2);
+  --color-muted: var(--muted);
+
+  --color-accent-300: var(--accent-300);
+  --color-accent-400: var(--accent-400);
+  --color-accent-500: var(--accent-500);
+  --color-accent-600: var(--accent-600);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+
+  --color-border: var(--border);
+  --color-border-2: var(--border-2);
+
+  /* Shadows */
+  --shadow-base: var(--shadow);
+  --shadow-accent: var(--shadow-accent);
+
+  /* Sidebar (y navegación) */
+  --color-sidebar-bg: linear-gradient(180deg, var(--bg-2), var(--bg));
+  --color-sidebar-border: var(--border);
+
+  --color-nav-text: var(--text-2);
+  --color-nav-text-active: var(--text);
+  --color-nav-hover: var(--accent-glow);
+  --color-nav-border-active: var(--border-2);
+
+
+
+
+}
+/* <div class="flex items-center gap-2">
+  <svg class="h-8 w-8">
+    <use href="assets/sprites.svg#icon-instagram"></use>
+  </svg>
+  <span>Instagram</span>
+</div>
+
+
+/* cards ----------------------------------- */
+@layer components {
+.gdt-card{
+  position: relative;
+  overflow: hidden;
+  padding: 1.25rem;
+  border-radius: 1rem; /* equivalente a rounded-2xl */
+  border: 1px solid var(--border-2);
+  background: var(--card);
+  box-shadow: var(--shadow);
+  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
+}
+
+  .gdt-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(124, 92, 255, 0.45);
+    box-shadow: var(--shadow-accent);
+  }
+
+  .gdt-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 12% 8%, rgba(124, 92, 255, 0.16), transparent 55%);
+  }
+
+  .gdt-card::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    pointer-events: none;
+    opacity: 0.6;
+    background: linear-gradient(90deg, transparent, var(--accent-500), transparent);
+  }
+}
+
+
+ /* inputs------------------------- */
+.input:hover:not(.is-invalid):not(.is-valid) {
+  background: var(--bg);
+  border-color: var(--color-accent-400);
+}
+
+.input:focus,
+.input:focus-visible {
+  border-color: var(--color-accent-500);
+  box-shadow: 0 0 0 3px var(--color-accent-glow);
+}
+
+.input.is-invalid:hover {
+  border-color: rgba(255, 77, 109, 0.95);
+}
+/* -------------------------------------------------- */
+
+.app-sidebar{
+  background: var(--color-sidebar-bg);
+  color: var(--color-text);
+  border-right: 1px solid var(--color-sidebar-border);
+  box-shadow: var(--shadow-base);
+}
+
+.app-sidebar .menu > li > a{
+  color: var(--color-nav-text);
+  border-radius: 12px;
+  transition: background-color .15s ease, color .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+
+.app-sidebar .menu > li > a:hover{
+  background: var(--color-nav-hover);
+  color: var(--color-nav-text-active);
+  box-shadow: var(--shadow-accent);
+}
+
+.app-sidebar .menu > li > a.active{
+  background: var(--color-nav-hover);
+  color: var(--color-nav-text-active);
+  border: 1px solid var(--color-nav-border-active);
+  box-shadow: var(--shadow-accent);
+}
+
+.app-sidebar [class*="icon-"]{
+  color: var(--color-accent-400);
+}
+
+.app-sidebar .dropdown-menu{
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 8px;
+}
+
+.app-sidebar .dropdown-menu a{
+  color: var(--color-text-2);
+  border-radius: 12px;
+}
+
+.app-sidebar .dropdown-menu a:hover{
+  background: var(--color-card-2);
+  color: var(--color-text);
+}
+
+.app-sidebar .dropdown-menu a:hover{
+  background: var(--color-card-2);
+  color: var(--color-text);
+}
+
+
+
+

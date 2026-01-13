@@ -1,29 +1,99 @@
-<section class="cal-toolbar">
-  <label class="cal-filter">
-    <input type="checkbox" (change)="setOnlyMine($event.target.checked)" />
+<section
+  class="
+    cal-toolbar
+    flex flex-wrap items-center gap-3
+    rounded-2xl border border-[color:var(--border)]
+    bg-[color:var(--card)]
+    shadow-[0_20px_60px_-40px_var(--accent-glow)]
+    p-4
+  "
+>
+  <label class="cal-filter flex items-center gap-2 text-sm font-semibold text-[color:var(--text)]">
+    <input
+      type="checkbox"
+      class="
+        size-4 rounded
+        accent-[color:var(--accent-500)]
+      "
+      (change)="setOnlyMine($event.target.checked)"
+    />
     Solo mis reservas
   </label>
 
-  <button type="button" (click)="refetch()" class="refresh-btn">
+  <button
+    type="button"
+    (click)="refetch()"
+    class="
+      refresh-btn
+      ml-auto
+      inline-flex items-center justify-center
+      rounded-xl px-4 py-2 font-semibold
+      bg-[color:var(--accent-500)]
+      text-white
+      shadow-[0_16px_40px_-24px_var(--accent-glow)]
+      transition
+      hover:bg-[color:var(--accent-600)]
+      active:scale-[0.98]
+    "
+  >
     Refrescar
   </button>
 
   @if (loading()) {
-    <span class="loading-pill">Cargando eventos...</span>
+    <span
+      class="
+        loading-pill
+        inline-flex items-center rounded-full px-3 py-1
+        text-xs font-semibold
+        border border-[color:var(--border-2)]
+        bg-[color:var(--card-2)]
+        text-[color:var(--text)]
+      "
+    >
+      Cargando eventos...
+    </span>
   }
 </section>
 
-<div class="calendar-legend">
-  <div class="calendar-legend__item">
-    <span class="calendar-legend__color calendar-legend__color--mine"></span>
+<div
+  class="
+    calendar-legend
+    mt-3 flex flex-wrap items-center gap-3
+    text-sm text-[color:var(--text-2)]
+  "
+>
+  <div class="calendar-legend__item flex items-center gap-2">
+    <span
+      class="
+        calendar-legend__color calendar-legend__color--mine
+        inline-block size-3 rounded-full
+        border border-[color:var(--border)]
+      "
+    ></span>
     <span>Tus reservas</span>
   </div>
-  <div class="calendar-legend__item">
-    <span class="calendar-legend__color calendar-legend__color--other"></span>
+
+  <div class="calendar-legend__item flex items-center gap-2">
+    <span
+      class="
+        calendar-legend__color calendar-legend__color--other
+        inline-block size-3 rounded-full
+        border border-[color:var(--border)]
+      "
+    ></span>
     <span>Reservas de otros clientes</span>
   </div>
 </div>
 
-<div class="calendar-panel">
+<div
+  class="
+    calendar-panel
+    mt-4
+    rounded-2xl border border-[color:var(--border)]
+    bg-[color:var(--card)]
+    shadow-[0_20px_60px_-40px_var(--accent-glow)]
+    p-3
+  "
+>
   <full-calendar #fc [options]="calendarOptions"></full-calendar>
 </div>

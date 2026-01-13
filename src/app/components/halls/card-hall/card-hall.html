@@ -1,39 +1,129 @@
-<article class="card">
-  <header class="card-header">
-    <h3 class="card-title">
-      <span class="card-title-label">SALA #</span>
-      <span class="card-title-value">{{ hall().numero }}</span>
+<article
+  class="
+    relative overflow-hidden rounded-2xl p-5
+    border border-[var(--border-2)]
+    bg-[var(--card)]
+    shadow-[var(--shadow)]
+    transition hover:-translate-y-0.5
+    hover:border-[color:rgba(124,92,255,0.45)]
+    hover:shadow-[var(--shadow-accent)]
+
+    motion-safe:motion-opacity-in-0
+    motion-safe:motion-translate-y-in-2
+    motion-safe:motion-scale-in-95
+    motion-safe:motion-duration-1000
+    motion-safe:motion-ease-out
+  "
+>
+  <div
+    class="
+      pointer-events-none absolute inset-0
+      bg-[radial-gradient(circle_at_12%_8%,rgba(124,92,255,0.16),transparent_55%)]
+    "
+  ></div>
+
+  <header class="relative flex items-start justify-between gap-3">
+    <h3 class="flex items-baseline gap-2 m-0">
+      <span
+        class="
+          text-xs font-extrabold uppercase tracking-[0.22em]
+          text-[var(--accent-500)]
+        "
+      >
+        SALA #
+      </span>
+
+      <span class="text-lg font-extrabold tracking-tight text-[var(--text)]">
+        {{ hall().numero }}
+      </span>
     </h3>
+
+    @if (canEdit() || canRemove()) {
+      <div class="flex items-center gap-2">
+        @if (canEdit()) {
+          <a
+            class="
+              inline-flex items-center justify-center
+              h-9 w-9 rounded-xl
+              border border-[var(--border-2)]
+              bg-[var(--card)]
+              text-[var(--accent-500)]
+              transition
+              hover:bg-[var(--card-2)]
+              hover:border-[color:rgba(124,92,255,0.55)]
+              focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-400)]
+            "
+            [routerLink]="['/hall', hall().id, 'edit']"
+            aria-label="Editar sala"
+          >
+            <span class="icon-[tabler--pencil] size-5" aria-hidden="true"></span>
+          </a>
+        }
+
+        @if (canRemove()) {
+          <button
+            type="button"
+            class="
+              inline-flex items-center justify-center
+              h-9 w-9 rounded-xl
+              border border-[color:rgba(225,29,72,0.30)]
+              bg-[var(--card)]
+              text-[var(--danger)]
+              transition
+              hover:bg-[color:rgba(225,29,72,0.12)]
+              hover:border-[color:rgba(225,29,72,0.55)]
+              focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:rgba(225,29,72,0.35)]
+            "
+            (click)="onDeleteClick()"
+            aria-label="Eliminar sala"
+          >
+            <span class="icon-[tabler--trash] size-5" aria-hidden="true"></span>
+          </button>
+        }
+      </div>
+    }
   </header>
 
-  <div class="card-body">
-    <p class="descripcion">
+  <div class="relative mt-3 grid gap-2">
+    <p class="m-0 text-sm leading-relaxed text-[var(--muted)]">
       {{ hall().descripcion }}
     </p>
 
-    <p class="meta-linea">
-      <span class="meta-label">TAMAÑO:</span>
-      <span class="meta-value">{{ hall().salaSize }}</span>
+    <p class="m-0 flex flex-wrap items-baseline gap-2">
+      <span
+        class="
+          text-[10px] font-extrabold uppercase tracking-[0.22em]
+          text-[var(--accent-500)]
+        "
+      >
+        TAMAÑO:
+      </span>
+      <span class="text-sm font-semibold text-[var(--text)]">
+        {{ hall().salaSize }}
+      </span>
     </p>
 
-    <p class="meta-linea capacidad">
-      <span class="meta-label">CAPACIDAD:</span>
-      <span class="meta-value">{{ hall().cantidad_personas }}</span>
-      <span class="meta-sufijo">personas</span>
+    <p class="m-0 flex flex-wrap items-baseline gap-2">
+      <span
+        class="
+          text-[10px] font-extrabold uppercase tracking-[0.22em]
+          text-[var(--accent-500)]
+        "
+      >
+        CAPACIDAD:
+      </span>
+      <span class="text-sm font-extrabold text-[var(--text)]">
+        {{ hall().cantidad_personas }}
+      </span>
+      <span class="text-xs text-[var(--muted)]">personas</span>
     </p>
   </div>
 
-  @if (canEdit()) {
-    <button
-      class="icon-btn edit"
-      [routerLink]="['/hall', hall().id, 'edit']"
-    ></button>
-  }
-  @if (canRemove()) {
-    <button
-      class="icon-btn delete"
-      type="button"
-      (click)="onDeleteClick()"
-    ></button>
-  }
+  <div
+    class="
+      pointer-events-none absolute bottom-0 left-0 h-[2px] w-full
+      bg-[linear-gradient(90deg,transparent,var(--accent-500),transparent)]
+      opacity-60
+    "
+  ></div>
 </article>

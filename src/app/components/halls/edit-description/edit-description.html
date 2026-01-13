@@ -1,33 +1,35 @@
-<form
-  [formGroup]="form"
-  (ngSubmit)="submit()"
-  class="sala-form"
-  novalidate
->
-  <h2>Editar descripción</h2>
+<form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4" novalidate>
+  <h2 class="text-base-content text-2xl font-semibold">Editar descripción</h2>
 
-  @let descCtrl = form.get('descripcion');
-
-  <div class="field">
-    <label for="descripcion">Descripción</label>
+  <div class="input-floating w-96">
     <input
       id="descripcion"
       type="text"
+      placeholder="Descripción"
+      class="input hover:bg-[var(--bg)]"
       formControlName="descripcion"
-      [class.invalid]="descCtrl?.touched && descCtrl?.invalid"
+      [class.is-invalid]="isInvalid('descripcion')"
+      [class.is-valid]="isValid('descripcion')"
+      [attr.aria-invalid]="isInvalid('descripcion') ? 'true' : null"
     />
 
-    @if (descCtrl?.touched && descCtrl?.hasError('required')) {
-      <p class="error">La descripción es obligatoria.</p>
-    }
+    <label class="input-floating-label" for="descripcion">Descripción</label>
 
-    @if (descCtrl?.touched && descCtrl?.hasError('minlength')) {
-      <p class="error">
-        La descripción debe tener al menos
-        {{ descCtrl?.errors?.['minlength']?.requiredLength }} caracteres.
-      </p>
+    @if (isInvalid('descripcion')) {
+      <span class="helper-text ps-3 text-[var(--danger)]">
+        @if (hasError('descripcion','required')) { La descripción es obligatoria. }
+        @else if (hasError('descripcion','minlength')) {
+          La descripción debe tener al menos
+          {{ form.get('descripcion')?.errors?.['minlength']?.requiredLength }} caracteres.
+        }
+        @else { Campo inválido. }
+      </span>
+    } @else if (isValid('descripcion')) {
+      <span class="helper-text ps-3">Se ve bien.</span>
     }
   </div>
 
-  <button type="submit" [disabled]="form.invalid">Guardar</button>
+  <button type="submit" class="btn btn-lg btn-primary btn-gradient btn-block" [disabled]="form.invalid">
+    Guardar
+  </button>
 </form>

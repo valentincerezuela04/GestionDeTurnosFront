@@ -10,10 +10,14 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
   styleUrl: './login-page-component.css',
 })
 export class LoginPageComponent {
+
   private fb = inject(NonNullableFormBuilder);
   private auth = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  submitted = false
+
+  showPassword = false;
 
   loading = false;
   error = '';
@@ -63,5 +67,22 @@ export class LoginPageComponent {
     const ctrl = this.form.get(controlName);
     return ctrl?.touched && ctrl.hasError(error);
   }
+  isInvalid(name: string): boolean {
+  const c = this.form.get(name);
+  return !!c && c.invalid && (this.submitted || c.touched || c.dirty);
+  
+}
+private c(name: string) {
+  return this.form.get(name);
+}
+
+private interacted(name: string): boolean {
+  const c = this.c(name);
+  return !!c && (this.submitted || c.touched || c.dirty);
+}
+isValid(name: string): boolean {
+  const c = this.c(name);
+  return !!c && c.valid && this.interacted(name);
+}
 }
 

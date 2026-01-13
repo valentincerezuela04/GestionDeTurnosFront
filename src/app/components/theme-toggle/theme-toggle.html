@@ -1,0 +1,54 @@
+<label
+  class="
+    relative inline-flex items-center
+    h-9 w-16 rounded-full
+    border border-[var(--border-2)]
+    bg-[var(--card)]
+    shadow-[0_10px_30px_-18px_var(--accent-glow)]
+    cursor-pointer select-none
+  "
+>
+  <input
+    #chk
+    type="checkbox"
+    class="peer sr-only"
+    aria-label="Cambiar tema"
+    [checked]="isDark()"
+    (change)="onChange(chk.checked)"
+  />
+
+  <span
+    class="
+      absolute left-1 top-1
+      grid place-items-center
+      h-7 w-7 rounded-full
+      bg-[var(--card-2)]
+      border border-[var(--border)]
+      shadow-sm
+      transition-transform duration-300
+      peer-checked:translate-x-7
+    "
+  ></span>
+
+  <span
+    class="
+      icon-[tabler--moon]
+      absolute left-2 top-2 size-4
+      text-[var(--accent-500)]
+      transition-opacity duration-200
+      peer-checked:opacity-100 opacity-40
+    "
+    aria-hidden="true"
+  ></span>
+
+  <span
+    class="
+      icon-[tabler--sun]
+      absolute right-2 top-2 size-4
+      text-[var(--accent-500)]
+      transition-opacity duration-200
+      peer-checked:opacity-40 opacity-100
+    "
+    aria-hidden="true"
+  ></span>
+</label>

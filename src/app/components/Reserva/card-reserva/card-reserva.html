@@ -1,55 +1,146 @@
-<div class="card reserva-card" (click)="onCardClick()">
-  <div class="card-header">
-    <div class="card-title">
-      <span class="card-title-label">SALA</span>
-      <span class="card-title-value"># {{ reserva.salaNumero }}</span>
-      <span class="card-title-capacity">
+<article
+  (click)="onCardClick()"
+  class="
+    relative overflow-hidden rounded-2xl p-5
+    border border-[var(--border-2)]
+    bg-[var(--card)]
+    shadow-[var(--shadow)]
+    transition cursor-pointer
+    hover:-translate-y-0.5
+    hover:border-[color:rgba(124,92,255,0.45)]
+    hover:shadow-[var(--shadow-accent)]
+    focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-400)]
+
+    motion-safe:motion-opacity-in-0
+    motion-safe:motion-translate-y-in-2
+    motion-safe:motion-scale-in-95
+    motion-safe:motion-duration-1000
+    motion-safe:motion-ease-out
+  "
+  tabindex="0"
+  role="button"
+  aria-label="Abrir detalle de reserva"
+>
+  <!-- glow -->
+  <div
+    class="
+      pointer-events-none absolute inset-0
+      bg-[radial-gradient(circle_at_12%_8%,rgba(124,92,255,0.16),transparent_55%)]
+    "
+  ></div>
+
+  <!-- Header -->
+  <header class="relative flex items-start justify-between gap-3">
+    <h3 class="m-0 flex flex-wrap items-baseline gap-2">
+      <span
+        class="
+          text-xs font-extrabold uppercase tracking-[0.22em]
+          text-[var(--accent-500)]
+        "
+      >
+        SALA
+      </span>
+
+      <span class="text-lg font-extrabold tracking-tight text-[var(--text)]">
+        # {{ reserva.salaNumero }}
+      </span>
+
+      <span class="text-xs text-[var(--muted)]">
         · {{ reserva.salaCapacidad }} personas
       </span>
-    </div>
+    </h3>
 
-    <span class="chip" [ngClass]="estadoClase">
+    <!-- Estado -->
+    <span
+      class="    inline-flex items-center gap-1.5
+    rounded-full px-2.5 py-1
+    text-[11px] font-extrabold tracking-wide
+    border"
+      [ngClass]="estadoClase"
+    >
       {{ reserva.estado }}
     </span>
-  </div>
+  </header>
 
-  <div class="card-body">
-    <p class="meta-linea">
-      <span class="meta-label">Fecha</span>
-      <span class="meta-value">
+  <!-- Body -->
+  <div class="relative mt-3 grid gap-2">
+    <p class="m-0 flex flex-wrap items-baseline gap-2">
+      <span
+        class="
+          text-[10px] font-extrabold uppercase tracking-[0.22em]
+          text-[var(--accent-500)]
+        "
+      >
+        FECHA:
+      </span>
+      <span class="text-sm font-semibold text-[var(--text)]">
         {{ reserva.fechaInicio | date : 'dd/MM/yyyy' }}
       </span>
     </p>
 
-    <p class="meta-linea">
-      <span class="meta-label">Horario</span>
-      <span class="meta-value">
-        {{ reserva.fechaInicio | date : 'HH:mm' }}
-        -
-        {{ reserva.fechaFinal  | date : 'HH:mm' }}
+    <p class="m-0 flex flex-wrap items-baseline gap-2">
+      <span
+        class="
+          text-[10px] font-extrabold uppercase tracking-[0.22em]
+          text-[var(--accent-500)]
+        "
+      >
+        HORARIO:
+      </span>
+      <span class="text-sm font-semibold text-[var(--text)]">
+        {{ reserva.fechaInicio | date : 'HH:mm' }} - {{ reserva.fechaFinal | date : 'HH:mm' }}
       </span>
     </p>
 
-    <p class="meta-linea">
-      <span class="meta-label">Monto</span>
-      <span class="meta-value meta-value--strong">
+    <p class="m-0 flex flex-wrap items-baseline gap-2">
+      <span
+        class="
+          text-[10px] font-extrabold uppercase tracking-[0.22em]
+          text-[var(--accent-500)]
+        "
+      >
+        MONTO:
+      </span>
+      <span class="text-sm font-extrabold text-[var(--text)]">
         {{ reserva.monto | currency:'ARS':'symbol':'1.0-0' }}
       </span>
     </p>
 
-    <p class="meta-linea" *ngIf="mostrarCliente">
-      <span class="meta-label">Cliente</span>
-      <span class="meta-value">
+    <p class="m-0 flex flex-wrap items-baseline gap-2" *ngIf="mostrarCliente">
+      <span
+        class="
+          text-[10px] font-extrabold uppercase tracking-[0.22em]
+          text-[var(--accent-500)]
+        "
+      >
+        CLIENTE:
+      </span>
+      <span class="text-sm font-semibold text-[var(--text)]">
         {{ reserva.clienteEmail }}
       </span>
     </p>
 
-    <p class="meta-linea">
-      <span class="meta-label">Pago</span>
-      <span class="meta-value">
+    <p class="m-0 flex flex-wrap items-baseline gap-2">
+      <span
+        class="
+          text-[10px] font-extrabold uppercase tracking-[0.22em]
+          text-[var(--accent-500)]
+        "
+      >
+        PAGO:
+      </span>
+      <span class="text-sm font-semibold text-[var(--text)]">
         {{ formatTipoPago(reserva.tipoPago) }}
       </span>
     </p>
   </div>
 
-</div>
+  <!-- bottom gradient line -->
+  <div
+    class="
+      pointer-events-none absolute bottom-0 left-0 h-[2px] w-full
+      bg-[linear-gradient(90deg,transparent,var(--accent-500),transparent)]
+      opacity-60
+    "
+  ></div>
+</article>

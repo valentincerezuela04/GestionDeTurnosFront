@@ -4,10 +4,11 @@ import { Aside } from './components/aside/aside';
 import { Headear } from './components/headear/headear';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs/operators';
+import { UiAlertComponent } from "./components/ui-alert/ui-alert";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, Aside, Headear],
+  imports: [RouterOutlet, RouterLink, Aside, Headear, UiAlertComponent],
   standalone: true,
   templateUrl: './app.html',
   styleUrl: './app.css',

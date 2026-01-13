@@ -1,103 +1,109 @@
-<form
-  [formGroup]="form"
-  (ngSubmit)="submit()"
-  class="sala-form"
-  novalidate
->
-  <h2>Crear sala</h2>
+<form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4" novalidate>
+  <h2 class="text-base-content text-2xl font-semibold">Crear sala</h2>
 
   <!-- Número -->
-  @let numeroCtrl = form.get('numero');
-  <div class="field">
-    <label for="numero">Número</label>
+  <div class="input-floating w-96">
     <input
       id="numero"
       type="number"
+      placeholder="Número de sala"
+      class="input hover:bg-[var(--bg)]"
       formControlName="numero"
-      [class.invalid]="numeroCtrl?.touched && numeroCtrl?.invalid"
+      [class.is-invalid]="isInvalid('numero') || numeroOcupado"
+      [class.is-valid]="isValid('numero') && !numeroOcupado"
+      [attr.aria-invalid]="(isInvalid('numero') || numeroOcupado) ? 'true' : null"
     />
+    <label class="input-floating-label" for="numero">Número*</label>
 
-    @if (numeroCtrl?.touched && numeroCtrl?.hasError('required')) {
-      <p class="error">El número es obligatorio.</p>
-    }
-
-    @if (numeroCtrl?.touched && numeroCtrl?.hasError('min')) {
-      <p class="error">El número debe ser mayor o igual a 1.</p>
-    }
-
-        @if (numeroOcupado) {
-      <p class="error">Ya existe una sala con ese número.</p>
+    @if (isInvalid('numero') || numeroOcupado) {
+      <span class="helper-text ps-3 text-[var(--danger)]">
+        @if (numeroOcupado) { Ya existe una sala con ese número. }
+        @else if (hasError('numero','required')) { El número es obligatorio. }
+        @else if (hasError('numero','min')) { El número debe ser mayor o igual a 1. }
+        @else { Campo inválido. }
+      </span>
+    } @else if (isValid('numero')) {
+      <span class="helper-text ps-3">Se ve bien.</span>
     }
   </div>
 
   <!-- Descripción -->
-  @let descCtrl = form.get('descripcion');
-  <div class="field">
-    <label for="descripcion">Descripción</label>
+  <div class="input-floating w-96">
     <input
       id="descripcion"
       type="text"
+      placeholder="Descripción"
+      class="input hover:bg-[var(--bg)]"
       formControlName="descripcion"
-      [class.invalid]="descCtrl?.touched && descCtrl?.invalid"
+      [class.is-invalid]="isInvalid('descripcion')"
+      [class.is-valid]="isValid('descripcion')"
+      [attr.aria-invalid]="isInvalid('descripcion') ? 'true' : null"
     />
+    <label class="input-floating-label" for="descripcion">Descripción*</label>
 
-    @if (descCtrl?.touched && descCtrl?.hasError('required')) {
-      <p class="error">La descripción es obligatoria.</p>
-    }
-
-    @if (descCtrl?.touched && descCtrl?.hasError('minlength')) {
-      <p class="error">
-        La descripción debe tener al menos
-        {{ descCtrl?.errors?.['minlength']?.requiredLength }} caracteres.
-        (actual:
-        {{ descCtrl?.errors?.['minlength']?.actualLength || 0 }})
-      </p>
+    @if (isInvalid('descripcion')) {
+      <span class="helper-text ps-3 text-[var(--danger)]">
+        @if (hasError('descripcion','required')) { La descripción es obligatoria. }
+        @else if (hasError('descripcion','minlength')) {
+          La descripción debe tener al menos
+          {{ form.get('descripcion')?.errors?.['minlength']?.requiredLength }} caracteres.
+          (actual: {{ form.get('descripcion')?.errors?.['minlength']?.actualLength || 0 }})
+        }
+        @else { Campo inválido. }
+      </span>
+    } @else if (isValid('descripcion')) {
+      <span class="helper-text ps-3">Se ve bien.</span>
     }
   </div>
 
-
- <!-- Tamaño de sala -->
-  @let sizeCtrl = form.get('salaSize');
-  <div class="field">
-    <label for="salaSize">Tamaño</label>
+  <!-- Tamaño -->
+  <div class="input-floating w-96">
     <select
       id="salaSize"
+      class="select hover:bg-[var(--bg)]"
       formControlName="salaSize"
-      [class.invalid]="sizeCtrl?.touched && sizeCtrl?.invalid"
+      [class.is-invalid]="isInvalid('salaSize')"
+      [class.is-valid]="isValid('salaSize')"
+      [attr.aria-invalid]="isInvalid('salaSize') ? 'true' : null"
     >
-      <option value="" disabled>Seleccione un tamaño</option>
-
+      <option value="" disabled selected>Seleccione un tamaño</option>
       @for (size of ['PEQUEÑA', 'MEDIANA', 'GRANDE']; track size) {
-        <option [ngValue]="size">
-          {{ size }}
-        </option>
+        <option [ngValue]="size">{{ size }}</option>
       }
     </select>
 
-    @if (sizeCtrl?.touched && sizeCtrl?.hasError('required')) {
-      <p class="error">El tamaño es obligatorio.</p>
+    <label class="input-floating-label" for="salaSize">Tamaño*</label>
+
+    @if (isInvalid('salaSize')) {
+      <span class="helper-text ps-3 text-[var(--danger)]">
+        @if (hasError('salaSize','required')) { El tamaño es obligatorio. }
+        @else { Campo inválido. }
+      </span>
+    } @else if (isValid('salaSize')) {
+      <span class="helper-text ps-3">Se ve bien.</span>
     }
   </div>
 
-  <!-- Capacidad fija (solo lectura, derivada del tamaño) -->
-  <div class="field">
-    <label for="capacidad">Cantidad de personas</label>
+  <!-- Capacidad (readonly) -->
+  <div class="input-floating w-96">
     <input
       id="capacidad"
       type="number"
+      placeholder="Cantidad de personas"
+      class="input hover:bg-[var(--bg)]"
       [value]="capacidadSeleccionada ?? ''"
       readonly
     />
+    <label class="input-floating-label" for="capacidad">Cantidad de personas</label>
 
     @if (!capacidadSeleccionada) {
-      <p class="hint">Seleccioná un tamaño para ver la capacidad.</p>
-    }
-
-    @if (capacidadSeleccionada) {
-      <p class="hint">Capacidad fija según el tamaño seleccionado.</p>
+      <span class="helper-text ps-3">Seleccioná un tamaño para ver la capacidad.</span>
+    } @else {
+      <span class="helper-text ps-3">Capacidad fija según el tamaño seleccionado.</span>
     }
   </div>
-  <button type="submit" [disabled]="form.invalid">
+
+  <button type="submit" class="btn btn-lg btn-primary btn-gradient btn-block" [disabled]="form.invalid">
     Guardar
   </button>
 </form>

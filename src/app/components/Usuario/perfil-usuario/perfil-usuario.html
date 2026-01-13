@@ -1,30 +1,45 @@
-<section class="perfil-usuario">
-  <header class="perfil-usuario__header">
-    <h1>Mi perfil</h1>
+<section class="max-w-5xl mx-auto px-4 py-6">
+  <header class="flex items-start justify-between gap-3 mb-5">
+    <div class="min-w-0">
+      <h1 class="text-xl font-extrabold tracking-tight text-[var(--text)]">
+        Mi perfil
+      </h1>
+      <p class="mt-1 text-sm text-[var(--muted)]">
+        Gestioná tu información personal y credenciales.
+      </p>
+    </div>
+
     @if (userInfo()) {
-      <span class="perfil-usuario__badge">
+      <span
+        class="
+          shrink-0 rounded-xl px-3 py-1
+          text-[10px] font-extrabold uppercase tracking-[0.22em]
+          border border-[var(--border-2)]
+          bg-[var(--card)]
+          text-[var(--accent-500)]
+        "
+      >
         {{ rolActualTexto() }}
       </span>
     }
   </header>
 
   @if (isLoading()) {
-    <p class="perfil-usuario__status">Cargando informacion del perfil...</p>
+    <p class="text-sm text-[var(--muted)]">Cargando informacion del perfil...</p>
   } @else {
     @if (errorMessage()) {
-      <p class="perfil-usuario__status perfil-usuario__status--error">
-        {{ errorMessage() }}
-      </p>
+      <p class="text-sm text-[var(--danger)]">{{ errorMessage() }}</p>
     }
 
     @let cliente = clienteDetalle();
     @let empleado = empleadoDetalle();
     @let info = userInfo();
 
-  <div class="perfil-usuario__stack">
-    @if (esCliente() && cliente) {
-      @if (!editMode()) {
-        <div class="perfil-usuario__panel">
+    <div class="space-y-4">
+      <!-- CLIENTE -->
+      @if (esCliente() && cliente) {
+        @if (!editMode()) {
+          <!-- IMPORTANTE: sin wrapper con bg/border para evitar "tarjeta externa" -->
           <app-card-usuario
             [usuario]="cliente"
             [rol]="rolActual()"
@@ -32,134 +47,315 @@
             [mostrarEditar]="true"
             (editar)="habilitarEdicion()"
           ></app-card-usuario>
-        </div>
-      } @else {
-        <form [formGroup]="clienteForm" class="perfil-usuario__form perfil-usuario__panel">
-          <div class="perfil-usuario__field">
-            <label for="nombre">Nombre</label>
-            <input id="nombre" type="text" formControlName="nombre" />
-            @if (controls.nombre.invalid && controls.nombre.touched) {
-              <span class="perfil-usuario__error">El nombre es obligatorio.</span>
-            }
-          </div>
-          <div class="perfil-usuario__field">
-            <label for="apellido">Apellido</label>
-            <input id="apellido" type="text" formControlName="apellido" />
-            @if (controls.apellido.invalid && controls.apellido.touched) {
-              <span class="perfil-usuario__error">El apellido es obligatorio.</span>
-            }
-          </div>
-          <div class="perfil-usuario__field">
-            <label for="dni">DNI</label>
-            <input
-              id="dni"
-              type="text"
-              formControlName="dni"
-              maxlength="8"
-              inputmode="numeric"
-            />
-            @if (controls.dni.touched && controls.dni.hasError('required')) {
-              <span class="perfil-usuario__error">El DNI es obligatorio.</span>
-            }
-            @if (controls.dni.touched && controls.dni.hasError('pattern')) {
-              <span class="perfil-usuario__error">Usa solo numeros (7 u 8 digitos).</span>
-            }
-          </div>
-          <div class="perfil-usuario__field">
-            <label for="telefono">Telefono</label>
-            <input
-              id="telefono"
-              type="text"
-              formControlName="telefono"
-              maxlength="10"
-              inputmode="tel"
-            />
-            @if (controls.telefono.touched && controls.telefono.hasError('required')) {
-              <span class="perfil-usuario__error">El telefono es obligatorio.</span>
-            }
-            @if (controls.telefono.touched && controls.telefono.hasError('pattern')) {
-              <span class="perfil-usuario__error">Debe tener exactamente 10 numeros.</span>
-            }
-          </div>
-          <div class="perfil-usuario__field">
-            <label for="email">Email</label>
-            <input id="email" type="email" formControlName="email" />
-            @if (controls.email.invalid && controls.email.touched) {
-              <span class="perfil-usuario__error">Ingresa un email valido.</span>
-            }
-          </div>
-                    <div class="perfil-usuario__field">
-            <label for="contrasena">Contrasena</label>
-            <input
-              id="contrasena"
-              type="password"
-              formControlName="contrasena"
-              placeholder="Minimo 4 caracteres e incluir al menos un numero"
-            />
-            @if (controls.contrasena.touched && controls.contrasena.hasError('minlength')) {
-              <span class="perfil-usuario__error">Debe tener al menos 4 caracteres.</span>
-            }
-            @if (controls.contrasena.touched && controls.contrasena.hasError('pattern')) {
-              <span class="perfil-usuario__error">Debe incluir al menos un numero.</span>
-            }
-          </div>
+        } @else {
+          <!-- Panel edición (mismo estilo que empleado) -->
+          <article
+            class="
+              relative overflow-hidden rounded-2xl p-5
+              border border-[var(--border-2)]
+              bg-[var(--card)]
+              shadow-[var(--shadow)]
+              transition hover:-translate-y-0.5
+              hover:border-[color:rgba(124,92,255,0.45)]
+              hover:shadow-[var(--shadow-accent)]
+            "
+          >
+            <div
+              class="
+                pointer-events-none absolute inset-0
+                bg-[radial-gradient(circle_at_12%_8%,rgba(124,92,255,0.16),transparent_55%)]
+              "
+            ></div>
 
-          <div class="perfil-usuario__field">
-            <label for="confirmarContrasena">Confirmar contrasena</label>
-            <input
-              id="confirmarContrasena"
-              type="password"
-              formControlName="confirmarContrasena"
-              placeholder="Repite la nueva contrasena"
-            />
-            @if (controls.confirmarContrasena.touched && controls.confirmarContrasena.hasError('minlength')) {
-              <span class="perfil-usuario__error">Debe tener al menos 4 caracteres.</span>
-            }
-            @if (controls.confirmarContrasena.touched && controls.confirmarContrasena.hasError('pattern')) {
-              <span class="perfil-usuario__error">Debe incluir al menos un numero.</span>
-            }
-            @if (controls.confirmarContrasena.touched && controls.confirmarContrasena.hasError('mismatch')) {
-              <span class="perfil-usuario__error">Las contrasenas no coinciden.</span>
-            }
-          </div>
+            <header class="relative flex items-start justify-between gap-3">
+              <div class="min-w-0">
+                <p class="m-0 text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
+                  Datos personales
+                </p>
+                <h2 class="m-0 mt-1 truncate text-lg font-extrabold tracking-tight text-[var(--text)]">
+                  Editar perfil
+                </h2>
+              </div>
+              <span
+                class="
+                  shrink-0 rounded-xl px-3 py-1
+                  text-[10px] font-extrabold uppercase tracking-[0.22em]
+                  border border-[var(--border-2)]
+                  bg-[var(--card-2)]
+                  text-[var(--accent-500)]
+                "
+              >
+                {{ rolActualTexto() }}
+              </span>
+            </header>
 
-        </form>
+            <div class="relative mt-4">
+              <form [formGroup]="clienteForm" class="grid grid-cols-2 gap-3 max-sm:grid-cols-1">
+                <!-- helper: input look -->
+                <!-- Nombre -->
+                <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3">
+                  <label for="nombre" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
+                    Nombre
+                  </label>
+                  <input
+                    id="nombre"
+                    type="text"
+                    formControlName="nombre"
+                    class="
+                      mt-2 w-full rounded-xl px-3 py-2
+                      border border-[var(--border)]
+                      bg-[var(--bg-2)]
+                      text-[var(--text)]
+                      outline-none transition
+                      focus:border-[var(--accent-400)]
+                      focus:ring-2 focus:ring-[color:rgba(124,92,255,0.25)]
+                    "
+                  />
+                  @if (controls.nombre.invalid && controls.nombre.touched) {
+                    <span class="mt-2 block text-xs text-[var(--danger)]">El nombre es obligatorio.</span>
+                  }
+                </div>
 
-        @if (formError()) {
-          <p class="perfil-usuario__status perfil-usuario__status--error">
-            {{ formError() }}
-          </p>
+                <!-- Apellido -->
+                <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3">
+                  <label for="apellido" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
+                    Apellido
+                  </label>
+                  <input
+                    id="apellido"
+                    type="text"
+                    formControlName="apellido"
+                    class="
+                      mt-2 w-full rounded-xl px-3 py-2
+                      border border-[var(--border)]
+                      bg-[var(--bg-2)]
+                      text-[var(--text)]
+                      outline-none transition
+                      focus:border-[var(--accent-400)]
+                      focus:ring-2 focus:ring-[color:rgba(124,92,255,0.25)]
+                    "
+                  />
+                  @if (controls.apellido.invalid && controls.apellido.touched) {
+                    <span class="mt-2 block text-xs text-[var(--danger)]">El apellido es obligatorio.</span>
+                  }
+                </div>
+
+                <!-- DNI -->
+                <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3">
+                  <label for="dni" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
+                    DNI
+                  </label>
+                  <input
+                    id="dni"
+                    type="text"
+                    formControlName="dni"
+                    maxlength="8"
+                    inputmode="numeric"
+                    class="
+                      mt-2 w-full rounded-xl px-3 py-2
+                      border border-[var(--border)]
+                      bg-[var(--bg-2)]
+                      text-[var(--text)]
+                      outline-none transition
+                      focus:border-[var(--accent-400)]
+                      focus:ring-2 focus:ring-[color:rgba(124,92,255,0.25)]
+                    "
+                  />
+                  @if (controls.dni.touched && controls.dni.hasError('required')) {
+                    <span class="mt-2 block text-xs text-[var(--danger)]">El DNI es obligatorio.</span>
+                  }
+                  @if (controls.dni.touched && controls.dni.hasError('pattern')) {
+                    <span class="mt-2 block text-xs text-[var(--danger)]">Usa solo numeros (7 u 8 digitos).</span>
+                  }
+                </div>
+
+                <!-- Teléfono -->
+                <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3">
+                  <label for="telefono" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
+                    Telefono
+                  </label>
+                  <input
+                    id="telefono"
+                    type="text"
+                    formControlName="telefono"
+                    maxlength="10"
+                    inputmode="tel"
+                    class="
+                      mt-2 w-full rounded-xl px-3 py-2
+                      border border-[var(--border)]
+                      bg-[var(--bg-2)]
+                      text-[var(--text)]
+                      outline-none transition
+                      focus:border-[var(--accent-400)]
+                      focus:ring-2 focus:ring-[color:rgba(124,92,255,0.25)]
+                    "
+                  />
+                  @if (controls.telefono.touched && controls.telefono.hasError('required')) {
+                    <span class="mt-2 block text-xs text-[var(--danger)]">El telefono es obligatorio.</span>
+                  }
+                  @if (controls.telefono.touched && controls.telefono.hasError('pattern')) {
+                    <span class="mt-2 block text-xs text-[var(--danger)]">Debe tener exactamente 10 numeros.</span>
+                  }
+                </div>
+
+                <!-- Email -->
+                <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3 col-span-2 max-sm:col-span-1">
+                  <label for="email" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    formControlName="email"
+                    class="
+                      mt-2 w-full rounded-xl px-3 py-2
+                      border border-[var(--border)]
+                      bg-[var(--bg-2)]
+                      text-[var(--text)]
+                      outline-none transition
+                      focus:border-[var(--accent-400)]
+                      focus:ring-2 focus:ring-[color:rgba(124,92,255,0.25)]
+                    "
+                  />
+                  @if (controls.email.invalid && controls.email.touched) {
+                    <span class="mt-2 block text-xs text-[var(--danger)]">Ingresa un email valido.</span>
+                  }
+                </div>
+
+                <!-- Contraseña -->
+                <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3">
+                  <label for="contrasena" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
+                    Contrasena
+                  </label>
+                  <input
+                    id="contrasena"
+                    type="password"
+                    formControlName="contrasena"
+                    placeholder="Minimo 4 caracteres e incluir al menos un numero"
+                    class="
+                      mt-2 w-full rounded-xl px-3 py-2
+                      border border-[var(--border)]
+                      bg-[var(--bg-2)]
+                      text-[var(--text)]
+                      outline-none transition
+                      focus:border-[var(--accent-400)]
+                      focus:ring-2 focus:ring-[color:rgba(124,92,255,0.25)]
+                    "
+                  />
+                  @if (controls.contrasena.touched && controls.contrasena.hasError('minlength')) {
+                    <span class="mt-2 block text-xs text-[var(--danger)]">Debe tener al menos 4 caracteres.</span>
+                  }
+                  @if (controls.contrasena.touched && controls.contrasena.hasError('pattern')) {
+                    <span class="mt-2 block text-xs text-[var(--danger)]">Debe incluir al menos un numero.</span>
+                  }
+                </div>
+
+                <!-- Confirmar -->
+                <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3">
+                  <label for="confirmarContrasena" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
+                    Confirmar contrasena
+                  </label>
+                  <input
+                    id="confirmarContrasena"
+                    type="password"
+                    formControlName="confirmarContrasena"
+                    placeholder="Repite la nueva contrasena"
+                    class="
+                      mt-2 w-full rounded-xl px-3 py-2
+                      border border-[var(--border)]
+                      bg-[var(--bg-2)]
+                      text-[var(--text)]
+                      outline-none transition
+                      focus:border-[var(--accent-400)]
+                      focus:ring-2 focus:ring-[color:rgba(124,92,255,0.25)]
+                    "
+                  />
+                  @if (controls.confirmarContrasena.touched && controls.confirmarContrasena.hasError('minlength')) {
+                    <span class="mt-2 block text-xs text-[var(--danger)]">Debe tener al menos 4 caracteres.</span>
+                  }
+                  @if (controls.confirmarContrasena.touched && controls.confirmarContrasena.hasError('pattern')) {
+                    <span class="mt-2 block text-xs text-[var(--danger)]">Debe incluir al menos un numero.</span>
+                  }
+                  @if (controls.confirmarContrasena.touched && controls.confirmarContrasena.hasError('mismatch')) {
+                    <span class="mt-2 block text-xs text-[var(--danger)]">Las contrasenas no coinciden.</span>
+                  }
+                </div>
+              </form>
+
+              @if (formError()) {
+                <p class="mt-3 text-sm text-[var(--danger)]">{{ formError() }}</p>
+              }
+            </div>
+
+            <footer class="relative mt-5 flex items-center justify-end gap-2">
+              <button
+                type="button"
+                class="
+                  inline-flex items-center gap-2 h-9 rounded-xl px-3
+                  border border-[var(--border-2)] bg-[var(--card)] text-[var(--text)]
+                  transition hover:bg-[var(--card-2)]
+                  focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-400)]
+                "
+                (click)="cancelarEdicion()"
+                [disabled]="isSaving()"
+              >
+                <span class="icon-[tabler--x] size-5" aria-hidden="true"></span>
+                Cancelar
+              </button>
+
+              <button
+                type="button"
+                class="
+                  inline-flex items-center gap-2 h-9 rounded-xl px-3
+                  border border-[color:rgba(15,185,129,0.35)]
+                  bg-[var(--card)] text-[var(--success)]
+                  transition hover:bg-[color:rgba(15,185,129,0.10)]
+                  focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:rgba(15,185,129,0.30)]
+                "
+                (click)="guardarCambios()"
+                [disabled]="isSaving()"
+              >
+                <span class="icon-[tabler--device-floppy] size-5" aria-hidden="true"></span>
+                {{ isSaving() ? 'Guardando...' : 'Guardar cambios' }}
+              </button>
+            </footer>
+
+            <div
+              class="
+                pointer-events-none absolute bottom-0 left-0 h-[2px] w-full
+                bg-[linear-gradient(90deg,transparent,var(--accent-500),transparent)]
+                opacity-60
+              "
+            ></div>
+          </article>
         }
-
-        <footer class="perfil-usuario__actions">
-          <button type="button" class="perfil-usuario__cancel" (click)="cancelarEdicion()" [disabled]="isSaving()">
-            Cancelar
-          </button>
-          <button type="button" class="perfil-usuario__save" (click)="guardarCambios()" [disabled]="isSaving()">
-            {{ isSaving() ? 'Guardando...' : 'Guardar cambios' }}
-          </button>
-        </footer>
       }
-    } @else if (empleado) {
-      <div class="perfil-usuario__panel">
+
+      <!-- EMPLEADO -->
+      @else if (empleado) {
+        <!-- SIN wrapper extra -->
         <app-card-usuario
           [usuario]="empleado"
           [rol]="rolActual()"
           titulo="Datos del empleado"
         ></app-card-usuario>
-      </div>
-    } @else if (info) {
-      <div class="perfil-usuario__panel">
+      }
+
+      <!-- INFO fallback -->
+      @else if (info) {
+        <!-- SIN wrapper extra -->
         <app-card-usuario
           [usuario]="info"
           [rol]="rolActual()"
           titulo="Informacion del usuario"
         ></app-card-usuario>
-      </div>
-    } @else {
-      <p class="perfil-usuario__status">No se encontro informacion del usuario.</p>
-    }
-  </div>
+      }
+
+      @else {
+        <p class="text-sm text-[var(--muted)]">
+          No se encontro informacion del usuario.
+        </p>
+      }
+    </div>
   }
 </section>
-

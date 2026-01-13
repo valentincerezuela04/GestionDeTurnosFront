@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@plugin "flyonui";
+@import "../../../node_modules/flyonui/variants.css";
+@source "../../../node_modules/flyonui/dist/index.js";
+
+@plugin "@iconify/tailwind4";
+
+@source "../../../src/**/*.{html,ts}";
+@import "./form-styles.css";
+
+@import "tailwindcss-intersect";
+@plugin "tailwindcss-motion";
+@import "flyonui/src/vendor/apexcharts.css";
+
+
+
+html, body { height: 100%; }
+body { margin: 0; isolation: isolate; }
+
+body::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+
+  /* color = tu accent */
+  background: #7C5CFF;
+
+  -webkit-mask-image: url("/assets/topography.svg");
+  mask-image: url("/assets/topography.svg");
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
+  -webkit-mask-size: 600px;
+  mask-size: 600px;
+
+  opacity: #7C5CFF;
+}
+app-root{
+  position: relative;
+  z-index: 1;
+  display: block;
+}

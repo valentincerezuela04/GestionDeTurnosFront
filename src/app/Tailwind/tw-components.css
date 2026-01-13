@@ -1,0 +1,31 @@
+@layer utilities {
+  @keyframes wave-drift-left {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-8%); }
+  }
+
+  @keyframes wave-drift-right {
+    from { transform: translateX(0); }
+    to   { transform: translateX(6%); }
+  }
+
+  @keyframes wave-bob {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(10px); }
+  }
+
+  .animate-wave-front {
+    animation: wave-drift-left 12s linear infinite, wave-bob 4s ease-in-out infinite;
+  }
+
+  .animate-wave-back {
+    animation: wave-drift-right 18s linear infinite, wave-bob 6s ease-in-out infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-wave-front,
+  .animate-wave-back {
+    animation: none !important;
+  }
+}

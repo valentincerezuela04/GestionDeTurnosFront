@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { EmpledosService } from '../../../services/Empleados/empledos-service';
 import { EmpleadoResponseDTO } from '../../../dto/Empleado/empleado-response-dto';
 import { CardEmpleados } from '../card-empleados/card-empleados';
@@ -9,7 +9,7 @@ import { CardEmpleados } from '../card-empleados/card-empleados';
 @Component({
   selector: 'app-mis-empleados',
   standalone: true,
-  imports: [CommonModule, CardEmpleados],
+  imports: [CommonModule],
   templateUrl: './mis-empleados.html',
   styleUrl: './mis-empleados.css',
 })

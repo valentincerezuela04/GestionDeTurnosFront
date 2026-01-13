@@ -1,36 +1,152 @@
-<aside class="side" [class.closed]="!open()" aria-label="Navegación">
-  <nav>
-    <a routerLink="/hall" routerLinkActive="active">Salas</a>
+<!-- Botón abrir (mobile) -->
+<button
+  type="button"
+  class="btn btn-text max-sm:btn-square sm:hidden"
+  (click)="open()"
+  aria-label="Abrir navegación"
+  aria-controls="collapsible-mini-sidebar"
+  [attr.aria-expanded]="open()"
+>
+  <span class="icon-[tabler--menu-2] size-5"></span>
+</button>
 
-    @if (isAdmin()) {
-      <a routerLink="/empleados" routerLinkActive="active">Empleados</a>
-    }
+<!-- DOCK / SIDEBAR -->
+<aside
+  id="collapsible-mini-sidebar"
+  class="
+    drawer drawer-start
+    fixed sm:fixed
+    z-50 sm:z-10
 
-    <a routerLink="/reservas" routerLinkActive="active">Reservas</a>
+    /* Mobile: debajo del header */
+    top-14 left-0
+    h-[calc(100dvh-56px)]
 
-    @if (isCliente()) {
-      <a routerLink="/reservas/historial" routerLinkActive="active">
-        Mi historial
-      </a>
-    }
+    /* Desktop: dock flotante centrado verticalmente */
+    sm:top-1/2 sm:left-4 sm:-translate-y-1/2
+    sm:h-auto sm:w-fit
+    sm:inline-flex sm:flex-col
 
-    @if (showFullMenu()) {
-      <a routerLink="/reservas/historial-general" routerLinkActive="active">
-        Historial reservas
-      </a>
-    }
+    overflow-hidden
 
-    @if (showFullMenu()) {
-      <a routerLink="/clientes" routerLinkActive="active">Clientes</a>
-    }
+    transition-[width,transform] duration-300 ease-out
 
-    <a routerLink="/calendar" routerLinkActive="active">Calendario</a>
+        bg-[color:var(--bg)]/10
+    backdrop-blur-xl backdrop-saturate-150
+    border-b border-[color:var(--border)]/90
+    shadow-[0_10px_30px_-18px_var(--accent-glow)]
+    sm:shadow-[0_22px_70px_-35px_var(--accent-glow)]
+    sm:rounded-3xl
+    sm:backdrop-blur-md
+    sm:ring-1 sm:ring-white/5
+  "
+  [class.w-66]="!mini()"
+  [class.w-17]="mini()"
+  [class.-translate-x-full]="!open()"
+  [class.translate-x-0]="open()"
+  aria-label="Navegación"
+>
+  <!-- Header del dock: botón mini (desktop) -->
+  <div class="px-3 py-2 w-full flex items-center justify-between gap-3">
+    <div class="hidden sm:block">
+      <button
+        type="button"
+        class="btn btn-circle btn-text"
+        (click)="toggleMini()"
+        [attr.aria-label]="mini() ? 'Expandir navegación' : 'Minificar navegación'"
+      >
+        <span class="icon-[tabler--menu-2] size-5"></span>
+        <span class="sr-only">Navigation Toggle</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Body (alto = contenido en desktop) -->
+  <div class="px-2 pb-2">
+    <ul class="menu p-0">
+      <li>
+        <a routerLink="/hall" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <span class="icon-[tabler--home] size-5"></span>
+          <span [class.hidden]="mini()">Salas</span>
+        </a>
+      </li>
+
+      @if (isAdmin()) {
+        <li>
+          <a routerLink="/empleados" routerLinkActive="active">
+            <span class="icon-[tabler--users] size-5"></span>
+            <span [class.hidden]="mini()">Empleados</span>
+          </a>
+        </li>
+      }
+
+      <li>
+        <a routerLink="/reservas" routerLinkActive="active">
+          <span class="icon-[tabler--clipboard-check] size-5"></span>
+          <span [class.hidden]="mini()">Reservas</span>
+        </a>
+      </li>
+
+      @if (isCliente()) {
+        <li>
+          <a routerLink="/reservas/historial" routerLinkActive="active">
+            <span class="icon-[tabler--history] size-5"></span>
+            <span [class.hidden]="mini()">Mi historial</span>
+          </a>
+        </li>
+      }
+
       @if (showFullMenu()) {
-      <a routerLink="/dashboardPagos" routerLinkActive="active">DashboardPagos</a>
-    }
-    @if (showFullMenu()) {
-      <a routerLink="/perfil" routerLinkActive="active">Perfil</a>
-    }
-  
-  </nav>
+        <li>
+          <a routerLink="/reservas/historial-general" routerLinkActive="active">
+            <span class="icon-[tabler--list-details] size-5"></span>
+            <span [class.hidden]="mini()">Historial reservas</span>
+          </a>
+        </li>
+
+        <li>
+          <a routerLink="/clientes" routerLinkActive="active">
+            <span class="icon-[tabler--user] size-5"></span>
+            <span [class.hidden]="mini()">Clientes</span>
+          </a>
+        </li>
+      }
+
+      <!-- Dropdown Apps -->
+      <li class="dropdown relative [--adaptive:none] [--strategy:static]">
+        <button type="button" class="dropdown-toggle" aria-haspopup="menu" aria-expanded="false">
+          <span class="icon-[tabler--apps] size-5"></span>
+          <span [class.hidden]="mini()">Apps</span>
+          <span class="icon-[tabler--chevron-down] dropdown-open:rotate-180 size-4" [class.hidden]="mini()"></span>
+        </button>
+
+        <ul class="dropdown-menu mt-0 shadow-none dropdown-open:opacity-100 hidden min-w-60" role="menu">
+          <li>
+            <a routerLink="/calendar" routerLinkActive="active">
+              <span class="icon-[tabler--calendar] size-5"></span>
+              Calendario
+            </a>
+          </li>
+
+          @if (showFullMenu()) {
+            <li>
+              <a routerLink="/dashboardPagos" routerLinkActive="active">
+                <span class="icon-[tabler--credit-card] size-5"></span>
+                Dashboard Pagos
+              </a>
+            </li>
+          }
+        </ul>
+      </li>
+
+      @if (showFullMenu()) {
+        <li>
+          <a routerLink="/perfil" routerLinkActive="active">
+            <span class="icon-[tabler--id] size-5"></span>
+            <span [class.hidden]="mini()">Perfil</span>
+          </a>
+        </li>
+      }
+    </ul>
+  </div>
 </aside>

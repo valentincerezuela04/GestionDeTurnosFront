@@ -9,6 +9,7 @@ import { UserInfoResponseDTO } from '../../../dto/user-info-response-dto';
 import { TipoPago } from '../../../models/reservas/tipo-pago';
 import { SalasService } from '../../../services/Salas/salas-service';
 import { SalaDTO as Sala } from '../../../models/sala';
+import { UiAlertService } from '../../../services/Ui-alert/ui-alert';
 
 @Component({
   selector: 'app-details-reserva',
@@ -23,8 +24,8 @@ export class DetailsReserva {
   private reservaSrv = inject(ReservaService);
   private authService = inject(AuthService);
   private salasService = inject(SalasService);
+  private uiAlert = inject(UiAlertService);
 
-  // Signals para el estado
   readonly reserva = signal<ReservaResponseDTO | null>(null);
   readonly usuario = signal<UserInfoResponseDTO | null>(null);
   readonly isEditing = signal<boolean>(false);
@@ -34,7 +35,6 @@ export class DetailsReserva {
   ]);
   readonly salas = signal<Sala[]>([]);
 
-  // Estado del formulario de edicion
   readonly editForm = signal<{
     salaId: number | null;
     fechaInicio: string;
@@ -47,11 +47,11 @@ export class DetailsReserva {
     tipoPago: TipoPago.EFECTIVO,
   });
 
-  // Computed values
   readonly puedeEditar = computed(() => {
     const user = this.usuario();
     return user?.role === 'EMPLEADO' || user?.role === 'CLIENTE';
   });
+
   readonly accionesHabilitadas = computed(() => this.esReservaActiva());
 
   constructor() {
@@ -73,8 +73,8 @@ export class DetailsReserva {
         }
         this.buscarEnHistorial(id);
       },
-      error: (err) => {
-        console.error('Error al cargar reservas activas:', err);
+      error: (err: unknown) => {
+        console.error('Error al cargar reservas activas:', err as any);
         this.buscarEnHistorial(id);
       },
     });
@@ -86,13 +86,32 @@ export class DetailsReserva {
         this.salas.set(salas ?? []);
         this.syncSalaSeleccion();
       },
-      error: (err) => console.error('Error al cargar las salas:', err),
+      error: (err: unknown) => {
+        console.error('Error al cargar las salas:', err as any);
+        this.uiAlert.show({
+          variant: 'error',
+          tone: 'soft',
+          title: 'Error',
+          message: 'Error al cargar las salas.',
+          timeoutMs: 5000,
+        });
+      },
     });
   }
 
   cargarUsuario(): void {
     this.authService.getUserInfo().subscribe({
       next: (user) => this.usuario.set(user as UserInfoResponseDTO),
+      error: (err: unknown) => {
+        console.error('Error al cargar el usuario:', err as any);
+        this.uiAlert.show({
+          variant: 'error',
+          tone: 'soft',
+          title: 'Error',
+          message: 'No se pudo cargar la información del usuario.',
+          timeoutMs: 5000,
+        });
+      },
     });
   }
 
@@ -126,7 +145,13 @@ export class DetailsReserva {
     const formValues = this.editForm();
 
     if (!formValues.salaId) {
-      alert('Selecciona una sala valida');
+      this.uiAlert.show({
+        variant: 'warning',
+        tone: 'soft',
+        title: 'Warning alert',
+        message: 'Seleccioná una sala válida.',
+        timeoutMs: 4500,
+      });
       return;
     }
 
@@ -147,11 +172,24 @@ export class DetailsReserva {
     updateReserva.subscribe({
       next: () => {
         this.isEditing.set(false);
+        this.uiAlert.show({
+          variant: 'success',
+          tone: 'soft',
+          title: 'Success alert',
+          message: 'Reserva actualizada correctamente.',
+          timeoutMs: 3000,
+        });
         this.cargarReserva(currentReserva.id);
       },
-      error: (err) => {
-        console.error('Error al actualizar la reserva:', err);
-        alert('Error al actualizar la reserva');
+      error: (err: unknown) => {
+        console.error('Error al actualizar la reserva:', err as any);
+        this.uiAlert.show({
+          variant: 'error',
+          tone: 'soft',
+          title: 'Error',
+          message: 'Error al actualizar la reserva.',
+          timeoutMs: 5000,
+        });
       },
     });
   }
@@ -169,12 +207,24 @@ export class DetailsReserva {
 
     cancelarReserva.subscribe({
       next: () => {
-        alert('Reserva cancelada con exito');
+        this.uiAlert.show({
+          variant: 'success',
+          tone: 'soft',
+          title: 'Success alert',
+          message: 'Reserva cancelada con éxito.',
+          timeoutMs: 3000,
+        });
         this.router.navigate(['/reservas']);
       },
-      error: (err) => {
-        console.error('Error al cancelar la reserva:', err);
-        alert('Error al cancelar la reserva');
+      error: (err: unknown) => {
+        console.error('Error al cancelar la reserva:', err as any);
+        this.uiAlert.show({
+          variant: 'error',
+          tone: 'soft',
+          title: 'Error',
+          message: 'Error al cancelar la reserva.',
+          timeoutMs: 5000,
+        });
       },
     });
   }
@@ -185,12 +235,24 @@ export class DetailsReserva {
 
     this.reservaSrv.deleteReserva(currentReserva.id).subscribe({
       next: () => {
-        alert('Reserva eliminada con exito');
+        this.uiAlert.show({
+          variant: 'success',
+          tone: 'soft',
+          title: 'Success alert',
+          message: 'Reserva eliminada con éxito.',
+          timeoutMs: 3000,
+        });
         this.router.navigate(['/reservas']);
       },
-      error: (err) => {
-        console.error('Error al eliminar la reserva:', err);
-        alert('Error al eliminar la reserva');
+      error: (err: unknown) => {
+        console.error('Error al eliminar la reserva:', err as any);
+        this.uiAlert.show({
+          variant: 'error',
+          tone: 'soft',
+          title: 'Error',
+          message: 'Error al eliminar la reserva.',
+          timeoutMs: 5000,
+        });
       },
     });
   }
@@ -270,6 +332,13 @@ export class DetailsReserva {
         : null;
 
     if (!source$) {
+      this.uiAlert.show({
+        variant: 'warning',
+        tone: 'soft',
+        title: 'Warning alert',
+        message: 'No se pudo determinar el historial del usuario. Volviendo al listado.',
+        timeoutMs: 4500,
+      });
       this.router.navigate(['/reservas']);
       return;
     }
@@ -278,13 +347,27 @@ export class DetailsReserva {
       next: (reservas) => {
         const reservaEncontrada = (reservas ?? []).find((r) => r.id === id);
         if (!reservaEncontrada) {
+          this.uiAlert.show({
+            variant: 'warning',
+            tone: 'soft',
+            title: 'Warning alert',
+            message: 'No se encontró la reserva.',
+            timeoutMs: 4500,
+          });
           this.router.navigate(['/reservas']);
           return;
         }
         this.setReservaData(reservaEncontrada);
       },
-      error: (err) => {
-        console.error('Error al buscar la reserva en historial:', err);
+      error: (err: unknown) => {
+        console.error('Error al buscar la reserva en historial:', err as any);
+        this.uiAlert.show({
+          variant: 'error',
+          tone: 'soft',
+          title: 'Error',
+          message: 'Error al buscar la reserva en el historial.',
+          timeoutMs: 5000,
+        });
         this.router.navigate(['/reservas']);
       },
     });
