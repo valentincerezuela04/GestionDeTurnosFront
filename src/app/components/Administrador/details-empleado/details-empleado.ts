@@ -7,6 +7,7 @@ import { EmpledosService } from '../../../services/Empleados/empledos-service';
 import { EmpleadoResponseDTO } from '../../../dto/Empleado/empleado-response-dto';
 import { Rol } from '../../../models/usuarios/rol';
 import { UiAlertService } from '../../../services/Ui-alert/ui-alert';
+import { UiConfirmService } from '../../../services/Ui-confirm/ui-confirm';
 
 
 
@@ -43,9 +44,11 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private destroyed$ = new Subject<void>();
+  private readonly lettersOnly = /[^\p{L}\s]/gu;
+  private readonly digitsOnly = /\D+/g;
 
- 
   private readonly uiAlert = inject(UiAlertService);
+  private readonly uiConfirm = inject(UiConfirmService);
 
   empleado?: EmpleadoResponseDTO;
   isLoading = true;
@@ -54,6 +57,26 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
   saveErrorMessage: string | null = null;
   saveInProgress = signal(false);
   editMode = signal(false);
+
+  onLettersInput(event: Event, controlName: string): void {
+    const input = event.target as HTMLInputElement | null;
+    if (!input) return;
+    const sanitized = input.value.replace(this.lettersOnly, '');
+    if (sanitized !== input.value) {
+      input.value = sanitized;
+      this.empleadoForm.get(controlName)?.setValue(sanitized);
+    }
+  }
+
+  onNumbersInput(event: Event, controlName: string): void {
+    const input = event.target as HTMLInputElement | null;
+    if (!input) return;
+    const sanitized = input.value.replace(this.digitsOnly, '');
+    if (sanitized !== input.value) {
+      input.value = sanitized;
+      this.empleadoForm.get(controlName)?.setValue(sanitized);
+    }
+  }
 
   readonly empleadoForm = this.fb.nonNullable.group({
     nombre: ['', [Validators.required]],
@@ -135,12 +158,17 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
     this.destroyed$.complete();
   }
 
-  eliminarEmpleado(): void {
+  async eliminarEmpleado(): Promise<void> {
     if (!this.empleado || this.deleteInProgress) return;
 
-    const confirmacion = confirm(
-      `Deseas eliminar a ${this.empleado.nombre} ${this.empleado.apellido}?`
-    );
+    const confirmacion = await this.uiConfirm.open({
+      variant: 'error',
+      tone: 'soft',
+      title: 'Confirmar eliminacion',
+      message: `Deseas eliminar a ${this.empleado.nombre} ${this.empleado.apellido}?`,
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar',
+    });
     if (!confirmacion) return;
 
     this.deleteInProgress = true;
@@ -165,7 +193,7 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
 
         this.uiAlert.show({
           variant: 'error',
-          tone: 'outline',
+          tone: 'soft',
           title: 'Error',
           message: 'Ocurrió un error al eliminar el empleado.',
           timeoutMs: 5000,
@@ -183,7 +211,7 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
 
     this.uiAlert.show({
       variant: 'info',
-      tone: 'outline',
+      tone: 'soft',
       title: 'Info',
       message: 'Modo edición habilitado.',
       timeoutMs: 2000,
@@ -274,7 +302,7 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
 
         this.uiAlert.show({
           variant: 'error',
-          tone: 'outline',
+          tone: 'soft',
           title: 'Error',
           message: 'Las contraseñas no coinciden.',
           timeoutMs: 5000,
@@ -288,7 +316,7 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
 
       this.uiAlert.show({
         variant: 'warning',
-        tone: 'outline',
+        tone: 'soft',
         title: 'Warning alert',
         message: 'Revisá los campos marcados: hay datos inválidos.',
         timeoutMs: 4500,

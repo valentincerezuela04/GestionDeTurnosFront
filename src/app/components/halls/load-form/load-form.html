@@ -1,5 +1,6 @@
-<form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4" novalidate>
-  <h2 class="text-base-content text-2xl font-semibold">Crear sala</h2>
+<div class="min-h-[calc(100vh-64px-48px)] flex items-center justify-center">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4 lg:-translate-x-24" novalidate>
+    <h2 class="text-base-content text-2xl font-semibold">Crear sala</h2>
 
   <!-- Número -->
   <div class="input-floating w-96">
@@ -22,8 +23,6 @@
         @else if (hasError('numero','min')) { El número debe ser mayor o igual a 1. }
         @else { Campo inválido. }
       </span>
-    } @else if (isValid('numero')) {
-      <span class="helper-text ps-3">Se ve bien.</span>
     }
   </div>
 
@@ -51,8 +50,6 @@
         }
         @else { Campo inválido. }
       </span>
-    } @else if (isValid('descripcion')) {
-      <span class="helper-text ps-3">Se ve bien.</span>
     }
   </div>
 
@@ -79,8 +76,6 @@
         @if (hasError('salaSize','required')) { El tamaño es obligatorio. }
         @else { Campo inválido. }
       </span>
-    } @else if (isValid('salaSize')) {
-      <span class="helper-text ps-3">Se ve bien.</span>
     }
   </div>
 
@@ -103,7 +98,8 @@
     }
   </div>
 
-  <button type="submit" class="btn btn-lg btn-primary btn-gradient btn-block" [disabled]="form.invalid">
-    Guardar
-  </button>
-</form>
+    <button type="submit" class="btn btn-lg btn-primary btn-gradient w-fit" [disabled]="form.invalid">
+      Guardar
+    </button>
+  </form>
+</div>

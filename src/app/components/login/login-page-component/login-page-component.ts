@@ -48,13 +48,13 @@ export class LoginPageComponent {
       error: (err) => {
         this.loading = false;
                 if (err.status === 400) {
-          // acá asumimos que 400 = email/contraseña incorrectos
-          this.error = 'Email o contraseña incorrectos.';
+          // aca asumimos que 400 = email/contrasena incorrectos
+          this.error = 'Email o contrasena incorrectos.';
         } else if (err.status === 0) {
-          // error de red / backend caído
-          this.error = 'No se pudo conectar con el servidor. Intentalo más tarde.';
+          // error de red / backend caido
+          this.error = 'No se pudo conectar con el servidor. Intentalo mas tarde.';
         } else {
-          this.error = 'Ocurrió un error al iniciar sesión. Intentalo de nuevo.';
+          this.error = 'Ocurrio un error al iniciar sesion. Intentalo de nuevo.';
         }
 
         // this.error = err?.error ?? 'No se pudo iniciar sesion';
@@ -85,4 +85,5 @@ isValid(name: string): boolean {
   return !!c && c.valid && this.interacted(name);
 }
 }
+
 

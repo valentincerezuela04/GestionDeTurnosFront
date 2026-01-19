@@ -25,8 +25,8 @@ export class EmpleadoFormPost {
   readonly errorMessage = signal<string | null>(null);
 
   readonly empleadoForm = this.fb.nonNullable.group({
-    nombre: ['', [Validators.required, Validators.minLength(3)]],
-    apellido: ['', [Validators.required, Validators.minLength(3)]],
+    nombre: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[\p{L}\s]+$/u)]],
+    apellido: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[\p{L}\s]+$/u)]],
     dni: [
       '',
       [
@@ -42,7 +42,7 @@ export class EmpleadoFormPost {
         Validators.required,
         Validators.minLength(8),
         Validators.maxLength(20),
-        Validators.pattern(/^[0-9+\-\s()]+$/),
+        Validators.pattern(/^\d+$/),
       ],
     ],
     email: ['', [Validators.required, Validators.email]],
@@ -62,7 +62,7 @@ export class EmpleadoFormPost {
         Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/),
       ],
     ],
-    legajo: [''],
+    legajo: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
     rol: this.fb.nonNullable.control(Rol.EMPLEADO as Rol),
   });
 
@@ -75,6 +75,29 @@ export class EmpleadoFormPost {
 
   readonly hoverOk = 'hover:bg-[var(--bg)] hover:border-[var(--accent-400)]';
   readonly hoverBad = 'hover:border-[color:rgba(255,77,109,0.95)]';
+
+  private readonly lettersOnly = /[^\p{L}\s]/gu;
+  private readonly digitsOnly = /\D+/g;
+
+  onLettersInput(event: Event, controlName: string): void {
+    const input = event.target as HTMLInputElement | null;
+    if (!input) return;
+    const sanitized = input.value.replace(this.lettersOnly, '');
+    if (sanitized !== input.value) {
+      input.value = sanitized;
+      this.empleadoForm.get(controlName)?.setValue(sanitized);
+    }
+  }
+
+  onNumbersInput(event: Event, controlName: string): void {
+    const input = event.target as HTMLInputElement | null;
+    if (!input) return;
+    const sanitized = input.value.replace(this.digitsOnly, '');
+    if (sanitized !== input.value) {
+      input.value = sanitized;
+      this.empleadoForm.get(controlName)?.setValue(sanitized);
+    }
+  }
 
   submit(): void {
     const raw = this.empleadoForm.getRawValue();
@@ -89,7 +112,7 @@ export class EmpleadoFormPost {
     }
 
     if (contrasena !== confirmarContrasena) {
-      this.errorMessage.set('Las contraseñas no coinciden.');
+      this.errorMessage.set('Las contrasenas no coinciden.');
       this.empleadoForm.get('contrasena')?.markAsTouched();
       confirmarCtrl?.setErrors({ ...(confirmarCtrl.errors ?? {}), mismatch: true });
       confirmarCtrl?.markAsTouched();
@@ -124,7 +147,31 @@ export class EmpleadoFormPost {
         },
         error: (error) => {
           console.error('Error al crear empleado:', error);
-          this.errorMessage.set('No se pudo crear el empleado. Verifica los datos e intenta nuevamente.');
+
+          const errorBody = (error as any)?.error;
+          const rawMessage =
+            (typeof errorBody === 'string' && errorBody) ||
+            (typeof errorBody?.message === 'string' && errorBody.message) ||
+            (typeof errorBody?.error === 'string' && errorBody.error) ||
+            (typeof (error as any)?.message === 'string' && (error as any)?.message) ||
+            '';
+          const normalized = rawMessage.toLowerCase();
+          const emailConflict =
+            (error as any)?.status === 409 ||
+            (/email|correo|mail/.test(normalized) && /registr|existe|usad|duplic/.test(normalized));
+
+          if (emailConflict) {
+            const conflictMessage = /cliente/.test(normalized)
+              ? 'El email ya esta registrado como cliente. Usa otro email para el empleado.'
+              : 'El email ya esta registrado. Usa otro email para el empleado.';
+            this.errorMessage.set(conflictMessage);
+          } else if (rawMessage) {
+            this.errorMessage.set(rawMessage);
+          } else {
+            this.errorMessage.set(
+              'No se pudo crear el empleado. Verifica los datos e intenta nuevamente.'
+            );
+          }
           this.isSubmitting.set(false);
         },
       });
@@ -152,3 +199,4 @@ export class EmpleadoFormPost {
     return !!this.ctrl(name)?.hasError(errorCode);
   }
 }
+

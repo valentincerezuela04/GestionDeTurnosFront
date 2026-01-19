@@ -3,6 +3,7 @@ import { Component, inject, input, output } from '@angular/core';
 import { Cliente } from '../../../models/usuarios/cliente';
 import { ClientesService } from '../../../services/Clientes/cliente-service';
 import { AuthService } from '../../../services/Auth/auth-service';
+import { UiConfirmService } from '../../../services/Ui-confirm/ui-confirm';
 
 @Component({
   selector: 'app-details-cliente',
@@ -16,6 +17,7 @@ export class DetailsClienteComponent {
   readonly volver = output<void>();
   private readonly clientesService = inject(ClientesService);
   private readonly auth = inject(AuthService);
+  private readonly uiConfirm = inject(UiConfirmService);
 
   eliminando = false;
   error: string | null = null;
@@ -28,10 +30,18 @@ export class DetailsClienteComponent {
     return this.auth.hasRole('ADMIN');
   }
 
-  eliminarCliente(): void {
+  async eliminarCliente(): Promise<void> {
     const current = this.cliente();
     if (!this.esAdmin || !current) return;
-    if (!confirm('Eliminar definitivamente este cliente?')) return;
+    const confirmacion = await this.uiConfirm.open({
+      variant: 'error',
+      tone: 'soft',
+      title: 'Confirmar eliminacion',
+      message: 'Eliminar definitivamente este cliente?',
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar',
+    });
+    if (!confirmacion) return;
 
     this.eliminando = true;
     this.error = null;

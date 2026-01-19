@@ -10,6 +10,7 @@ import { TipoPago } from '../../../models/reservas/tipo-pago';
 import { SalasService } from '../../../services/Salas/salas-service';
 import { SalaDTO as Sala } from '../../../models/sala';
 import { UiAlertService } from '../../../services/Ui-alert/ui-alert';
+import { UiConfirmService } from '../../../services/Ui-confirm/ui-confirm';
 
 @Component({
   selector: 'app-details-reserva',
@@ -25,6 +26,7 @@ export class DetailsReserva {
   private authService = inject(AuthService);
   private salasService = inject(SalasService);
   private uiAlert = inject(UiAlertService);
+  private uiConfirm = inject(UiConfirmService);
 
   readonly reserva = signal<ReservaResponseDTO | null>(null);
   readonly usuario = signal<UserInfoResponseDTO | null>(null);
@@ -194,10 +196,18 @@ export class DetailsReserva {
     });
   }
 
-  cancelarReserva(): void {
+  async cancelarReserva(): Promise<void> {
     const currentReserva = this.reserva();
     if (!currentReserva || !this.esReservaActiva(currentReserva)) return;
-    if (!confirm('Cancelar la reserva?')) return;
+    const confirmacion = await this.uiConfirm.open({
+      variant: 'warning',
+      tone: 'soft',
+      title: 'Confirmar cancelacion',
+      message: 'Cancelar la reserva?',
+      confirmText: 'Cancelar',
+      cancelText: 'Volver',
+    });
+    if (!confirmacion) return;
 
     const currentUser = this.usuario();
     const cancelarReserva =
@@ -229,9 +239,19 @@ export class DetailsReserva {
     });
   }
 
-  eliminarReserva(): void {
+  async eliminarReserva(): Promise<void> {
     const currentReserva = this.reserva();
-    if (!currentReserva || !confirm('Eliminar definitivamente la reserva?')) return;
+    if (!currentReserva) return;
+
+    const confirmacion = await this.uiConfirm.open({
+      variant: 'error',
+      tone: 'soft',
+      title: 'Confirmar eliminacion',
+      message: 'Eliminar definitivamente la reserva?',
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar',
+    });
+    if (!confirmacion) return;
 
     this.reservaSrv.deleteReserva(currentReserva.id).subscribe({
       next: () => {

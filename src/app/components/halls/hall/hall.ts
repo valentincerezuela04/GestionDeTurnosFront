@@ -1,11 +1,13 @@
 import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
+import { Subject, startWith, switchMap } from 'rxjs';
 import { CardHall } from "../card-hall/card-hall";
 import { SalasService } from '../../../services/Salas/salas-service';
-import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/Auth/auth-service';
 import { AppRole } from '../../../models/auth.model';
 import { UiAlertService } from '../../../services/Ui-alert/ui-alert';
+import { ReservaService } from '../../../services/Reservas/reservas-service';
 
 
 @Component({
@@ -16,12 +18,18 @@ import { UiAlertService } from '../../../services/Ui-alert/ui-alert';
 })
 export class Hall {
   serv = inject(SalasService)
-  router = inject(Router)
   private auth = inject(AuthService);
   private uiAlert = inject(UiAlertService);
+  private reservas = inject(ReservaService);
 
-
-  hallList = toSignal(this.serv.getAll(),{initialValue: []})
+  private readonly refresh$ = new Subject<void>();
+  hallList = toSignal(
+    this.refresh$.pipe(
+      startWith(void 0),
+      switchMap(() => this.serv.getAll())
+    ),
+    { initialValue: [] }
+  );
   private readonly role = computed(() => this.auth.user()?.rol as AppRole | null);
   readonly canCreate = computed(() => this.role() === 'ADMIN');
   readonly canEdit = computed(() => {
@@ -31,60 +39,65 @@ export class Hall {
   readonly canDelete = computed(() => this.role() === 'ADMIN');
 
 
-  deleteSala(id:number){
-   this.serv.canDelete(id).subscribe({
-      next: (canDelete) => {
-        if (!canDelete) {
-          this.uiAlert.show({
-  variant: 'warning',
-  tone: 'soft',
-  title: 'Warning alert',
-  message: 'No se puede eliminar la sala porque tiene turnos asociados.',
-  timeoutMs: 4500,
-});
+  deleteSala(id: number) {
+    const hall = this.hallList().find((item) => item.id === id);
+    if (!hall) {
+      this.uiAlert.show({
+        variant: 'error',
+        tone: 'soft',
+        title: 'Error',
+        message: 'No se encontró la sala para eliminar.',
+        timeoutMs: 4000,
+      });
+      return;
+    }
 
+    this.reservas.getReservasActivas().subscribe({
+      next: (reservas) => {
+        const hasActive = reservas.some((reserva) => reserva.salaNumero === hall.numero);
+        if (hasActive) {
+          this.uiAlert.show({
+            variant: 'warning',
+            tone: 'soft',
+            title: 'Warning alert',
+            message: 'No se puede eliminar la sala porque tiene reservas activas.',
+            timeoutMs: 4500,
+          });
           return;
         }
 
         this.serv.delete(id).subscribe({
           next: () => {
-            
-
-            
-               this.router.navigateByUrl('/hall').then(() => {
-              this.uiAlert.show({
-  variant: 'success',
-  tone: 'soft',
-  title: 'Success alert',
-  message: 'Sala eliminada con éxito',
-  timeoutMs: 3000,
-});
-
+            this.refresh$.next();
+            this.uiAlert.show({
+              variant: 'success',
+              tone: 'soft',
+              title: 'Success alert',
+              message: 'Sala eliminada con éxito',
+              timeoutMs: 3000,
             });
           },
           error: (err) => {
             console.error(err);
             this.uiAlert.show({
-  variant: 'error',
-  tone: 'soft',
-  title: 'Error',
-  message: 'Error al eliminar la sala',
-  timeoutMs: 5000,
-});
-
+              variant: 'error',
+              tone: 'soft',
+              title: 'Error',
+              message: 'Error al eliminar la sala',
+              timeoutMs: 5000,
+            });
           },
         });
       },
       error: (err) => {
         console.error(err);
         this.uiAlert.show({
-  variant: 'error',
-  tone: 'outline',
-  title: 'Error',
-  message: 'No se pudo verificar si se puede eliminar.',
-  timeoutMs: 5000,
-});
-
+          variant: 'error',
+          tone: 'soft',
+          title: 'Error',
+          message: 'No se pudo verificar reservas activas.',
+          timeoutMs: 5000,
+        });
       },
     });
   }

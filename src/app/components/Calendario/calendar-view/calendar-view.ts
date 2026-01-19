@@ -45,8 +45,20 @@ export class CalendarViewComponent {
     // return (dto as any).esMia === true;
   }
 
+  private esReservaFinalizada(dto: CalendarDto): boolean {
+    const endValue = dto.end || dto.start;
+    if (!endValue) return false;
+    const endDate = new Date(endValue);
+    if (Number.isNaN(endDate.getTime())) return false;
+    return endDate.getTime() < Date.now();
+  }
+
   private getEventClassNames(arg: any): string[] {
+  const esFinalizada = !!arg.event.extendedProps['esFinalizada'];
   const esMia = !!arg.event.extendedProps['esMia'];
+  if (esFinalizada) {
+    return ['cal-event', 'cal-event--done'];
+  }
   return esMia
     ? ['cal-event', 'cal-event--mine']
     : ['cal-event', 'cal-event--other'];
@@ -64,10 +76,13 @@ private buildEventContent(arg: any): { html: string } {
   const hora = `${fmt(arg.event.start)} - ${fmt(arg.event.end)}`;
   const cleanTitle = (title.split('-')[0] ?? title).trim();
   const esMia = !!arg.event.extendedProps['esMia'];
+  const esFinalizada = !!arg.event.extendedProps['esFinalizada'];
 
-  const badgeHtml = esMia
-    ? '<span class="cal-pill cal-pill--mine">Tu reserva</span>'
-    : '<span class="cal-pill cal-pill--busy">Ocupado</span>';
+  const badgeHtml = esFinalizada
+    ? '<span class="cal-pill cal-pill--done">Finalizada</span>'
+    : esMia
+      ? '<span class="cal-pill cal-pill--mine">Tu reserva</span>'
+      : '<span class="cal-pill cal-pill--busy">Ocupado</span>';
 
   return {
     html: `
@@ -100,7 +115,7 @@ private buildEventContent(arg: any): { html: string } {
     },
     events: (info, success, failure) => {
       this.loading.set(true);
-      this.calSvc.getEvents().subscribe({
+      this.calSvc.getEvents({ includeFinalizadas: true }).subscribe({
         next: (data) => {
           const filtrados = this.onlyMine()
             ? data.filter((d) => this.esReservaMia(d))
@@ -114,6 +129,7 @@ private buildEventContent(arg: any): { html: string } {
             extendedProps: {
               description: d.description,
               esMia: this.esReservaMia(d),
+              esFinalizada: this.esReservaFinalizada(d),
             },
           }));
 

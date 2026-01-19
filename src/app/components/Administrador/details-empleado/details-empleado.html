@@ -105,7 +105,13 @@
               <label for="nombre" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
                 Nombre
               </label>
-              <input id="nombre" type="text" formControlName="nombre" class="input mt-2 w-full" />
+              <input
+                id="nombre"
+                type="text"
+                formControlName="nombre"
+                class="input mt-2 w-full"
+                (input)="onLettersInput($event, 'nombre')"
+              />
               @if (controls.nombre.invalid && controls.nombre.touched) {
                 <span class="mt-2 block text-xs text-[var(--danger)]">El nombre es obligatorio.</span>
               }
@@ -115,7 +121,13 @@
               <label for="apellido" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
                 Apellido
               </label>
-              <input id="apellido" type="text" formControlName="apellido" class="input mt-2 w-full" />
+              <input
+                id="apellido"
+                type="text"
+                formControlName="apellido"
+                class="input mt-2 w-full"
+                (input)="onLettersInput($event, 'apellido')"
+              />
               @if (controls.apellido.invalid && controls.apellido.touched) {
                 <span class="mt-2 block text-xs text-[var(--danger)]">El apellido es obligatorio.</span>
               }
@@ -125,7 +137,15 @@
               <label for="dni" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
                 DNI
               </label>
-              <input id="dni" type="text" formControlName="dni" inputmode="numeric" maxlength="8" class="input mt-2 w-full" />
+              <input
+                id="dni"
+                type="text"
+                formControlName="dni"
+                inputmode="numeric"
+                maxlength="8"
+                class="input mt-2 w-full"
+                (input)="onNumbersInput($event, 'dni')"
+              />
               @if (controls.dni.touched && controls.dni.hasError('required')) {
                 <span class="mt-2 block text-xs text-[var(--danger)]">El DNI es obligatorio.</span>
               }
@@ -138,7 +158,15 @@
               <label for="telefono" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
                 Teléfono
               </label>
-              <input id="telefono" type="text" formControlName="telefono" inputmode="tel" maxlength="10" class="input mt-2 w-full" />
+              <input
+                id="telefono"
+                type="text"
+                formControlName="telefono"
+                inputmode="tel"
+                maxlength="10"
+                class="input mt-2 w-full"
+                (input)="onNumbersInput($event, 'telefono')"
+              />
               @if (controls.telefono.touched && controls.telefono.hasError('required')) {
                 <span class="mt-2 block text-xs text-[var(--danger)]">El teléfono es obligatorio.</span>
               }
