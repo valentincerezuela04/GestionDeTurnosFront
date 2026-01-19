@@ -122,7 +122,7 @@ export class LoadForm {
         console.error(e as any);
         this.uiAlert.show({
           variant: 'error',
-          tone: 'outline',
+          tone: 'soft',
           title: 'Error',
           message: 'Error al verificar número de sala',
           timeoutMs: 5000,

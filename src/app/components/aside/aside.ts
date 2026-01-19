@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, output, signal } from '@angular/core';
+import { AfterViewInit, Component, computed, inject, input, output, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/Auth/auth-service';
 import { AppRole } from '../../models/auth.model';
@@ -10,7 +10,7 @@ import { AppRole } from '../../models/auth.model';
   templateUrl: './aside.html',
   styleUrl: './aside.css',
 })
-export class Aside {
+export class Aside implements AfterViewInit {
   private readonly auth = inject(AuthService);
 
    // ✅ esto viene del padre: <app-aside [open]="sideBarOpen()">
@@ -40,4 +40,14 @@ export class Aside {
 
   // solo CLIENTE
   readonly isCliente = computed(() => this.role() === 'CLIENTE');
+
+  ngAfterViewInit(): void {
+    this.initDropdowns();
+  }
+
+  private initDropdowns(): void {
+    if (typeof window === 'undefined') return;
+    const dropdown = (window as { HSDropdown?: { autoInit?: () => void } }).HSDropdown;
+    dropdown?.autoInit?.();
+  }
 }

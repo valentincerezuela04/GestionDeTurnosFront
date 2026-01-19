@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ClientesService } from '../../../services/Clientes/cliente-service';
 import { Cliente } from '../../../models/usuarios/cliente';
 import { AuthService } from '../../../services/Auth/auth-service';
+import { UiConfirmService } from '../../../services/Ui-confirm/ui-confirm';
 
 @Component({
   selector: 'app-clientes-list',
@@ -21,6 +22,7 @@ export class ClientesListComponent implements OnInit {
 
   clientesService = inject(ClientesService);
   private auth = inject(AuthService);
+  private uiConfirm = inject(UiConfirmService);
   eliminandoIds = new Set<number>();
 
   ngOnInit(): void {
@@ -52,12 +54,20 @@ export class ClientesListComponent implements OnInit {
     return this.auth.hasRole('ADMIN');
   }
 
-  eliminarCliente(event: Event, cliente: Cliente): void {
+  async eliminarCliente(event: Event, cliente: Cliente): Promise<void> {
     event.stopPropagation();
     event.preventDefault();
 
     if (!this.esAdmin) return;
-    if (!confirm('Eliminar definitivamente este cliente?')) return;
+    const confirmacion = await this.uiConfirm.open({
+      variant: 'error',
+      tone: 'soft',
+      title: 'Confirmar eliminacion',
+      message: 'Eliminar definitivamente este cliente?',
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar',
+    });
+    if (!confirmacion) return;
 
     this.eliminandoIds.add(cliente.id);
     this.clientesService.delete(cliente.id).subscribe({

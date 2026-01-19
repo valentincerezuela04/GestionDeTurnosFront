@@ -13,9 +13,10 @@
       ></app-aside>
 
       <!-- CONTENT -->
-      <main class="flex-1 p-6 flex">
-        <div class="w-full max-w-[1180px]">
+      <main class="flex-1 p-6 flex justify-center">
+        <div class="w-full max-w-[1280px] mx-auto">
           <ui-alert></ui-alert>
+          <ui-confirm></ui-confirm>
           <router-outlet></router-outlet>
         </div>
       </main>
@@ -37,6 +38,7 @@
     </header>
 
     <main class="flex-1 grid place-items-center p-8">
+      <ui-confirm></ui-confirm>
       <router-outlet></router-outlet>
     </main>
   </div>

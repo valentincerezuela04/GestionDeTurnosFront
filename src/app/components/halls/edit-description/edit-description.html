@@ -1,4 +1,5 @@
-<form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4" novalidate>
+<div class="min-h-[calc(100vh-64px-48px)] flex items-center justify-center">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4 lg:-translate-x-24" novalidate>
   <h2 class="text-base-content text-2xl font-semibold">Editar descripción</h2>
 
   <div class="input-floating w-96">
@@ -24,12 +25,11 @@
         }
         @else { Campo inválido. }
       </span>
-    } @else if (isValid('descripcion')) {
-      <span class="helper-text ps-3">Se ve bien.</span>
     }
   </div>
 
-  <button type="submit" class="btn btn-lg btn-primary btn-gradient btn-block" [disabled]="form.invalid">
+  <button type="submit" class="btn btn-lg btn-primary btn-gradient w-fit" [disabled]="form.invalid">
     Guardar
   </button>
-</form>
+  </form>
+</div>

@@ -1,13 +1,13 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
 import { ReservaService } from '../../../services/Reservas/reservas-service';
 import { AuthService } from '../../../services/Auth/auth-service';
 import { SalasService } from '../../../services/Salas/salas-service';
 import { ClientesService } from '../../../services/Clientes/cliente-service';
+import { UiAlertService } from '../../../services/Ui-alert/ui-alert';
 
 import { ReservaRequestByClienteDTO } from '../../../dto/Reserva/';
 import { ReservaRequestByEmpleadoDTO } from '../../../dto/Reserva/reservaRequestbyEmpleadoDTO ';
@@ -21,7 +21,7 @@ import { TipoPago } from '../../../models/reservas/tipo-pago';
   templateUrl: 'reserva-form.html',
   styleUrls: ['./reserva-form.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, MatSnackBarModule],
+  imports: [ReactiveFormsModule, CommonModule],
 })
 export class ReservaFormComponent implements OnInit {
   form!: FormGroup;
@@ -47,7 +47,7 @@ export class ReservaFormComponent implements OnInit {
   salasService = inject(SalasService);
   clientesService = inject(ClientesService);
   router = inject(Router);
-  private snackBar = inject(MatSnackBar);
+  private uiAlert = inject(UiAlertService);
 
   minFechaInicio!: string;
 
@@ -87,8 +87,12 @@ export class ReservaFormComponent implements OnInit {
         this.recalcularMonto();
       },
       error: () =>
-        this.snackBar.open('No se pudieron cargar las salas', 'Cerrar', {
-          duration: 2500,
+        this.uiAlert.show({
+          variant: 'error',
+          tone: 'soft',
+          title: 'Error',
+          message: 'No se pudieron cargar las salas',
+          timeoutMs: 2500,
         }),
     });
   }
@@ -106,13 +110,25 @@ export class ReservaFormComponent implements OnInit {
     // Asegurar numéricos
     const salaId = Number(v.salaId);
     if (Number.isNaN(salaId)) {
-      this.snackBar.open('Selecciona una sala válida', 'Cerrar', { duration: 2500 });
+      this.uiAlert.show({
+        variant: 'warning',
+        tone: 'soft',
+        title: 'Warning alert',
+        message: 'Selecciona una sala valida',
+        timeoutMs: 2500,
+      });
       return;
     }
 
     const clienteId = v.clienteId != null ? Number(v.clienteId) : null;
     if (this.isEmpleado() && (clienteId == null || Number.isNaN(clienteId))) {
-      this.snackBar.open('Ingresa un cliente válido', 'Cerrar', { duration: 2500 });
+      this.uiAlert.show({
+        variant: 'warning',
+        tone: 'soft',
+        title: 'Warning alert',
+        message: 'Ingresa un cliente valido',
+        timeoutMs: 2500,
+      });
       return;
     }
 
@@ -123,11 +139,13 @@ export class ReservaFormComponent implements OnInit {
 
     // CAMBIO: si es MERCADO_PAGO, no permitimos monto <= 0 (evitamos unit_price invalid)
     if (tipoPagoSeleccionado === TipoPago.MERCADO_PAGO && monto <= 0) {
-      this.snackBar.open(
-        'El monto calculado es inválido. Verifica sala y rango de fechas.',
-        'Cerrar',
-        { duration: 3500, panelClass: ['error-snackbar'] }
-      );
+      this.uiAlert.show({
+        variant: 'error',
+        tone: 'soft',
+        title: 'Error',
+        message: 'El monto calculado es invalido. Verifica sala y rango de fechas.',
+        timeoutMs: 3500,
+      });
       return;
     }
 
@@ -141,9 +159,12 @@ export class ReservaFormComponent implements OnInit {
     };
 
     const onOk = () => {
-      this.snackBar.open('Reserva creada correctamente', 'Cerrar', {
-        duration: 3000,
-        panelClass: ['success-snackbar'],
+      this.uiAlert.show({
+        variant: 'success',
+        tone: 'soft',
+        title: 'Success alert',
+        message: 'Reserva creada correctamente',
+        timeoutMs: 3000,
       });
       setTimeout(() => this.router.navigate(['/reservas']), 800);
     };
@@ -154,14 +175,15 @@ export class ReservaFormComponent implements OnInit {
       const rawErr = (err?.error?.message || err?.error || '').toString();
       const isSolape = err?.status === 409 || /solap|ocupad/i.test(rawErr);
 
-      this.snackBar.open(
-        isSolape ? 'La sala no está disponible en ese horario.' : rawErr || 'No se pudo crear la reserva',
-        'Cerrar',
-        {
-          duration: 3500,
-          panelClass: [isSolape ? 'warn-snackbar' : 'error-snackbar'],
-        }
-      );
+      this.uiAlert.show({
+        variant: isSolape ? 'warning' : 'error',
+        tone: 'soft',
+        title: isSolape ? 'Warning alert' : 'Error',
+        message: isSolape
+          ? 'La sala no esta disponible en ese horario.'
+          : rawErr || 'No se pudo crear la reserva',
+        timeoutMs: 3500,
+      });
     };
 
     // ===================== FLUJO CLIENTE =====================
@@ -179,36 +201,48 @@ export class ReservaFormComponent implements OnInit {
       if (tipoPagoSeleccionado === TipoPago.MERCADO_PAGO) {
         this.reservaService.createReservaCliente(dto).subscribe({
           next: (reserva: any) => {
-            this.snackBar.open('Reserva creada, preparando Mercado Pago...', 'Cerrar', {
-              duration: 2000,
-              panelClass: ['success-snackbar'],
+            this.uiAlert.show({
+              variant: 'success',
+              tone: 'soft',
+              title: 'Success alert',
+              message: 'Reserva creada, preparando Mercado Pago...',
+              timeoutMs: 2000,
             });
 
             this.reservaService.generarLinkPago(reserva.id).subscribe({
               next: (resp: any) => {
                 const initPoint = resp?.initPoint;
                 if (!initPoint) {
-                  this.snackBar.open('No se pudo obtener el link de pago.', 'Cerrar', {
-                    duration: 3500,
-                    panelClass: ['warn-snackbar'],
+                  this.uiAlert.show({
+                    variant: 'warning',
+                    tone: 'soft',
+                    title: 'Warning alert',
+                    message: 'No se pudo obtener el link de pago.',
+                    timeoutMs: 3500,
                   });
                   return;
                 }
 
-                // Abre MP en otra pestaña
+                // Abre MP en otra pestana
                 window.open(initPoint, '_blank');
-                this.snackBar.open('Abrimos Mercado Pago para completar el pago', 'Cerrar', {
-                  duration: 3200,
+                this.uiAlert.show({
+                  variant: 'info',
+                  tone: 'soft',
+                  title: 'Info',
+                  message: 'Abrimos Mercado Pago para completar el pago',
+                  timeoutMs: 3200,
                 });
                 setTimeout(() => this.router.navigate(['/reservas']), 1000);
               },
               error: (err) => {
                 console.error('Error al generar link de pago:', err?.error || err);
-                this.snackBar.open(
-                  'Reserva creada, pero no pudimos generar el link de Mercado Pago',
-                  'Cerrar',
-                  { duration: 3500, panelClass: ['error-snackbar'] }
-                );
+                this.uiAlert.show({
+                  variant: 'error',
+                  tone: 'soft',
+                  title: 'Error',
+                  message: 'Reserva creada, pero no pudimos generar el link de Mercado Pago',
+                  timeoutMs: 3500,
+                });
               },
             });
           },
@@ -228,8 +262,12 @@ export class ReservaFormComponent implements OnInit {
       const dto: ReservaRequestByEmpleadoDTO = { ...payloadBase, clienteId: clienteId! };
       this.reservaService.createReservaEmpleado(dto).subscribe({ next: onOk, error: onError });
     } else {
-      this.snackBar.open('No se pudo determinar el rol del usuario', 'Cerrar', {
-        duration: 2500,
+      this.uiAlert.show({
+        variant: 'error',
+        tone: 'soft',
+        title: 'Error',
+        message: 'No se pudo determinar el rol del usuario',
+        timeoutMs: 2500,
       });
     }
   }
@@ -260,8 +298,12 @@ export class ReservaFormComponent implements OnInit {
     this.clientesService.getAll().subscribe({
       next: (clientes) => (this.clientes = clientes ?? []),
       error: () =>
-        this.snackBar.open('No se pudieron cargar los clientes', 'Cerrar', {
-          duration: 2500,
+        this.uiAlert.show({
+          variant: 'error',
+          tone: 'soft',
+          title: 'Error',
+          message: 'No se pudieron cargar los clientes',
+          timeoutMs: 2500,
         }),
     });
   }

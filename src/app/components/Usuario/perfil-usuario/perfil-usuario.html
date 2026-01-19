@@ -76,17 +76,6 @@
                   Editar perfil
                 </h2>
               </div>
-              <span
-                class="
-                  shrink-0 rounded-xl px-3 py-1
-                  text-[10px] font-extrabold uppercase tracking-[0.22em]
-                  border border-[var(--border-2)]
-                  bg-[var(--card-2)]
-                  text-[var(--accent-500)]
-                "
-              >
-                {{ rolActualTexto() }}
-              </span>
             </header>
 
             <div class="relative mt-4">
@@ -101,6 +90,7 @@
                     id="nombre"
                     type="text"
                     formControlName="nombre"
+                    (input)="onLettersInput($event, 'nombre')"
                     class="
                       mt-2 w-full rounded-xl px-3 py-2
                       border border-[var(--border)]
@@ -125,6 +115,7 @@
                     id="apellido"
                     type="text"
                     formControlName="apellido"
+                    (input)="onLettersInput($event, 'apellido')"
                     class="
                       mt-2 w-full rounded-xl px-3 py-2
                       border border-[var(--border)]
@@ -151,6 +142,7 @@
                     formControlName="dni"
                     maxlength="8"
                     inputmode="numeric"
+                    (input)="onNumbersInput($event, 'dni')"
                     class="
                       mt-2 w-full rounded-xl px-3 py-2
                       border border-[var(--border)]
@@ -180,6 +172,7 @@
                     formControlName="telefono"
                     maxlength="10"
                     inputmode="tel"
+                    (input)="onNumbersInput($event, 'telefono')"
                     class="
                       mt-2 w-full rounded-xl px-3 py-2
                       border border-[var(--border)]

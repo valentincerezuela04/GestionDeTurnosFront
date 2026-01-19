@@ -21,12 +21,12 @@
       "
     >
       <div class="flex items-center gap-3">
-        <h2 class="text-base-content text-xl font-bold">Gestión de Turnos</h2>
+        <h2 class="text-base-content text-xl font-bold">Gestion de Turnos</h2>
       </div>
 
       <div>
         <h3 class="text-base-content mb-1.5 text-2xl font-semibold">Nuevo empleado</h3>
-        <p class="text-base-content/80">Completá los datos para crear un empleado.</p>
+        <p class="text-base-content/80">Completa los datos para crear un empleado.</p>
       </div>
 
       <form [formGroup]="empleadoForm" (ngSubmit)="submit()" class="space-y-4" novalidate>
@@ -36,6 +36,7 @@
             type="text"
             placeholder="Tu nombre"
             formControlName="nombre"
+            (input)="onLettersInput($event, 'nombre')"
             [class.is-invalid]="isInvalid('nombre')"
             [class.is-valid]="isValid('nombre')"
             [ngClass]="[inputBase, isInvalid('nombre') ? hoverBad : hoverOk]"
@@ -47,10 +48,9 @@
             <span class="helper-text ps-3 text-[var(--danger)]">
               @if (hasError('nombre','required')) { El nombre es obligatorio. }
               @else if (hasError('nombre','minlength')) { Debe tener al menos 3 caracteres. }
-              @else { Campo inválido. }
+              @else if (hasError('nombre','pattern')) { Solo letras. }
+              @else { Campo invalido. }
             </span>
-          } @else if (isValid('nombre')) {
-            <span class="helper-text ps-3 text-base-content/70">Se ve bien.</span>
           }
         </div>
 
@@ -60,6 +60,7 @@
             type="text"
             placeholder="Tu apellido"
             formControlName="apellido"
+            (input)="onLettersInput($event, 'apellido')"
             [class.is-invalid]="isInvalid('apellido')"
             [class.is-valid]="isValid('apellido')"
             [ngClass]="[inputBase, isInvalid('apellido') ? hoverBad : hoverOk]"
@@ -71,10 +72,9 @@
             <span class="helper-text ps-3 text-[var(--danger)]">
               @if (hasError('apellido','required')) { El apellido es obligatorio. }
               @else if (hasError('apellido','minlength')) { Debe tener al menos 3 caracteres. }
-              @else { Campo inválido. }
+              @else if (hasError('apellido','pattern')) { Solo letras. }
+              @else { Campo invalido. }
             </span>
-          } @else if (isValid('apellido')) {
-            <span class="helper-text ps-3 text-base-content/70">Se ve bien.</span>
           }
         </div>
 
@@ -84,8 +84,9 @@
             type="text"
             inputmode="numeric"
             maxlength="8"
-            placeholder="7 u 8 dígitos"
+            placeholder="7 u 8 digitos"
             formControlName="dni"
+            (input)="onNumbersInput($event, 'dni')"
             [class.is-invalid]="isInvalid('dni')"
             [class.is-valid]="isValid('dni')"
             [ngClass]="[inputBase, isInvalid('dni') ? hoverBad : hoverOk]"
@@ -96,11 +97,9 @@
           @if (isInvalid('dni')) {
             <span class="helper-text ps-3 text-[var(--danger)]">
               @if (hasError('dni','required')) { El DNI es obligatorio. }
-              @else if (hasError('dni','pattern')) { Solo números (7 u 8 dígitos). }
-              @else { Campo inválido. }
+              @else if (hasError('dni','pattern')) { Solo numeros (7 u 8 digitos). }
+              @else { Campo invalido. }
             </span>
-          } @else if (isValid('dni')) {
-            <span class="helper-text ps-3 text-base-content/70">Se ve bien.</span>
           }
         </div>
 
@@ -108,25 +107,24 @@
           <input
             id="telefono"
             type="text"
-            inputmode="tel"
+            inputmode="numeric"
             maxlength="20"
-            placeholder="Teléfono"
+            placeholder="Telefono"
             formControlName="telefono"
+            (input)="onNumbersInput($event, 'telefono')"
             [class.is-invalid]="isInvalid('telefono')"
             [class.is-valid]="isValid('telefono')"
             [ngClass]="[inputBase, isInvalid('telefono') ? hoverBad : hoverOk]"
             [attr.aria-invalid]="isInvalid('telefono') ? 'true' : null"
           />
-          <label class="input-floating-label" for="telefono">Teléfono</label>
+          <label class="input-floating-label" for="telefono">Telefono</label>
 
           @if (isInvalid('telefono')) {
             <span class="helper-text ps-3 text-[var(--danger)]">
-              @if (hasError('telefono','required')) { El teléfono es obligatorio. }
-              @else if (hasError('telefono','pattern')) { Ingresá un teléfono válido. }
-              @else { Campo inválido. }
+              @if (hasError('telefono','required')) { El telefono es obligatorio. }
+              @else if (hasError('telefono','pattern')) { Ingresa un telefono valido. }
+              @else { Campo invalido. }
             </span>
-          } @else if (isValid('telefono')) {
-            <span class="helper-text ps-3 text-base-content/70">Se ve bien.</span>
           }
         </div>
 
@@ -146,8 +144,8 @@
           @if (isInvalid('email')) {
             <span class="helper-text ps-3 text-[var(--danger)]">
               @if (hasError('email','required')) { El email es obligatorio. }
-              @else if (hasError('email','email')) { Formato de email inválido. }
-              @else { Campo inválido. }
+              @else if (hasError('email','email')) { Formato de email invalido. }
+              @else { Campo invalido. }
             </span>
           } @else if (isValid('email')) {
             <span class="helper-text ps-3 text-base-content/70">Se ve bien.</span>
@@ -168,7 +166,7 @@
         [attr.aria-invalid]="isInvalid('contrasena') ? 'true' : null"
       />
 
-      <label class="input-floating-label ms-0" for="contrasena">Contraseña</label>
+      <label class="input-floating-label ms-0" for="contrasena">Contrasena</label>
     </div>
 
     <button
@@ -179,7 +177,7 @@
         focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-400)]
       "
       (click)="showPassword = !showPassword"
-      [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+      [attr.aria-label]="showPassword ? 'Ocultar contrasena' : 'Mostrar contrasena'"
       tabindex="-1"
     >
       <span
@@ -208,10 +206,10 @@
 
   @if (isInvalid('contrasena')) {
     <span class="helper-text ps-3 text-[var(--danger)]">
-      @if (hasError('contrasena','required')) { La contraseña es obligatoria. }
-      @else if (hasError('contrasena','minlength')) { Mínimo 6 caracteres. }
-      @else if (hasError('contrasena','pattern')) { Debe incluir al menos una letra y un número. }
-      @else { Campo inválido. }
+      @if (hasError('contrasena','required')) { La contrasena es obligatoria. }
+      @else if (hasError('contrasena','minlength')) { Minimo 6 caracteres. }
+      @else if (hasError('contrasena','pattern')) { Debe incluir al menos una letra y un numero. }
+      @else { Campo invalido. }
     </span>
   } @else if (isValid('contrasena')) {
     <span class="helper-text ps-3">Se ve bien.</span>
@@ -232,7 +230,7 @@
         [attr.aria-invalid]="isInvalid('confirmarContrasena') ? 'true' : null"
       />
 
-      <label class="input-floating-label ms-0" for="confirmarContrasena">Confirmar contraseña</label>
+      <label class="input-floating-label ms-0" for="confirmarContrasena">Confirmar contrasena</label>
     </div>
 
     <button
@@ -243,7 +241,7 @@
         focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-400)]
       "
       (click)="showPassword = !showPassword"
-      [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+      [attr.aria-label]="showPassword ? 'Ocultar contrasena' : 'Mostrar contrasena'"
       tabindex="-1"
     >
       <span
@@ -272,11 +270,11 @@
 
   @if (isInvalid('confirmarContrasena')) {
     <span class="helper-text ps-3 text-[var(--danger)]">
-      @if (hasError('confirmarContrasena','required')) { La confirmación es obligatoria. }
-      @else if (hasError('confirmarContrasena','minlength')) { Mínimo 6 caracteres. }
-      @else if (hasError('confirmarContrasena','pattern')) { Debe incluir al menos una letra y un número. }
-      @else if (hasError('confirmarContrasena','mismatch')) { Las contraseñas no coinciden. }
-      @else { Campo inválido. }
+      @if (hasError('confirmarContrasena','required')) { La confirmacion es obligatoria. }
+      @else if (hasError('confirmarContrasena','minlength')) { Minimo 6 caracteres. }
+      @else if (hasError('confirmarContrasena','pattern')) { Debe incluir al menos una letra y un numero. }
+      @else if (hasError('confirmarContrasena','mismatch')) { Las contrasenas no coinciden. }
+      @else { Campo invalido. }
     </span>
   } @else if (isValid('confirmarContrasena')) {
     <span class="helper-text ps-3">Se ve bien.</span>
@@ -288,13 +286,25 @@
           <input
             id="legajo"
             type="text"
-            placeholder="Opcional"
+            inputmode="numeric"
+            placeholder="Numero de legajo"
             formControlName="legajo"
+            (input)="onNumbersInput($event, 'legajo')"
             [class.is-invalid]="isInvalid('legajo')"
             [class.is-valid]="isValid('legajo')"
-            [ngClass]="[inputBase, hoverOk]"
+            [ngClass]="[inputBase, isInvalid('legajo') ? hoverBad : hoverOk]"
           />
-          <label class="input-floating-label" for="legajo">Legajo (opcional)</label>
+          <label class="input-floating-label" for="legajo">Legajo</label>
+
+          @if (isInvalid('legajo')) {
+            <span class="helper-text ps-3 text-[var(--danger)]">
+              @if (hasError('legajo','required')) { El legajo es obligatorio. }
+              @else if (hasError('legajo','pattern')) { Solo numeros. }
+              @else { Campo invalido. }
+            </span>
+          } @else if (isValid('legajo')) {
+            <span class="helper-text ps-3">Se ve bien.</span>
+          }
         </div>
 
         <button
@@ -323,3 +333,4 @@
     </div>
   </div>
 </div>
+

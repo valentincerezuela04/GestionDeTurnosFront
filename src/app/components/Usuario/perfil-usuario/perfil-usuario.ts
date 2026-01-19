@@ -51,6 +51,8 @@ export class PerfilUsuario implements OnInit {
   private fb = inject(FormBuilder);
   private destroyRef = inject(DestroyRef);
   private uiAlert = inject(UiAlertService);
+  private readonly lettersOnly = /[^\p{L}\s]/gu;
+  private readonly digitsOnly = /\D+/g;
 
   readonly isLoading = signal(true);
   readonly errorMessage = signal<string | null>(null);
@@ -79,6 +81,26 @@ export class PerfilUsuario implements OnInit {
   readonly esCliente = computed(() => this.rolActual() === Rol.CLIENTE);
   readonly esEmpleado = computed(() => this.rolActual() === Rol.EMPLEADO);
   readonly esAdmin = computed(() => this.rolActual() === Rol.ADMIN);
+
+  onLettersInput(event: Event, controlName: string): void {
+    const input = event.target as HTMLInputElement | null;
+    if (!input) return;
+    const sanitized = input.value.replace(this.lettersOnly, '');
+    if (sanitized !== input.value) {
+      input.value = sanitized;
+      this.clienteForm.get(controlName)?.setValue(sanitized);
+    }
+  }
+
+  onNumbersInput(event: Event, controlName: string): void {
+    const input = event.target as HTMLInputElement | null;
+    if (!input) return;
+    const sanitized = input.value.replace(this.digitsOnly, '');
+    if (sanitized !== input.value) {
+      input.value = sanitized;
+      this.clienteForm.get(controlName)?.setValue(sanitized);
+    }
+  }
 
   ngOnInit(): void {
     this.cargarPerfil();
@@ -262,7 +284,7 @@ export class PerfilUsuario implements OnInit {
         confirmarCtrl?.markAsTouched();
         this.uiAlert.show({
           variant: 'error',
-          tone: 'outline',
+          tone: 'soft',
           title: 'Error',
           message: 'Las contraseñas no coinciden.',
           timeoutMs: 5000,

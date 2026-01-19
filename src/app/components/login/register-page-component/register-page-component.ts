@@ -1,4 +1,4 @@
-﻿import { Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/Auth/auth-service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -23,8 +23,8 @@ export class RegisterPageComponent {
   error = '';
 
   form = this.fb.group({
-    nombre: ['', [Validators.required, Validators.minLength(3)]],
-    apellido: ['', [Validators.required, Validators.minLength(3)]],
+    nombre: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[\p{L}\s]+$/u)]],
+    apellido: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[\p{L}\s]+$/u)]],
     dni: ['', [Validators.required, Validators.maxLength(8), Validators.pattern(/^[0-9]{7,8}$/)]],
     telefono: ['', [Validators.required, Validators.maxLength(10), Validators.pattern(/^[0-9]{10}$/)]],
     email: ['', [Validators.required, Validators.email]],
@@ -33,6 +33,29 @@ export class RegisterPageComponent {
       [Validators.required, Validators.minLength(4), Validators.pattern(/^(?=.*\d).{4,}$/)],
     ],
   });
+
+  private readonly lettersOnly = /[^\p{L}\s]/gu;
+  private readonly digitsOnly = /\D+/g;
+
+  onLettersInput(event: Event, controlName: string): void {
+    const input = event.target as HTMLInputElement | null;
+    if (!input) return;
+    const sanitized = input.value.replace(this.lettersOnly, '');
+    if (sanitized !== input.value) {
+      input.value = sanitized;
+      this.form.get(controlName)?.setValue(sanitized);
+    }
+  }
+
+  onNumbersInput(event: Event, controlName: string): void {
+    const input = event.target as HTMLInputElement | null;
+    if (!input) return;
+    const sanitized = input.value.replace(this.digitsOnly, '');
+    if (sanitized !== input.value) {
+      input.value = sanitized;
+      this.form.get(controlName)?.setValue(sanitized);
+    }
+  }
 
     get returnUrl(): string | null {
     return this.route.snapshot.queryParamMap.get('returnUrl');
@@ -46,7 +69,7 @@ if (this.form.invalid) {
     variant: 'warning',
     tone: 'soft',
     title: 'Warning alert',
-    message: 'Revisá los campos marcados: hay datos inválidos.',
+    message: 'Revisa los campos marcados: hay datos invalidos.',
     timeoutMs: 4500,
   });
   return;
@@ -63,7 +86,7 @@ if (this.form.invalid) {
     variant: 'success',
     tone: 'soft',
     title: 'Success alert',
-    message: 'Te registraste correctamente. Por favor, iniciá sesión.',
+    message: 'Te registraste correctamente. Por favor, inicia sesion.',
     timeoutMs: 3500,
   });
   this.router.navigate(['/login']);
@@ -115,3 +138,4 @@ hasError(name: string, key: string): boolean {
   return !!c && this.interacted(name) && !!c.errors?.[key];
 }
 }
+

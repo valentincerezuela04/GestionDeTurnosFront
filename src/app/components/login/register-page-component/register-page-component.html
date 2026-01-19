@@ -1,4 +1,4 @@
-﻿<!-- <h2>Crear cuenta</h2>
+<!-- <h2>Crear cuenta</h2>
 
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="register-form" novalidate>
   <div class="field">
@@ -84,14 +84,14 @@
          bg-cover bg-center bg-no-repeat py-10"
 > -->
   <div class="relative flex items-center justify-center px-4 sm:px-6 lg:px-8">
-    <!-- Decoración SVG (opcional). Podés pegarla tal cual acá. -->
+    <!-- Decoracion SVG (opcional). Podes pegarla tal cual aca. -->
     <!-- <div class="absolute"> ...TU SVG... </div> -->
 
     <div class="bg-base-100 shadow-base-300/20 z-10 w-full space-y-6 rounded-xl p-6 shadow-md sm:min-w-md lg:p-8">
       <!-- Header -->
       <div class="flex items-center gap-3">
        
-        <h2 class="text-base-content text-xl font-bold">Gestión de Turnos</h2>
+        <h2 class="text-base-content text-xl font-bold">Gestion de Turnos</h2>
       </div>
 
       <!-- Title -->
@@ -110,6 +110,7 @@
       placeholder="Tu nombre"
       class="input hover:bg-[var(--bg)]"
       formControlName="nombre"
+      (input)="onLettersInput($event, 'nombre')"
       [class.is-invalid]="isInvalid('nombre')"
       [class.is-valid]="isValid('nombre')"
       [attr.aria-invalid]="isInvalid('nombre') ? 'true' : null"
@@ -120,10 +121,9 @@
       <span class="helper-text ps-3 text-[var(--danger)]">
         @if (hasError('nombre','required')) { El nombre es obligatorio. }
         @else if (hasError('nombre','minlength')) { Debe tener al menos 3 caracteres. }
-        @else { Campo inválido. }
+        @else if (hasError('nombre','pattern')) { Solo letras. }
+        @else { Campo invalido. }
       </span>
-    } @else if (isValid('nombre')) {
-      <span class="helper-text ps-3">Se ve bien.</span>
     }
   </div>
 
@@ -135,6 +135,7 @@
       placeholder="Tu apellido"
       class="input hover:bg-[var(--bg)]"
       formControlName="apellido"
+      (input)="onLettersInput($event, 'apellido')"
       [class.is-invalid]="isInvalid('apellido')"
       [class.is-valid]="isValid('apellido')"
       [attr.aria-invalid]="isInvalid('apellido') ? 'true' : null"
@@ -145,10 +146,9 @@
       <span class="helper-text ps-3 text-[var(--danger)]">
         @if (hasError('apellido','required')) { El apellido es obligatorio. }
         @else if (hasError('apellido','minlength')) { Debe tener al menos 3 caracteres. }
-        @else { Campo inválido. }
+        @else if (hasError('apellido','pattern')) { Solo letras. }
+        @else { Campo invalido. }
       </span>
-    } @else if (isValid('apellido')) {
-      <span class="helper-text ps-3">Se ve bien.</span>
     }
   </div>
 
@@ -159,9 +159,10 @@
       type="text"
       inputmode="numeric"
       maxlength="8"
-      placeholder="7 u 8 dígitos"
+      placeholder="7 u 8 digitos"
       class="input hover:bg-[var(--bg)]"
       formControlName="dni"
+      (input)="onNumbersInput($event, 'dni')"
       [class.is-invalid]="isInvalid('dni')"
       [class.is-valid]="isValid('dni')"
       [attr.aria-invalid]="isInvalid('dni') ? 'true' : null"
@@ -171,38 +172,35 @@
     @if (isInvalid('dni')) {
       <span class="helper-text ps-3 text-[var(--danger)]">
         @if (hasError('dni','required')) { El DNI es obligatorio. }
-        @else if (hasError('dni','pattern')) { Solo números (7 u 8 dígitos). }
-        @else { Campo inválido. }
+        @else if (hasError('dni','pattern')) { Solo numeros (7 u 8 digitos). }
+        @else { Campo invalido. }
       </span>
-    } @else if (isValid('dni')) {
-      <span class="helper-text ps-3">Se ve bien.</span>
     }
   </div>
 
-  <!-- Teléfono -->
+  <!-- Telefono -->
   <div class="input-floating w-96">
     <input
       id="telefono"
       type="text"
-      inputmode="tel"
+      inputmode="numeric"
       maxlength="10"
-      placeholder="10 dígitos"
+      placeholder="10 digitos"
       class="input hover:bg-[var(--bg)]"
       formControlName="telefono"
+      (input)="onNumbersInput($event, 'telefono')"
       [class.is-invalid]="isInvalid('telefono')"
       [class.is-valid]="isValid('telefono')"
       [attr.aria-invalid]="isInvalid('telefono') ? 'true' : null"
     />
-    <label class="input-floating-label" for="telefono">Teléfono</label>
+    <label class="input-floating-label" for="telefono">Telefono</label>
 
     @if (isInvalid('telefono')) {
       <span class="helper-text ps-3 text-[var(--danger)]">
-        @if (hasError('telefono','required')) { El teléfono es obligatorio. }
-        @else if (hasError('telefono','pattern')) { Debe tener exactamente 10 números. }
-        @else { Campo inválido. }
+        @if (hasError('telefono','required')) { El telefono es obligatorio. }
+        @else if (hasError('telefono','pattern')) { Debe tener exactamente 10 numeros. }
+        @else { Campo invalido. }
       </span>
-    } @else if (isValid('telefono')) {
-      <span class="helper-text ps-3">Se ve bien.</span>
     }
   </div>
 
@@ -223,15 +221,15 @@
     @if (isInvalid('email')) {
       <span class="helper-text ps-3 text-[var(--danger)]">
         @if (hasError('email','required')) { El email es obligatorio. }
-        @else if (hasError('email','email')) { Formato de email inválido. }
-        @else { Campo inválido. }
+        @else if (hasError('email','email')) { Formato de email invalido. }
+        @else { Campo invalido. }
       </span>
     } @else if (isValid('email')) {
       <span class="helper-text ps-3">Se ve bien.</span>
     }
   </div>
 
-  <!-- Contraseña (floating igual al email + botón ojo) -->
+  <!-- Contrasena (floating igual al email + boton ojo) -->
   <div class="w-96">
   <div class="input" [class.is-invalid]="isInvalid('contrasena')" [class.is-valid]="isValid('contrasena')">
     <div class="input-floating grow">
@@ -246,7 +244,7 @@
         [attr.aria-invalid]="isInvalid('contrasena') ? 'true' : null"
       />
 
-      <label class="input-floating-label ms-0" for="contrasena">Contraseña</label>
+      <label class="input-floating-label ms-0" for="contrasena">Contrasena</label>
     </div>
 
     <button
@@ -257,7 +255,7 @@
         focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-400)]
       "
       (click)="showPassword = !showPassword"
-      [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+      [attr.aria-label]="showPassword ? 'Ocultar contrasena' : 'Mostrar contrasena'"
       tabindex="-1"
     >
       <span
@@ -286,10 +284,10 @@
 
   @if (isInvalid('contrasena')) {
     <span class="helper-text ps-3 text-[var(--danger)]">
-      @if (hasError('contrasena','required')) { La contraseña es obligatoria. }
-      @else if (hasError('contrasena','minlength')) { Mínimo 4 caracteres. }
-      @else if (hasError('contrasena','pattern')) { Incluye al menos un número. }
-      @else { Campo inválido. }
+      @if (hasError('contrasena','required')) { La contrasena es obligatoria. }
+      @else if (hasError('contrasena','minlength')) { Minimo 4 caracteres. }
+      @else if (hasError('contrasena','pattern')) { Incluye al menos un numero. }
+      @else { Campo invalido. }
     </span>
   } @else if (isValid('contrasena')) {
     <span class="helper-text ps-3">Se ve bien.</span>
@@ -310,3 +308,4 @@
     <p class="text-center text-sm text-[var(--danger)]">{{ error }}</p>
   }
 </form>
+
