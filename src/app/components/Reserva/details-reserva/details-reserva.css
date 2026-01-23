@@ -324,6 +324,61 @@
   color: var(--text-2);
 }
 
+.ui-confirm-backdrop{
+  background: color-mix(in srgb, var(--bg) 35%, #000 65%);
+  backdrop-filter: blur(6px);
+}
+
+.ui-confirm-modal{
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-accent);
+}
+
+.ui-confirm-title{
+  color: var(--text);
+}
+
+.ui-confirm-message{
+  color: var(--text-2);
+}
+
+.ui-confirm-actions{
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.ui-confirm-actions button{
+  min-width: 140px;
+  border-radius: 12px;
+}
+
+.ui-confirm-actions .btn-confirm{
+  background: var(--accent-500);
+  color: #fff;
+  border: 1px solid transparent;
+  box-shadow: 0 16px 40px -24px var(--accent-glow);
+}
+
+.ui-confirm-actions .btn-confirm:hover{
+  background: var(--accent-600);
+}
+
+.ui-confirm-actions .btn-cancel{
+  background: var(--card-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.ui-confirm-actions .btn-cancel:hover{
+  border-color: var(--accent-400);
+  box-shadow: var(--shadow-accent);
+}
+
+
 /* responsive */
 @media (max-width: 880px) {
   .details-content {

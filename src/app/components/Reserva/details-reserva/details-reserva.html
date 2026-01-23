@@ -243,60 +243,103 @@
             border border-[color:var(--border)]
           "
         >
-          @if (!isEditing()) {
-            <div>
-              @if (puedeEditar()) {
+          @if (esEmpleado() && esPendientePago() && !isEditing()) {
+            <div class="mb-4">
+              <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
                 <button
-                  class="btn btn-primary
+                  class="
+                    w-full sm:w-auto
+                    px-5 py-2.5 rounded-xl
+                    font-semibold tracking-tight
+                    text-white
+                    bg-[color:var(--accent-500)]
+                    border border-transparent
+                    shadow-[0_16px_40px_-24px_var(--accent-glow)]
+                    hover:bg-[color:var(--accent-600)]
+                    hover:shadow-[0_18px_46px_-26px_var(--accent-glow)]
+                    active:translate-y-[1px]
+                    transition
+                  "
+                  (click)="confirmarPagoEmpleado()"
+                >
+                  Confirmar pago
+                </button>
+
+                <button
+                  class="
+                    w-full sm:w-auto
+                    px-5 py-2.5 rounded-xl
+                    font-semibold tracking-tight
+                    text-white
+                    bg-[color:var(--danger)]
+                    border border-transparent
+                    shadow-[0_16px_40px_-24px_var(--shadow)]
+                    hover:brightness-110
+                    active:translate-y-[1px]
+                    transition
+                  "
+                  (click)="rechazarPagoEmpleado()"
+                >
+                  Rechazar pago
+                </button>
+              </div>
+            </div>
+          } @else {
+            @if (!isEditing()) {
+              <div>
+                @if (puedeEditar()) {
+                  <button
+                    class="btn btn-primary
+                      bg-[color:var(--accent-500)]
+                      text-white
+                      hover:bg-[color:var(--accent-600)]
+                      shadow-[0_16px_40px_-24px_var(--accent-glow)]
+                    "
+                    (click)="startEditing()"
+                  >
+                    Editar
+                  </button>
+                }
+                <button
+                  class="btn btn-warning
+                    bg-[color:var(--card-2)]
+                    border border-[color:var(--border)]
+                    text-[color:var(--text)]
+                    hover:border-[color:var(--accent-400)]
+                    hover:shadow-[0_14px_35px_-28px_var(--accent-glow)]
+                  "
+                  (click)="cancelarReserva()"
+                >
+                  Cancelar Reserva
+                </button>
+              </div>
+            } @else {
+              <div>
+                <button
+                  class="btn btn-success
                     bg-[color:var(--accent-500)]
                     text-white
                     hover:bg-[color:var(--accent-600)]
                     shadow-[0_16px_40px_-24px_var(--accent-glow)]
                   "
-                  (click)="startEditing()"
+                  (click)="guardarCambios()"
                 >
-                  Editar
+                  Guardar
                 </button>
-              }
-              <button
-                class="btn btn-warning
-                  bg-[color:var(--card-2)]
-                  border border-[color:var(--border)]
-                  text-[color:var(--text)]
-                  hover:border-[color:var(--accent-400)]
-                  hover:shadow-[0_14px_35px_-28px_var(--accent-glow)]
-                "
-                (click)="cancelarReserva()"
-              >
-                Cancelar Reserva
-              </button>
-            </div>
-          } @else {
-            <div>
-              <button
-                class="btn btn-success
-                  bg-[color:var(--accent-500)]
-                  text-white
-                  hover:bg-[color:var(--accent-600)]
-                  shadow-[0_16px_40px_-24px_var(--accent-glow)]
-                "
-                (click)="guardarCambios()"
-              >
-                Guardar
-              </button>
-              <button
-                class="btn btn-secondary
-                  bg-[color:var(--card-2)]
-                  border border-[color:var(--border)]
-                  text-[color:var(--text)]
-                  hover:border-[color:var(--accent-400)]
-                  hover:shadow-[0_14px_35px_-28px_var(--accent-glow)]
-                "
-                (click)="cancelEditing()"
-              >
-                Cancelar Edición
-              </button>
-            </div>
+                <button
+                  class="btn btn-secondary
+                    bg-[color:var(--card-2)]
+                    border border-[color:var(--border)]
+                    text-[color:var(--text)]
+                    hover:border-[color:var(--accent-400)]
+                    hover:shadow-[0_14px_35px_-28px_var(--accent-glow)]
+                  "
+                  (click)="cancelEditing()"
+                >
+                  Cancelar Edición
+                </button>
+              </div>
+            }
           }
         </div>
       }

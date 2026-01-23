@@ -49,12 +49,24 @@ export class DetailsReserva {
     tipoPago: TipoPago.EFECTIVO,
   });
 
+  readonly esEmpleado = computed(() => {
+    const rol = (this.usuario()?.role ?? '').toString().toUpperCase();
+    return rol === 'EMPLEADO';
+  });
+
+  readonly esPendientePago = computed(() => {
+    const estado = (this.reserva()?.estado ?? '').toString().toUpperCase();
+    return estado === 'PENDIENTE_CONFIRMACION_PAGO';
+  });
+
   readonly puedeEditar = computed(() => {
     const user = this.usuario();
     return user?.role === 'EMPLEADO' || user?.role === 'CLIENTE';
   });
 
-  readonly accionesHabilitadas = computed(() => this.esReservaActiva());
+  readonly accionesHabilitadas = computed(() => {
+    return this.esReservaActiva() || this.esPendientePago();
+  });
 
   constructor() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -239,6 +251,83 @@ export class DetailsReserva {
     });
   }
 
+  async confirmarPagoEmpleado(): Promise<void> {
+    const currentReserva = this.reserva();
+    if (!currentReserva || !this.esEmpleado() || !this.esPendientePago()) return;
+
+    const ok = await this.uiConfirm.open({
+      variant: 'info',
+      tone: 'soft',
+      title: 'Confirmar pago',
+      message: '¿Confirmar el pago y activar la reserva?',
+      confirmText: 'Confirmar',
+      cancelText: 'Volver',
+    });
+    if (!ok) return;
+
+    this.reservaSrv.confirmarPago(currentReserva.id).subscribe({
+      next: () => {
+        this.uiAlert.show({
+          variant: 'success',
+          tone: 'soft',
+          title: 'Success alert',
+          message: 'Pago confirmado. Reserva activada.',
+          timeoutMs: 3000,
+        });
+        this.cargarReserva(currentReserva.id);
+      },
+      error: (err: unknown) => {
+        console.error('Error al confirmar pago:', err as any);
+        this.uiAlert.show({
+          variant: 'error',
+          tone: 'soft',
+          title: 'Error',
+          message: 'No se pudo confirmar el pago.',
+          timeoutMs: 5000,
+        });
+      },
+    });
+  }
+
+  async rechazarPagoEmpleado(): Promise<void> {
+    const currentReserva = this.reserva();
+    if (!currentReserva || !this.esEmpleado() || !this.esPendientePago()) return;
+
+    const ok = await this.uiConfirm.open({
+      variant: 'warning',
+      tone: 'soft',
+      title: 'Rechazar pago',
+      message: 'Esto cancelará la reserva. ¿Continuar?',
+      confirmText: 'Rechazar',
+      cancelText: 'Volver',
+    });
+    if (!ok) return;
+
+    this.reservaSrv.cancelarReservaEmpleado(currentReserva.id).subscribe({
+      next: () => {
+        this.uiAlert.show({
+          variant: 'success',
+          tone: 'soft',
+          title: 'Success alert',
+          message: 'Pago rechazado. Reserva cancelada.',
+          timeoutMs: 3000,
+        });
+        this.reserva.update((r) => (r ? { ...r, estado: 'CANCELADO' as any } : r));
+        this.cargarReserva(currentReserva.id);
+      },
+      error: (err: unknown) => {
+        console.error('Error al rechazar pago:', err as any);
+        this.uiAlert.show({
+          variant: 'error',
+          tone: 'soft',
+          title: 'Error',
+          message: 'No se pudo rechazar el pago.',
+          timeoutMs: 5000,
+        });
+      },
+    });
+  }
+
   async eliminarReserva(): Promise<void> {
     const currentReserva = this.reserva();
     if (!currentReserva) return;
@@ -307,6 +396,7 @@ export class DetailsReserva {
   estadoClase(estado: ReservaResponseDTO['estado']): string {
     const normalized = (estado ?? '').toString().toUpperCase();
     if (normalized === 'ACTIVO') return 'chip-activo';
+    if (normalized === 'PENDIENTE_CONFIRMACION_PAGO') return 'chip-pendiente';
     if (normalized === 'CANCELADO') return 'chip-cancelado';
     if (normalized === 'FINALIZADO') return 'chip-finalizado';
     return '';
