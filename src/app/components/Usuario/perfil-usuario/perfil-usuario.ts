@@ -64,8 +64,8 @@ export class PerfilUsuario implements OnInit {
   readonly formError = signal<string | null>(null);
 
   readonly clienteForm = this.fb.nonNullable.group({
-    nombre: ['', Validators.required],
-    apellido: ['', Validators.required],
+    nombre: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[\p{L}\s]+$/u)]],
+    apellido: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[\p{L}\s]+$/u)]],
     dni: ['', [Validators.required, Validators.maxLength(8), Validators.pattern(/^[0-9]{7,8}$/)]],
     telefono: ['', [Validators.required, Validators.maxLength(10), Validators.pattern(/^[0-9]{10}$/)]],
     email: ['', [Validators.required, Validators.email]],

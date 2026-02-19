@@ -37,7 +37,7 @@ export class ReservaFormComponent implements OnInit {
   // CAMBIO: tipado con SalaSize y sin trucos raros con strings
   private readonly tarifaPorHoraPorSize: Record<SalaSize, number> = {
     PEQUEÑA: 500,
-    MEDIANA: 8000,
+    MEDIANA: 800,
     GRANDE: 1200,
   };
 
@@ -172,7 +172,11 @@ export class ReservaFormComponent implements OnInit {
     const onError = (err: any) => {
       console.error('API error body =>', err?.error);
 
-      const rawErr = (err?.error?.message || err?.error || '').toString();
+      const rawErr =
+        (typeof err?.error?.message === 'string' ? err.error.message : '') ||
+        (typeof err?.error?.error === 'string' ? err.error.error : '') ||
+        (typeof err?.error === 'string' ? err.error : '') ||
+        '';
       const isSolape = err?.status === 409 || /solap|ocupad/i.test(rawErr);
 
       this.uiAlert.show({

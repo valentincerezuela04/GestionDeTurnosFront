@@ -108,7 +108,7 @@
             id="telefono"
             type="text"
             inputmode="numeric"
-            maxlength="20"
+            maxlength="10"
             placeholder="Telefono"
             formControlName="telefono"
             (input)="onNumbersInput($event, 'telefono')"
@@ -207,8 +207,8 @@
   @if (isInvalid('contrasena')) {
     <span class="helper-text ps-3 text-[var(--danger)]">
       @if (hasError('contrasena','required')) { La contrasena es obligatoria. }
-      @else if (hasError('contrasena','minlength')) { Minimo 6 caracteres. }
-      @else if (hasError('contrasena','pattern')) { Debe incluir al menos una letra y un numero. }
+      @else if (hasError('contrasena','minlength')) { Minimo 4 caracteres. }
+      @else if (hasError('contrasena','pattern')) { Debe incluir al menos un numero. }
       @else { Campo invalido. }
     </span>
   } @else if (isValid('contrasena')) {
@@ -271,8 +271,8 @@
   @if (isInvalid('confirmarContrasena')) {
     <span class="helper-text ps-3 text-[var(--danger)]">
       @if (hasError('confirmarContrasena','required')) { La confirmacion es obligatoria. }
-      @else if (hasError('confirmarContrasena','minlength')) { Minimo 6 caracteres. }
-      @else if (hasError('confirmarContrasena','pattern')) { Debe incluir al menos una letra y un numero. }
+      @else if (hasError('confirmarContrasena','minlength')) { Minimo 4 caracteres. }
+      @else if (hasError('confirmarContrasena','pattern')) { Debe incluir al menos un numero. }
       @else if (hasError('confirmarContrasena','mismatch')) { Las contrasenas no coinciden. }
       @else { Campo invalido. }
     </span>

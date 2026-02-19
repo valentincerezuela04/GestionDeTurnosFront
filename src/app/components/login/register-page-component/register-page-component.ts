@@ -96,7 +96,12 @@ if (this.form.invalid) {
   this.loading = false;
   console.error('Registration failed', err as any);
 
-  this.error = (err as any)?.error ?? 'No se pudo registrar';
+  const errBody = (err as any)?.error;
+  this.error =
+    (typeof errBody === 'string' ? errBody : '') ||
+    (typeof errBody?.error === 'string' ? errBody.error : '') ||
+    (typeof errBody?.message === 'string' ? errBody.message : '') ||
+    'No se pudo registrar';
 
   this.uiAlert.show({
     variant: 'error',

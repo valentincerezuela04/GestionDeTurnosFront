@@ -40,9 +40,8 @@ export class EmpleadoFormPost {
       '',
       [
         Validators.required,
-        Validators.minLength(8),
-        Validators.maxLength(20),
-        Validators.pattern(/^\d+$/),
+        Validators.maxLength(10),
+        Validators.pattern(/^[0-9]{10}$/),
       ],
     ],
     email: ['', [Validators.required, Validators.email]],
@@ -50,16 +49,16 @@ export class EmpleadoFormPost {
       '',
       [
         Validators.required,
-        Validators.minLength(6),
-        Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/),
+        Validators.minLength(4),
+        Validators.pattern(/^(?=.*\d).{4,}$/),
       ],
     ],
     confirmarContrasena: [
       '',
       [
         Validators.required,
-        Validators.minLength(6),
-        Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/),
+        Validators.minLength(4),
+        Validators.pattern(/^(?=.*\d).{4,}$/),
       ],
     ],
     legajo: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
