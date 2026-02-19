@@ -40,6 +40,13 @@ get estadoClase(): string {
         text-[color:rgba(74,56,204,1)]
         dark:text-[color:rgba(190,180,255,0.95)]
       `;
+    case 'PENDIENTE_CONFIRMACION_PAGO':
+      return `
+        bg-[color:rgba(234,179,8,0.15)]
+        border-[color:rgba(234,179,8,0.45)]
+        text-[color:rgba(161,98,7,1)]
+        dark:text-[color:rgba(234,179,8,0.95)]
+      `;
     default:
       return `
         bg-[color:rgba(124,92,255,0.10)]
@@ -52,6 +59,12 @@ get estadoClase(): string {
 
   onCardClick(): void {
     this.reservaClick.emit(this.reserva);
+  }
+
+  formatEstado(estado: ReservaResponseDTO['estado']): string {
+    if (!estado) return 'N/A';
+    if (estado.toUpperCase() === 'PENDIENTE_CONFIRMACION_PAGO') return 'PENDIENTE PAGO';
+    return estado;
   }
 
   formatTipoPago(tipo: ReservaResponseDTO['tipoPago']): string {

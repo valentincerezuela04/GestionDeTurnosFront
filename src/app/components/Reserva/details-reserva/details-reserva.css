@@ -229,6 +229,24 @@
   color: var(--text);
   border-color: var(--border-2);
 }
+.chip-pendiente{
+  background: rgba(234, 179, 8, .15);
+  color: #eab308;
+  border-color: rgba(234, 179, 8, .35);
+}
+
+/* confirmar pago */
+.btn.btn-confirm-pago {
+  background: #16a34a;
+  border: 1px solid rgba(255,255,255,.02);
+  color: #fff;
+  box-shadow: 0 10px 28px -18px rgba(34,197,94,.4);
+}
+.btn.btn-confirm-pago:hover {
+  background: #15803d;
+  box-shadow: 0 0 14px rgba(34,197,94,.35), 0 10px 28px -18px rgba(34,197,94,.4);
+  transform: translateY(-1px);
+}
 
 /* form de edición dentro de los bloques */
 .edit-form {

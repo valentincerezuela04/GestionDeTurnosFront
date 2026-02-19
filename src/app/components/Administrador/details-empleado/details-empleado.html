@@ -113,7 +113,11 @@
                 (input)="onLettersInput($event, 'nombre')"
               />
               @if (controls.nombre.invalid && controls.nombre.touched) {
-                <span class="mt-2 block text-xs text-[var(--danger)]">El nombre es obligatorio.</span>
+                <span class="mt-2 block text-xs text-[var(--danger)]">
+                  @if (controls.nombre.hasError('required')) { El nombre es obligatorio. }
+                  @else if (controls.nombre.hasError('minlength')) { Debe tener al menos 3 caracteres. }
+                  @else if (controls.nombre.hasError('pattern')) { Solo letras. }
+                </span>
               }
             </div>
 
@@ -129,7 +133,11 @@
                 (input)="onLettersInput($event, 'apellido')"
               />
               @if (controls.apellido.invalid && controls.apellido.touched) {
-                <span class="mt-2 block text-xs text-[var(--danger)]">El apellido es obligatorio.</span>
+                <span class="mt-2 block text-xs text-[var(--danger)]">
+                  @if (controls.apellido.hasError('required')) { El apellido es obligatorio. }
+                  @else if (controls.apellido.hasError('minlength')) { Debe tener al menos 3 caracteres. }
+                  @else if (controls.apellido.hasError('pattern')) { Solo letras. }
+                </span>
               }
             </div>
 

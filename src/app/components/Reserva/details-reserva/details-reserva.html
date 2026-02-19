@@ -16,7 +16,7 @@
             class="estado-chip bg-[color:var(--card-2)] border border-[color:var(--border-2)] text-[color:var(--text)]"
             [ngClass]="estadoClase(reservaData.estado)"
           >
-            {{ reservaData.estado }}
+            {{ formatEstado(reservaData.estado) }}
           </span>
           <span
             class="pago-chip bg-[color:var(--bg-2)] border border-[color:var(--border)] text-[color:var(--text-2)]"
@@ -172,7 +172,7 @@
                 "
               >
                 <span class="estado-chip" [ngClass]="estadoClase(reservaData.estado)">
-                  {{reservaData.estado}}
+                  {{formatEstado(reservaData.estado)}}
                 </span>
               </div>
             </div>
@@ -245,7 +245,20 @@
         >
           @if (!isEditing()) {
             <div>
-              @if (puedeEditar()) {
+              @if (esPendientePago() && usuario()?.role === 'EMPLEADO') {
+                <button
+                  class="btn btn-confirm-pago
+                    bg-green-600
+                    text-white
+                    hover:bg-green-700
+                    shadow-[0_16px_40px_-24px_rgba(34,197,94,.4)]
+                  "
+                  (click)="confirmarPagoReserva()"
+                >
+                  Confirmar Pago
+                </button>
+              }
+              @if (puedeEditar() && !esPendientePago()) {
                 <button
                   class="btn btn-primary
                     bg-[color:var(--accent-500)]

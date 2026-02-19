@@ -54,7 +54,12 @@ export class DetailsReserva {
     return user?.role === 'EMPLEADO' || user?.role === 'CLIENTE';
   });
 
-  readonly accionesHabilitadas = computed(() => this.esReservaActiva());
+  readonly accionesHabilitadas = computed(() => this.esReservaActivaOPendiente());
+
+  readonly esPendientePago = computed(() => {
+    const estado = (this.reserva()?.estado ?? '').toString().toUpperCase();
+    return estado === 'PENDIENTE_CONFIRMACION_PAGO';
+  });
 
   constructor() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -198,7 +203,7 @@ export class DetailsReserva {
 
   async cancelarReserva(): Promise<void> {
     const currentReserva = this.reserva();
-    if (!currentReserva || !this.esReservaActiva(currentReserva)) return;
+    if (!currentReserva || !this.esReservaActivaOPendiente(currentReserva)) return;
     const confirmacion = await this.uiConfirm.open({
       variant: 'warning',
       tone: 'soft',
@@ -299,6 +304,12 @@ export class DetailsReserva {
     this.router.navigate(['/reservas']);
   }
 
+  formatEstado(estado: ReservaResponseDTO['estado']): string {
+    if (!estado) return 'N/A';
+    if (estado.toUpperCase() === 'PENDIENTE_CONFIRMACION_PAGO') return 'PENDIENTE PAGO';
+    return estado;
+  }
+
   formatTipoPago(tipo: ReservaResponseDTO['tipoPago']): string {
     if (!tipo) return 'N/A';
     return tipo.toString().replace(/_/g, ' ');
@@ -309,6 +320,7 @@ export class DetailsReserva {
     if (normalized === 'ACTIVO') return 'chip-activo';
     if (normalized === 'CANCELADO') return 'chip-cancelado';
     if (normalized === 'FINALIZADO') return 'chip-finalizado';
+    if (normalized === 'PENDIENTE_CONFIRMACION_PAGO') return 'chip-pendiente';
     return '';
   }
 
@@ -328,7 +340,7 @@ export class DetailsReserva {
 
   private setReservaData(reservaEncontrada: ReservaResponseDTO): void {
     this.reserva.set(reservaEncontrada);
-    if (!this.esReservaActiva(reservaEncontrada)) {
+    if (!this.esReservaActivaOPendiente(reservaEncontrada)) {
       this.isEditing.set(false);
     }
     this.editForm.set({
@@ -395,5 +407,48 @@ export class DetailsReserva {
 
   private esReservaActiva(reserva: ReservaResponseDTO | null = this.reserva()): boolean {
     return (reserva?.estado ?? '').toString().toUpperCase() === 'ACTIVO';
+  }
+
+  private esReservaActivaOPendiente(reserva: ReservaResponseDTO | null = this.reserva()): boolean {
+    const estado = (reserva?.estado ?? '').toString().toUpperCase();
+    return estado === 'ACTIVO' || estado === 'PENDIENTE_CONFIRMACION_PAGO';
+  }
+
+  async confirmarPagoReserva(): Promise<void> {
+    const currentReserva = this.reserva();
+    if (!currentReserva) return;
+
+    const confirmacion = await this.uiConfirm.open({
+      variant: 'success',
+      tone: 'soft',
+      title: 'Confirmar pago',
+      message: '¿Confirmar que el pago fue recibido? La reserva pasará a estado ACTIVO.',
+      confirmText: 'Confirmar',
+      cancelText: 'Volver',
+    });
+    if (!confirmacion) return;
+
+    this.reservaSrv.confirmarPago(currentReserva.id).subscribe({
+      next: () => {
+        this.uiAlert.show({
+          variant: 'success',
+          tone: 'soft',
+          title: 'Pago confirmado',
+          message: 'El pago fue confirmado y la reserva está activa.',
+          timeoutMs: 3000,
+        });
+        this.cargarReserva(currentReserva.id);
+      },
+      error: (err: unknown) => {
+        console.error('Error al confirmar pago:', err as any);
+        this.uiAlert.show({
+          variant: 'error',
+          tone: 'soft',
+          title: 'Error',
+          message: 'Error al confirmar el pago.',
+          timeoutMs: 5000,
+        });
+      },
+    });
   }
 }

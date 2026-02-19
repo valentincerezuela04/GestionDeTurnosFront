@@ -93,4 +93,9 @@ export class ReservaService {
       {}
     );
   }
+
+  // CONFIRMAR PAGO: empleado confirma pago de una reserva pendiente
+  confirmarPago(reservaId: number): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/${reservaId}/confirmar-pago`, null);
+  }
 }
