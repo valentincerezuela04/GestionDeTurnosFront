@@ -68,8 +68,6 @@ Desarrollar una aplicación web funcional que permita:
 - MySQL
 - Integración Google Calendar
 
-> El frontend puede funcionar con **JSON-server** o con **API real** (backend).
-
 ---
 
 ## 🔐 Roles y permisos
@@ -125,9 +123,6 @@ Flujo general:
 4. El sistema puede confirmar el estado:
    `PUT /reserva/{id}/confirmar-pago`
 
-Métodos soportados: `EFECTIVO`, `TARJETA`, `TRANSFERENCIA`, `MERCADO_PAGO`, `NO_INFORMADO`.
-
-> La generación de preferencias y webhooks están implementados en el backend.
 
 ---
 
