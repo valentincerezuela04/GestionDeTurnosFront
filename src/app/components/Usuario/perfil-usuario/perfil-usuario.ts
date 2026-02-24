@@ -37,6 +37,18 @@ function optionalPattern(regex: RegExp) {
   };
 }
 
+function requiredMinLengthTrimmed(min: number) {
+  return (control: any) => {
+    const value = (control?.value ?? '').toString().trim();
+    if (!value) {
+      return { required: true };
+    }
+    return value.length >= min
+      ? null
+      : { minTrimmedLength: { requiredLength: min, actualLength: value.length } };
+  };
+}
+
 @Component({
   selector: 'app-perfil-usuario',
   standalone: true,
@@ -64,8 +76,8 @@ export class PerfilUsuario implements OnInit {
   readonly formError = signal<string | null>(null);
 
   readonly clienteForm = this.fb.nonNullable.group({
-    nombre: ['', Validators.required],
-    apellido: ['', Validators.required],
+    nombre: ['', [requiredMinLengthTrimmed(3)]],
+    apellido: ['', [requiredMinLengthTrimmed(3)]],
     dni: ['', [Validators.required, Validators.maxLength(8), Validators.pattern(/^[0-9]{7,8}$/)]],
     telefono: ['', [Validators.required, Validators.maxLength(10), Validators.pattern(/^[0-9]{10}$/)]],
     email: ['', [Validators.required, Validators.email]],
@@ -348,11 +360,13 @@ export class PerfilUsuario implements OnInit {
 
     const dni = Number(dniStr);
     const telefono = Number(telefonoStr);
+    const nombre = (formValue.nombre ?? '').toString().trim();
+    const apellido = (formValue.apellido ?? '').toString().trim();
 
     const payload: Cliente = {
       ...current,
-      nombre: formValue.nombre,
-      apellido: formValue.apellido,
+      nombre,
+      apellido,
       dni,
       telefono,
       email: formValue.email,

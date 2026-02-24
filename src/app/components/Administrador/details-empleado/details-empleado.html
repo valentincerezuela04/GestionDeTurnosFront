@@ -112,8 +112,11 @@
                 class="input mt-2 w-full"
                 (input)="onLettersInput($event, 'nombre')"
               />
-              @if (controls.nombre.invalid && controls.nombre.touched) {
+              @if (controls.nombre.touched && controls.nombre.hasError('required')) {
                 <span class="mt-2 block text-xs text-[var(--danger)]">El nombre es obligatorio.</span>
+              }
+              @if (controls.nombre.touched && controls.nombre.hasError('minTrimmedLength')) {
+                <span class="mt-2 block text-xs text-[var(--danger)]">El nombre debe tener al menos 3 caracteres.</span>
               }
             </div>
 
@@ -128,8 +131,11 @@
                 class="input mt-2 w-full"
                 (input)="onLettersInput($event, 'apellido')"
               />
-              @if (controls.apellido.invalid && controls.apellido.touched) {
+              @if (controls.apellido.touched && controls.apellido.hasError('required')) {
                 <span class="mt-2 block text-xs text-[var(--danger)]">El apellido es obligatorio.</span>
+              }
+              @if (controls.apellido.touched && controls.apellido.hasError('minTrimmedLength')) {
+                <span class="mt-2 block text-xs text-[var(--danger)]">El apellido debe tener al menos 3 caracteres.</span>
               }
             </div>
 
@@ -221,7 +227,27 @@
               <label for="legajo" class="block text-[10px] font-extrabold uppercase tracking-[0.22em] text-[var(--accent-500)]">
                 Legajo
               </label>
-              <input id="legajo" type="text" formControlName="legajo" class="input mt-2 w-full" />
+              <input
+                id="legajo"
+                type="text"
+                formControlName="legajo"
+                inputmode="numeric"
+                maxlength="8"
+                class="input mt-2 w-full"
+                (input)="onNumbersInput($event, 'legajo')"
+              />
+              @if (controls.legajo.touched && controls.legajo.hasError('required')) {
+                <span class="mt-2 block text-xs text-[var(--danger)]">El legajo es obligatorio.</span>
+              }
+              @if (controls.legajo.touched && controls.legajo.hasError('minlength')) {
+                <span class="mt-2 block text-xs text-[var(--danger)]">El legajo debe tener al menos 5 numeros.</span>
+              }
+              @if (controls.legajo.touched && controls.legajo.hasError('maxlength')) {
+                <span class="mt-2 block text-xs text-[var(--danger)]">El legajo debe tener como maximo 8 numeros.</span>
+              }
+              @if (controls.legajo.touched && controls.legajo.hasError('pattern')) {
+                <span class="mt-2 block text-xs text-[var(--danger)]">El legajo debe contener solo numeros.</span>
+              }
             </div>
 
             <div class="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3">

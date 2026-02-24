@@ -31,10 +31,6 @@ export class DetailsReserva {
   readonly reserva = signal<ReservaResponseDTO | null>(null);
   readonly usuario = signal<UserInfoResponseDTO | null>(null);
   readonly isEditing = signal<boolean>(false);
-  readonly tipoPagoOptions = signal<TipoPago[]>([
-    TipoPago.EFECTIVO,
-    TipoPago.MERCADO_PAGO,
-  ]);
   readonly salas = signal<Sala[]>([]);
 
   readonly editForm = signal<{
@@ -60,8 +56,9 @@ export class DetailsReserva {
   });
 
   readonly puedeEditar = computed(() => {
-    const user = this.usuario();
-    return user?.role === 'EMPLEADO' || user?.role === 'CLIENTE';
+    const rol = (this.usuario()?.role ?? '').toString().toUpperCase();
+    const tienePermisoPorRol = rol === 'EMPLEADO' || rol === 'CLIENTE';
+    return tienePermisoPorRol && this.esReservaActiva();
   });
 
   readonly accionesHabilitadas = computed(() => {
@@ -174,7 +171,7 @@ export class DetailsReserva {
       formValues.salaId,
       formValues.fechaInicio,
       formValues.fechaFinal,
-      formValues.tipoPago
+      currentReserva.tipoPago
     );
 
     const currentUser = this.usuario();
@@ -210,7 +207,7 @@ export class DetailsReserva {
 
   async cancelarReserva(): Promise<void> {
     const currentReserva = this.reserva();
-    if (!currentReserva || !this.esReservaActiva(currentReserva)) return;
+    if (!currentReserva || !this.esReservaCancelable(currentReserva)) return;
     const confirmacion = await this.uiConfirm.open({
       variant: 'warning',
       tone: 'soft',
@@ -380,10 +377,6 @@ export class DetailsReserva {
     this.editForm.update((form) => ({ ...form, fechaFinal: value }));
   }
 
-  updateTipoPago(value: TipoPago): void {
-    this.editForm.update((form) => ({ ...form, tipoPago: value }));
-  }
-
   volver(): void {
     this.router.navigate(['/reservas']);
   }
@@ -485,5 +478,10 @@ export class DetailsReserva {
 
   private esReservaActiva(reserva: ReservaResponseDTO | null = this.reserva()): boolean {
     return (reserva?.estado ?? '').toString().toUpperCase() === 'ACTIVO';
+  }
+
+  private esReservaCancelable(reserva: ReservaResponseDTO | null = this.reserva()): boolean {
+    const estado = (reserva?.estado ?? '').toString().toUpperCase();
+    return estado === 'ACTIVO' || estado === 'PENDIENTE_CONFIRMACION_PAGO';
   }
 }

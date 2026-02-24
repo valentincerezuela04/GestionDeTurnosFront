@@ -62,7 +62,10 @@ export class EmpleadoFormPost {
         Validators.pattern(/^(?=.*[A-Za-z])(?=.*\d).+$/),
       ],
     ],
-    legajo: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+    legajo: [
+      '',
+      [Validators.required, Validators.minLength(5), Validators.maxLength(8), Validators.pattern(/^\d+$/)],
+    ],
     rol: this.fb.nonNullable.control(Rol.EMPLEADO as Rol),
   });
 
@@ -134,7 +137,7 @@ export class EmpleadoFormPost {
       telefono: (raw.telefono ?? '').toString().trim(),
       email: raw.email,
       contrasena,
-      legajo: raw.legajo,
+      legajo: (raw.legajo ?? '').toString().trim(),
       rol: Rol.EMPLEADO as Rol,
     };
 

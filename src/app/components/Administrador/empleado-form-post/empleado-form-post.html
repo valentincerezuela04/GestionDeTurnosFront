@@ -287,6 +287,7 @@
             id="legajo"
             type="text"
             inputmode="numeric"
+            maxlength="8"
             placeholder="Numero de legajo"
             formControlName="legajo"
             (input)="onNumbersInput($event, 'legajo')"
@@ -299,6 +300,8 @@
           @if (isInvalid('legajo')) {
             <span class="helper-text ps-3 text-[var(--danger)]">
               @if (hasError('legajo','required')) { El legajo es obligatorio. }
+              @else if (hasError('legajo','minlength')) { Debe tener al menos 5 numeros. }
+              @else if (hasError('legajo','maxlength')) { Debe tener como maximo 8 numeros. }
               @else if (hasError('legajo','pattern')) { Solo numeros. }
               @else { Campo invalido. }
             </span>

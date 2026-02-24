@@ -101,8 +101,11 @@
                       focus:ring-2 focus:ring-[color:rgba(124,92,255,0.25)]
                     "
                   />
-                  @if (controls.nombre.invalid && controls.nombre.touched) {
+                  @if (controls.nombre.touched && controls.nombre.hasError('required')) {
                     <span class="mt-2 block text-xs text-[var(--danger)]">El nombre es obligatorio.</span>
+                  }
+                  @if (controls.nombre.touched && controls.nombre.hasError('minTrimmedLength')) {
+                    <span class="mt-2 block text-xs text-[var(--danger)]">El nombre debe tener al menos 3 caracteres.</span>
                   }
                 </div>
 
@@ -126,8 +129,11 @@
                       focus:ring-2 focus:ring-[color:rgba(124,92,255,0.25)]
                     "
                   />
-                  @if (controls.apellido.invalid && controls.apellido.touched) {
+                  @if (controls.apellido.touched && controls.apellido.hasError('required')) {
                     <span class="mt-2 block text-xs text-[var(--danger)]">El apellido es obligatorio.</span>
+                  }
+                  @if (controls.apellido.touched && controls.apellido.hasError('minTrimmedLength')) {
+                    <span class="mt-2 block text-xs text-[var(--danger)]">El apellido debe tener al menos 3 caracteres.</span>
                   }
                 </div>
 

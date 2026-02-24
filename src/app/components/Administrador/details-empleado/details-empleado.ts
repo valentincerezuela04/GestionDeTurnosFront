@@ -31,6 +31,16 @@ function optionalPattern(regex: RegExp) {
   };
 }
 
+function requiredMinLengthTrimmed(min: number) {
+  return (control: any) => {
+    const value = (control?.value ?? '').toString().trim();
+    if (!value) return { required: true };
+    return value.length >= min
+      ? null
+      : { minTrimmedLength: { requiredLength: min, actualLength: value.length } };
+  };
+}
+
 @Component({
   selector: 'app-details-empleado',
   standalone: true,
@@ -79,14 +89,14 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
   }
 
   readonly empleadoForm = this.fb.nonNullable.group({
-    nombre: ['', [Validators.required]],
-    apellido: ['', [Validators.required]],
+    nombre: ['', [requiredMinLengthTrimmed(3)]],
+    apellido: ['', [requiredMinLengthTrimmed(3)]],
     dni: ['', [Validators.required, Validators.maxLength(8), Validators.pattern(/^[0-9]{7,8}$/)]],
     telefono: ['', [Validators.required, Validators.maxLength(10), Validators.pattern(/^[0-9]{10}$/)]],
     email: ['', [Validators.required, Validators.email]],
     contrasena: ['', [optionalMinLength(4), optionalPattern(/\d/)]],
     confirmarContrasena: ['', [optionalMinLength(4), optionalPattern(/\d/)]],
-    legajo: [''],
+    legajo: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(8), Validators.pattern(/^\d+$/)]],
     rol: [Rol.EMPLEADO as Rol, [Validators.required]],
   });
 
@@ -327,13 +337,13 @@ export class DetailsEmpleado implements OnInit, OnDestroy {
 
     const cambios = {
       ...this.empleado,
-      nombre: raw.nombre,
-      apellido: raw.apellido,
+      nombre: (raw.nombre ?? '').toString().trim(),
+      apellido: (raw.apellido ?? '').toString().trim(),
       dni: raw.dni != null ? String(raw.dni) : this.empleado.dni,
       telefono: raw.telefono != null ? String(raw.telefono) : this.empleado.telefono,
       email: raw.email,
       contrasena: nuevaContrasena,
-      legajo: raw.legajo ?? this.empleado.legajo,
+      legajo: (raw.legajo ?? '').toString().trim(),
       rol: Rol.EMPLEADO,
     };
 

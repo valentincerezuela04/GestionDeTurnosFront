@@ -133,22 +133,17 @@
           </div>
         } @else {
           <div class="edit-form">
-            <div class="form-group">
-              <label for="tipoPago" class="text-[color:var(--text)]">Tipo de Pago</label>
-              <select
-                id="tipoPago"
-                [ngModel]="editForm().tipoPago"
-                (ngModelChange)="updateTipoPago($event)"
-                class="form-control
+            <div class="form-group form-group--readonly">
+              <label class="text-[color:var(--text)]">Tipo de Pago</label>
+              <div
+                class="readonly-value
                   bg-[color:var(--card)]
                   border border-[color:var(--border)]
                   text-[color:var(--text)]
                 "
               >
-                @for (tipo of tipoPagoOptions(); track tipo) {
-                  <option [value]="tipo">{{tipo}}</option>
-                }
-              </select>
+                {{formatTipoPago(editForm().tipoPago)}}
+              </div>
             </div>
             <div class="form-group form-group--readonly">
               <label class="text-[color:var(--text)]">Monto</label>
