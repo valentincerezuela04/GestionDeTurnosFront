@@ -1,47 +1,148 @@
 # 🗓️ Sistema de Gestión de Turnos — Trabajo Práctico Final (Programación IV – UTN)
 
-Este repositorio contiene el **Trabajo Práctico Final de Programación IV (2025)**, desarrollado en coordinación con **Metodología de Sistemas II**, siguiendo la consigna oficial de la materia.  
-El proyecto está desarrollado **íntegramente en Angular 20**, cumpliendo con todos los requisitos obligatorios establecidos para la aprobación.  
-Además, se proyecta su futura ampliación para la **Tesis Final de la carrera**.
+Aplicación web para la **gestión integral de turnos, salas y reservas**, desarrollada como **Trabajo Práctico Final de Programación IV (2025)** en UTN.  
+El frontend está construido **íntegramente en Angular 20** cumpliendo los requisitos obligatorios de la materia, y el proyecto está pensado para una futura ampliación como **Tesis Final** (con backend completo en Spring Boot + JWT).
+
+---
+🔗 **Backend (API REST):** https://github.com/luca884/Gestion-de-Turnos-BACK.git
+
+## 🎯 Objetivo
+
+Desarrollar una aplicación web funcional que permita:
+
+- Autenticación de usuarios con **roles y permisos**
+- **CRUD** de **Salas**
+- **CRUD** de **Reservas** (con validación de solapamientos)
+- Secciones protegidas mediante **Guards**
+- Experiencia moderna: **responsive**, UI consistente y documentación clara
+- Integraciones avanzadas (según versión): **Google Calendar** y **Mercado Pago**
 
 ---
 
-## 📌 Objetivo del Proyecto
+## ✨ Funcionalidades principales
 
-Desarrollar una aplicación web funcional para la **gestión integral de turnos**, permitiendo a los usuarios autenticados reservar salas, visualizar disponibilidad, administrar sus reservas y mantener sincronización con Google Calendar (integración opcional ya implementada).
+### 👤 Usuarios
+- Registro y login
+- Roles con permisos (`CLIENTE`, `EMPLEADO`, `ADMIN`)
+- Perfil de usuario
+- Interceptor HTTP para JWT 
 
-El sistema incluye:
-- Login con roles
-- CRUD de Salas
-- CRUD de Reservas
-- Guards por rol + autenticacion
-- Diseño responsive
-- Documentación clara
+### 📅 Reservas
+- Crear reserva
+- Ver “Mis reservas”
+- Historial personal y general
+- Cancelación
+- Validación de solapamientos
+- Visualización en calendario (FullCalendar)
+
+### 🏢 Salas
+- Listado de salas
+- Crear / editar / eliminar (según rol)
+- Administración desde UI dedicada
+
+### 📊 Extra (nota superior / versión avanzada)
+- Dashboard de pagos con estadísticas y gráficos (ApexCharts)
+- Tablas con filtros y paginación (DataTables)
+- Modo claro / oscuro (`ThemeService`)
+- Componentes reutilizables de UI (`UiAlert`, `UiConfirm`)
 
 ---
 
-## 🚀 Tecnologías Utilizadas
+## 🚀 Tecnologías utilizadas
 
-### **Frontend**
-- Angular 20 (Stand-alone Components)
+### Frontend
+- **Angular 20** (Stand-alone Components)
 - Angular Router (lazy loading)
-- Angular Signals
-- Servicios HttpClient
-- HTML + CSS
-- Manejo de DTOs, modelos e interfaces
-- DatePipe y utilidades nativas
-- libreria:FullCalendar
+- **Angular Signals**
+- HttpClient + Interceptor JWT
+- **Angular Material** (según versión)
+- **Tailwind CSS 4** + **FlyonUI** (según versión)
+- **FullCalendar** (calendario interactivo)
+- **ApexCharts** (dashboard de pagos)
+- **DataTables** (tablas avanzadas)
 
-### **Backend (opcional / parte de la futura tesis)**
-- Spring Boot 3.4.x
+### Backend (opcional / parte futura de tesis)
+- **Spring Boot 3.4.x**
 - Spring Security + JWT
 - JPA / Hibernate
 - MySQL
 - Integración Google Calendar
 
+> El frontend puede funcionar con **JSON-server** o con **API real** (backend).
+
 ---
 
-## 📂 Estructura del Repositorio
+## 🔐 Roles y permisos
+
+| Rol        | Acceso |
+|------------|--------|
+| `CLIENTE`  | Reservas propias, historial personal, calendario, perfil |
+| `EMPLEADO` | Reservas, historial general, salas (editar), dashboard pagos |
+| `ADMIN`    | Todo lo anterior + gestión de empleados + creación de salas |
+
+---
+
+## 🗺️ Rutas principales
+
+| Ruta | Descripción | Roles |
+|------|-------------|-------|
+| `/login` | Inicio de sesión | Público |
+| `/register` | Registro | Público |
+| `/hall` | Listado de salas | Autenticado |
+| `/hall/new` | Crear sala | ADMIN |
+| `/reservas` | Mis reservas | CLIENTE, EMPLEADO, ADMIN |
+| `/reservas/new` | Nueva reserva | CLIENTE, EMPLEADO |
+| `/reservas/historial` | Historial personal | CLIENTE |
+| `/reservas/historial-general` | Historial general | ADMIN, EMPLEADO |
+| `/clientes` | Lista de clientes | CLIENTE, EMPLEADO, ADMIN |
+| `/empleados` | Gestión empleados | ADMIN |
+| `/calendar` | Calendario reservas | Autenticado |
+| `/perfil` | Perfil usuario | Autenticado |
+| `/dashboardPagos` | Dashboard pagos | ADMIN, EMPLEADO |
+
+---
+
+## 🧩 Cumplimiento de requisitos del TP Final (UTN)
+
+✅ **Proyecto creado íntegramente en Angular 20**  
+✅ **Dos CRUD completos**: Salas y Reservas  
+✅ **Login con distintos roles**: Cliente / Empleado / Admin  
+✅ **Guards por autenticación y rol**: `authGuard`, `roleGuard`  
+✅ **Peticiones HTTP**: HttpClient (JSON-server o API real)  
+✅ **Repositorio con historial real de commits**  
+✅ **Listo para presentación / exposición**
+
+---
+
+## 💳 Integración con Mercado Pago (versión avanzada)
+
+Flujo general:
+
+1. Al confirmar una reserva, el frontend solicita al backend un link de pago:
+   `POST /reserva/{id}/pago/mercado-pago`
+2. El backend genera la preferencia en Mercado Pago y devuelve el `init_point`.
+3. El usuario completa el pago en Mercado Pago.
+4. El sistema puede confirmar el estado:
+   `PUT /reserva/{id}/confirmar-pago`
+
+Métodos soportados: `EFECTIVO`, `TARJETA`, `TRANSFERENCIA`, `MERCADO_PAGO`, `NO_INFORMADO`.
+
+> La generación de preferencias y webhooks están implementados en el backend.
+
+---
+
+## 📆 Integración con Google Calendar (versión avanzada)
+
+- La vista `/calendar` utiliza **FullCalendar** y consume:
+  `GET /calendario/eventos`
+- Cada evento incluye: `id`, `start`, `end`, `title`, `description`
+- Clientes ven solo sus reservas; empleados/admin ven el calendario completo.
+
+> OAuth2, tokens y sincronización se gestionan desde el backend.
+
+---
+
+## 📁 Estructura del repositorio
 
 ```bash
 .
@@ -60,112 +161,12 @@ El sistema incluye:
 │   ├── package.json
 │   └── README.md
 │
-└── BACKEND/ 
-    ├── src/
-    │   ├── main/
-    │   │   ├── java/com/utn/gestion_de_turnos/
-    │   │   │   ├── controller/
-    │   │   │   ├── model/
-    │   │   │   ├── dto/
-    │   │   │   ├── service/
-    │   │   │   ├── repository/
-    │   │   │   └── security/
-    │   │   └── resources/
-    │   │       └── application.properties
-    ├── pom.xml
-    └── README.md
-
-
-
----
-
-# 🧩 Cumplimiento de los Requisitos del TP Final
-
-### ✔️ 1. Proyecto creado íntegramente en Angular 20  
-Cumplido.
-
-### ✔️ 2. Dos CRUD completos  
-- CRUD de Salas  
-- CRUD de Reservas  
-
-### ✔️ 3. Sistema de login con distintos roles  
-Roles implementados:
-- Cliente  
-- Empleado  
-- Administrador  
-
-### ✔️ 4. Guards para proteger rutas según rol  
-- `authGuard`  
-- `roleGuard`
-
-### ✔️ 5. Peticiones HTTP  
-Uso de:
-- HttpClient  
-- JSON-server o API real  
-
-### ✔️ 6. Repositorio con historial real de commits  
-Cumplido.
-
-### ✔️ 7. Presentación del software  
-Listo para exposición en la fecha establecida.
-
----
-
-## ⭐ Requisitos para Nota Superior (7 a 10)
-
-### ✔️ Funcionalidad adicional
-- Integración con Google Calendar  
-- Módulo administrativo ampliado
-
-### ✔️ Diseño visual destacado  
-Limpio, prolijo y consistente.
-
-### ✔️ Totalmente responsive  
-Adaptado a desktop, tablet y móvil.
-
-### ✔️ Documentación completa  
-Incluye este README y material de apoyo.
-
----
-
-# 📌 Funcionalidades Principales
-
-### 👤 Usuarios
-- Registro  
-- Login  
-- Roles con permisos  
-- Acceso a secciones protegidas  
-
-### 📅 Reservas
-- Crear reserva  
-- Verificar solapamientos  
-- Cancelar  
-- Ver “Mis Reservas”  
-- Sincronizar con Google Calendar  
-
-### 🏢 Salas
-- Crear sala  
-- Editar sala  
-- Eliminar sala  
-- Listar todas las salas  
-
----
-
-# 🔐 Autenticación y Seguridad
-
-- JWT (si se usa backend real)  
-- Guards:
-  - `authGuard`
-  - `roleGuard`  
-- Restricción por roles en rutas críticas
-
----
-
-# 🛠️ Cómo Ejecutar el Proyecto
-
-### **Frontend**
-```bash
-cd FRONTED/GestionDeTurnosFront
-npm install
-ng serve -o
-
+└── BACKEND/
+    ├── src/main/java/com/utn/gestion_de_turnos/
+    │   ├── controller/
+    │   ├── model/
+    │   ├── dto/
+    │   ├── service/
+    │   ├── repository/
+    │   └── security/
+    └── src/main/resources/application.properties
