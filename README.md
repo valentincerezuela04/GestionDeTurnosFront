@@ -15,7 +15,7 @@ Desarrollar una aplicación web funcional que permita:
 - **CRUD** de **Reservas** (con validación de solapamientos)
 - Secciones protegidas mediante **Guards**
 - Experiencia moderna: **responsive**, UI consistente y documentación clara
-- Integraciones avanzadas (según versión): **Google Calendar** y **Mercado Pago**
+- **Integraciones**: Google Calendar (sincronización de agenda) y MercadoPago (seña/pago) en la versión backend
 
 ---
 
@@ -25,7 +25,7 @@ Desarrollar una aplicación web funcional que permita:
 - Registro y login
 - Roles con permisos (`CLIENTE`, `EMPLEADO`, `ADMIN`)
 - Perfil de usuario
-- Interceptor HTTP para JWT 
+- Interceptor HTTP para JWT
 
 ### 📅 Reservas
 - Crear reserva
@@ -54,19 +54,19 @@ Desarrollar una aplicación web funcional que permita:
 - **Angular 20** (Stand-alone Components)
 - Angular Router (lazy loading)
 - **Angular Signals**
-- HttpClient + Interceptor JWT
-- **Angular Material** (según versión)
-- **Tailwind CSS 4** + **FlyonUI** (según versión)
+- **HttpClient** consumiendo API REST (Spring Boot + JWT)
+- **Tailwind CSS 4** + **FlyonUI** (UI principal)
 - **FullCalendar** (calendario interactivo)
 - **ApexCharts** (dashboard de pagos)
 - **DataTables** (tablas avanzadas)
 
-### Backend (opcional / parte futura de tesis)
+### Backend
 - **Spring Boot 3.4.x**
 - Spring Security + JWT
 - JPA / Hibernate
 - MySQL
 - Integración Google Calendar
+- Integración MercadoPago
 
 ---
 
@@ -92,7 +92,7 @@ Desarrollar una aplicación web funcional que permita:
 | `/reservas/new` | Nueva reserva | CLIENTE, EMPLEADO |
 | `/reservas/historial` | Historial personal | CLIENTE |
 | `/reservas/historial-general` | Historial general | ADMIN, EMPLEADO |
-| `/clientes` | Lista de clientes | CLIENTE, EMPLEADO, ADMIN |
+| `/clientes` | Lista de clientes | ADMIN, EMPLEADO |
 | `/empleados` | Gestión empleados | ADMIN |
 | `/calendar` | Calendario reservas | Autenticado |
 | `/perfil` | Perfil usuario | Autenticado |
@@ -106,34 +106,33 @@ Desarrollar una aplicación web funcional que permita:
 ✅ **Dos CRUD completos**: Salas y Reservas  
 ✅ **Login con distintos roles**: Cliente / Empleado / Admin  
 ✅ **Guards por autenticación y rol**: `authGuard`, `roleGuard`  
-✅ **Peticiones HTTP**: HttpClient (JSON-server o API real)  
+✅ **Peticiones HTTP**: HttpClient consumiendo API REST (Spring Boot)  
 ✅ **Repositorio con historial real de commits**  
 ✅ **Listo para presentación / exposición**
 
 ---
 
-## 💳 Integración con Mercado Pago (versión avanzada)
+## 💳 Integración con Mercado Pago (versión backend)
 
 Flujo general:
 
-1. Al confirmar una reserva, el frontend solicita al backend un link de pago:
+1. Al confirmar una reserva, el frontend solicita al backend un link de pago:  
    `POST /reserva/{id}/pago/mercado-pago`
 2. El backend genera la preferencia en Mercado Pago y devuelve el `init_point`.
 3. El usuario completa el pago en Mercado Pago.
-4. El sistema puede confirmar el estado:
+4. El sistema puede confirmar el estado:  
    `PUT /reserva/{id}/confirmar-pago`
-
 
 ---
 
-## 📆 Integración con Google Calendar (versión avanzada)
+## 📆 Integración con Google Calendar (versión backend)
 
-- La vista `/calendar` utiliza **FullCalendar** y consume:
+- La vista `/calendar` utiliza **FullCalendar** y consume:  
   `GET /calendario/eventos`
 - Cada evento incluye: `id`, `start`, `end`, `title`, `description`
 - Clientes ven solo sus reservas; empleados/admin ven el calendario completo.
 
-> OAuth2, tokens y sincronización se gestionan desde el backend.
+> La autenticación y sincronización se gestionan desde el backend.
 
 ---
 
